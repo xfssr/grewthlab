@@ -28,3 +28,6 @@ __example_source/
 Thumbs.db
 *.swp
 *.swo
+
+.vercel
+.env*.local
