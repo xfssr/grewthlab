@@ -17,7 +17,7 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 }
 
 function deepMerge<T>(base: T, override: unknown): T {
-  if (override === undefined) {
+  if (override === undefined || override === null) {
     return base;
   }
 
