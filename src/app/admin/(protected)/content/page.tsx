@@ -740,6 +740,18 @@ export default function AdminContentPage() {
               }
             />
           </div>
+          <div className="md:col-span-2 rounded-lg border border-white/10 bg-black/20 p-4">
+            <p className="text-sm text-zinc-200">Gallery Cards Editor (9:16 Photo / Video + Tier category)</p>
+            <p className="mt-1 text-xs text-zinc-400">
+              Use the gallery editor to manage existing cards from &quot;עבודות נבחרות&quot; and define each card&apos;s tier.
+            </p>
+            <Link
+              href="/admin/gallery"
+              className="mt-3 inline-flex rounded-md border border-white/20 px-3 py-2 text-sm text-zinc-200 hover:border-white/35"
+            >
+              Open gallery cards editor
+            </Link>
+          </div>
         </div>
       </AdminForm>
 

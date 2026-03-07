@@ -32,6 +32,7 @@ model Page {
 model GalleryItem {
   id          String   @id @default(cuid()) @map("id")
   title       String   @map("title")
+  tier        String   @default("") @map("tier")
   description String   @default("") @map("description")
   imageUrl    String   @default("") @map("image_url")
   videoUrl    String   @default("") @map("video_url")

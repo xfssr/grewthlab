@@ -1,3 +1,4 @@
+import { buildContentArchiveModules } from "@/core/site.content";
 import type { Locale, LocalizedMediaAsset, SiteContentViewModel } from "@/core/site.types";
 import { PACKAGE_IDS } from "@/core/site.types";
 import { prisma } from "@/lib/db";
@@ -86,6 +87,7 @@ function mapGalleryItems(
   rows: Array<{
     id: string;
     title: string;
+    tier: string;
     description: string;
     imageUrl: string;
     videoUrl: string;
@@ -103,13 +105,15 @@ function mapGalleryItems(
 
     const alt = row.description?.trim() || row.title?.trim() || (locale === "he" ? "פריט גלריה" : "Gallery item");
 
+    const normalizedTier = row.tier?.trim() || row.title?.trim();
+
     mapped.push({
       id: row.id,
       type: hasVideo ? "video" : "image",
       src: mediaSrc,
       poster: hasVideo ? row.imageUrl?.trim() || undefined : undefined,
       alt,
-      tags: ["admin", "gallery"],
+      tags: ["admin", "gallery", ...(normalizedTier ? [normalizedTier] : []), row.title?.trim()].filter(Boolean),
     });
   }
 
@@ -162,6 +166,7 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         select: {
           id: true,
           title: true,
+          tier: true,
           description: true,
           imageUrl: true,
           videoUrl: true,
@@ -203,6 +208,8 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         withLocalizedCopy.gallery.items = mappedGallery;
       }
     }
+
+    withLocalizedCopy.contentArchive.modules = buildContentArchiveModules(locale, withLocalizedCopy.gallery.items);
 
     if (solutionRows.length > 0) {
       const cardById = new Map(withLocalizedCopy.solutions.cards.map((card) => [card.id, card]));

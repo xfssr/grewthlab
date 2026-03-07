@@ -1065,7 +1065,7 @@ function trimTopic(value: string, maxLength = 82): string {
   return `${compact.slice(0, maxLength).trimEnd()}...`;
 }
 
-function mapContentArchiveModules(locale: Locale, galleryItems: LocalizedMediaAsset[]): ContentArchiveModule[] {
+export function buildContentArchiveModules(locale: Locale, galleryItems: LocalizedMediaAsset[]): ContentArchiveModule[] {
   const baseItems = mapContentArchive(locale);
 
   return galleryItems.map((galleryItem, moduleIndex) => {
@@ -1222,7 +1222,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
   const pricingLabels = localizedPricingLabels(locale);
   const localizedCopy = localizedSectionCopy[locale];
   const galleryItems = mapMedia(locale);
-  const contentArchiveModules = mapContentArchiveModules(locale, galleryItems);
+  const contentArchiveModules = buildContentArchiveModules(locale, galleryItems);
 
   const rawSolutions = messages.solutionsPage?.cards ?? [];
   const rawSolutionById = new Map<PackageId, (typeof rawSolutions)[number]>();
