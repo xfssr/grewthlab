@@ -8,7 +8,6 @@ import { prisma } from "@/lib/db";
 export const runtime = "nodejs";
 
 const loginSchema = z.object({
-  login: z.string().trim().min(1).max(120),
   password: z.string().min(5).max(120),
 });
 
@@ -56,22 +55,17 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const login = parsed.data.login.toLowerCase();
-
   try {
-    const user = await prisma.user.findFirst({
+    const users = await prisma.user.findMany({
       where: {
-        email: {
-          equals: login,
-          mode: "insensitive",
-        },
+        role: "admin",
       },
     });
 
-    if (user) {
+    for (const user of users) {
       const validPassword = await bcrypt.compare(parsed.data.password, user.passwordHash);
       if (!validPassword) {
-        return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
+        continue;
       }
 
       const token = await createSessionToken({
@@ -96,18 +90,18 @@ export async function POST(request: NextRequest) {
     // Fallback below handles local login when database is not configured yet.
   }
 
-  if (login === FALLBACK_ADMIN_LOGIN && parsed.data.password === FALLBACK_ADMIN_PASSWORD) {
+  if (parsed.data.password === FALLBACK_ADMIN_PASSWORD) {
     const token = await createSessionToken({
-      sub: `local-${login}`,
-      email: login,
+      sub: `local-${FALLBACK_ADMIN_LOGIN}`,
+      email: FALLBACK_ADMIN_LOGIN,
       role: "admin",
     });
 
     const response = NextResponse.json({
       authenticated: true,
       user: {
-        id: `local-${login}`,
-        email: login,
+        id: `local-${FALLBACK_ADMIN_LOGIN}`,
+        email: FALLBACK_ADMIN_LOGIN,
         role: "admin",
       },
     });

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "pages" ALTER COLUMN "subtitle" DROP DEFAULT,
+ALTER COLUMN "hero_image" DROP DEFAULT,
+ALTER COLUMN "updated_at" DROP DEFAULT;
