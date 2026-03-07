@@ -18,18 +18,22 @@ const updateSolutionSchema = createSolutionSchema.partial().extend({
 });
 
 export async function GET() {
-  const items = await prisma.solution.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const items = await prisma.solution.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  return NextResponse.json({
-    items: items.map((item) => ({
-      ...item,
-      price: Number(item.price),
-    })),
-  });
+    return NextResponse.json({
+      items: items.map((item) => ({
+        ...item,
+        price: Number(item.price),
+      })),
+    });
+  } catch {
+    return NextResponse.json({ items: [], error: "Database unavailable." });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -136,4 +140,3 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json({ ok: true });
 }
-

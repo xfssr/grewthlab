@@ -2,12 +2,20 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
+async function safeCount(operation: Promise<number>) {
+  try {
+    return await operation;
+  } catch {
+    return 0;
+  }
+}
+
 export default async function AdminDashboardPage() {
   const [pagesCount, galleryCount, solutionsCount, localizedContentCount] = await Promise.all([
-    prisma.page.count(),
-    prisma.galleryItem.count(),
-    prisma.solution.count(),
-    prisma.siteContentOverride.count().catch(() => 0),
+    safeCount(prisma.page.count()),
+    safeCount(prisma.galleryItem.count()),
+    safeCount(prisma.solution.count()),
+    safeCount(prisma.siteContentOverride.count()),
   ]);
 
   const cards = [

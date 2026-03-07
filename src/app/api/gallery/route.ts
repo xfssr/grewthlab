@@ -18,13 +18,17 @@ const updateGalleryItemSchema = createGalleryItemSchema.partial().extend({
 });
 
 export async function GET() {
-  const items = await prisma.galleryItem.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  try {
+    const items = await prisma.galleryItem.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
 
-  return NextResponse.json({ items });
+    return NextResponse.json({ items });
+  } catch {
+    return NextResponse.json({ items: [], error: "Database unavailable." });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -116,4 +120,3 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json({ ok: true });
 }
-

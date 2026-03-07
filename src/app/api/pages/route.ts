@@ -16,15 +16,19 @@ const upsertPageSchema = z.object({
 
 export async function GET(request: NextRequest) {
   const slug = request.nextUrl.searchParams.get("slug") || "home";
-  const page = await prisma.page.findUnique({
-    where: { slug },
-  });
+  try {
+    const page = await prisma.page.findUnique({
+      where: { slug },
+    });
 
-  if (!page) {
-    return NextResponse.json({ page: null });
+    if (!page) {
+      return NextResponse.json({ page: null });
+    }
+
+    return NextResponse.json({ page });
+  } catch {
+    return NextResponse.json({ page: null, error: "Database unavailable." });
   }
-
-  return NextResponse.json({ page });
 }
 
 export async function PUT(request: NextRequest) {
