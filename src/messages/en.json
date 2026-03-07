@@ -1,0 +1,816 @@
+{
+  "meta": {
+    "title": "Business Start Studio | Content, Website, and Promotion for Business Growth",
+    "description": "Commercial content, digital packaging, and promotion for SMBs that need more inquiries and bookings."
+  },
+  "brand": {
+    "label": "BUSINESS START STUDIO",
+    "name": "Business Start Studio"
+  },
+  "ui": {
+    "languageToggle": "Switch language",
+    "close": "Close"
+  },
+  "nav": {
+    "links": [
+      {
+        "label": "Home",
+        "path": "/"
+      },
+      {
+        "label": "Services",
+        "path": "/services"
+      },
+      {
+        "label": "Solutions",
+        "path": "/solutions"
+      },
+      {
+        "label": "Pricing",
+        "path": "/pricing"
+      },
+      {
+        "label": "Portfolio",
+        "path": "/portfolio"
+      },
+      {
+        "label": "About",
+        "path": "/about"
+      },
+      {
+        "label": "Contact",
+        "path": "/contact"
+      }
+    ],
+    "stickyCta": "Chat on WhatsApp"
+  },
+  "hero": {
+    "eyebrow": "Business Solution System",
+    "title": "Business solutions for content, site, and ads",
+    "description": "We create content, build conversion-ready pages, and run focused promotion to generate qualified inquiries and new clients.",
+    "trust": "Not isolated services. One connected business flow from content to clients.",
+    "primaryCta": "View Solutions",
+    "secondaryCta": "Examples & Pricing",
+    "collageLabel": "Content Mix",
+    "collageTags": ["Social Media", "Video", "Photo", "Ads"],
+    "metrics": [
+      {
+        "label": "Typical Delivery Window",
+        "value": "14-28 Days"
+      },
+      {
+        "label": "Assets per Launch",
+        "value": "10+"
+      },
+      {
+        "label": "Primary Target",
+        "value": "Inquiries / Bookings"
+      }
+    ],
+    "panelLabel": "Execution Focus"
+  },
+  "whatWeDo": {
+    "eyebrow": "How It Works Together",
+    "title": "Need more than separate services for your business?",
+    "description": "We build one connected system that combines content, digital presence, and promotion to generate client inquiries.",
+    "pillars": [
+      {
+        "title": "Content foundation",
+        "description": "Create clear business content and assets around your offer."
+      },
+      {
+        "title": "Site / service-page conversion layer",
+        "description": "Turn those assets into a page or site that explains value and drives action."
+      },
+      {
+        "title": "Promotion and client flow",
+        "description": "Run targeted campaigns and route the right audience to qualified inquiries."
+      }
+    ]
+  },
+  "process": {
+    "eyebrow": "How It Works",
+    "title": "Three steps to a working growth flow",
+    "description": "From business need to inquiries with one connected execution path.",
+    "steps": [
+      {
+        "marker": "01",
+        "title": "Define business need and target",
+        "description": "We sharpen your offer, audience, and the result your funnel should produce."
+      },
+      {
+        "marker": "02",
+        "title": "Build content and conversion layer",
+        "description": "We produce content and set up the page/site structure that is ready to convert."
+      },
+      {
+        "marker": "03",
+        "title": "Launch promotion to attract clients",
+        "description": "We run focused promotion and turn views and clicks into qualified business inquiries."
+      }
+    ]
+  },
+  "audience": {
+    "eyebrow": "Who It Is For",
+    "title": "SMBs that need visibility and action",
+    "description": "Especially businesses that want content + site + ads in one place.",
+    "categories": [
+      "Restaurants",
+      "Bars",
+      "Cafes",
+      "Catering",
+      "Hotels",
+      "Events",
+      "Beauty and Lifestyle",
+      "Local Services"
+    ]
+  },
+  "difference": {
+    "eyebrow": "Why It Is Different",
+    "title": "One team for content, website, and promotion",
+    "description": "More than a photographer and more than a page builder.",
+    "points": [
+      "One execution flow for content + page + promotion",
+      "Commercial messaging before decoration",
+      "Deliverables built for response and bookings",
+      "Fast, practical turnaround for SMB timelines",
+      "Clear scope, timeline, and pricing structure"
+    ],
+    "callout": "The goal is measurable demand, not pretty noise."
+  },
+  "services": {
+    "eyebrow": "Services",
+    "title": "Bookable service blocks",
+    "description": "Standard services and packaged business solutions.",
+    "items": [
+      {
+        "title": "Photography",
+        "description": "Business stills for social and web."
+      },
+      {
+        "title": "Video",
+        "description": "Short-form and promotional business video."
+      },
+      {
+        "title": "Reels",
+        "description": "Fast reels for reach and inquiry flow."
+      },
+      {
+        "title": "Editing",
+        "description": "Video editing with subtitles and platform cuts."
+      },
+      {
+        "title": "Content Day",
+        "description": "One focused production day for monthly assets."
+      },
+      {
+        "title": "Product / Food Photography",
+        "description": "Product and menu visuals built for sales."
+      }
+    ]
+  },
+  "outcomes": {
+    "eyebrow": "What You Get",
+    "title": "Clear commercial outcomes",
+    "description": "Everything is designed to improve conversion readiness.",
+    "items": [
+      "Stronger first impression for new customers",
+      "Clearer business message and visual identity",
+      "Content ready for social and paid campaigns",
+      "Service page that answers key buyer questions",
+      "Higher trust and cleaner inquiry quality",
+      "More quote requests, bookings, and WhatsApp leads"
+    ]
+  },
+  "portfolio": {
+    "eyebrow": "Portfolio",
+    "title": "Work across food, hospitality, beauty, and products",
+    "description": "Selected projects built for visibility and launch.",
+    "items": [
+      {
+        "title": "Helix Dining",
+        "subtitle": "Restaurant content and launch",
+        "metric": "Restaurant Launch",
+        "visual": "/portfolio/helix.svg",
+        "alt": "Restaurant visual campaign"
+      },
+      {
+        "title": "Nera Hospitality",
+        "subtitle": "Hospitality content package",
+        "metric": "Hospitality Assets",
+        "visual": "/portfolio/nera.svg",
+        "alt": "Hospitality content package"
+      },
+      {
+        "title": "Axis Product Lab",
+        "subtitle": "Product visuals and service page",
+        "metric": "Product Presence",
+        "visual": "/portfolio/axis.svg",
+        "alt": "Product launch visuals"
+      }
+    ]
+  },
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Before We Start",
+    "description": "Short answers for business owners.",
+    "items": [
+      {
+        "question": "Is this suitable for small businesses?",
+        "answer": "Yes. The model is built for small and medium businesses with practical budgets."
+      },
+      {
+        "question": "Do you build both content and website?",
+        "answer": "Yes. The model combines content, landing page, and promotion."
+      },
+      {
+        "question": "How long does delivery take?",
+        "answer": "Usually between two to four weeks based on scope."
+      },
+      {
+        "question": "Do you have entry-level packages?",
+        "answer": "Yes. Basic, Growth, and monthly System options are available."
+      }
+    ]
+  },
+  "cta": {
+    "eyebrow": "Next Step",
+    "title": "Ready to start getting inquiries?",
+    "description": "Let us run a short brief and build your practical launch path.",
+    "primaryCta": "Start on WhatsApp",
+    "secondaryCta": "Go to Contact"
+  },
+  "contact": {
+    "eyebrow": "Start Here",
+    "title": "Start with one focused conversation",
+    "description": "Message us on WhatsApp or send a short brief and we will map the next move.",
+    "primaryCta": "Chat on WhatsApp",
+    "secondaryCta": "Go to Contact",
+    "channels": [
+      {
+        "label": "WhatsApp",
+        "value": "+972 50 9656366"
+      },
+      {
+        "label": "Phone",
+        "value": "+972 50 9656366"
+      },
+      {
+        "label": "Instagram",
+        "value": "emil_nisenblatt"
+      },
+      {
+        "label": "Email",
+        "value": "nisenem98@gmail.com"
+      }
+    ],
+    "form": {
+      "title": "Quick Inquiry",
+      "nameLabel": "Full Name",
+      "phoneLabel": "Phone / WhatsApp",
+      "businessLabel": "Business Name",
+      "messageLabel": "What do you want to promote?",
+      "submit": "Send"
+    }
+  },
+  "servicesPage": {
+    "metaTitle": "Services | Business Start Studio",
+    "metaDescription": "Content production, service pages, and promotion packages for businesses that need inquiries.",
+    "eyebrow": "Services",
+    "title": "Book by service type",
+    "description": "Clear split between standard production and business solution packages.",
+    "primaryCta": "WhatsApp Consultation",
+    "secondaryCta": "Jump to Business Solutions",
+    "standardEyebrow": "Standard Services",
+    "standardTitle": "For production-focused needs",
+    "standardDescription": "Defined scope, clear timeline, and transparent starting prices.",
+    "solutionEyebrow": "Business Solutions",
+    "solutionTitle": "For inquiry-focused outcomes",
+    "solutionDescription": "Combined packages: content + page + promotion.",
+    "cardCta": "Details",
+    "standardCards": [
+      {
+        "title": "Business Photography",
+        "audience": "For teams that need credible visuals quickly.",
+        "features": [
+          "Professional stills",
+          "Social-ready exports",
+          "Web-ready variants",
+          "Organized handoff"
+        ],
+        "timeline": "Up to 7 business days",
+        "price": "From 1,500 ILS",
+        "slug": "photography"
+      },
+      {
+        "title": "Business Video",
+        "audience": "For businesses that need clear offer storytelling.",
+        "features": [
+          "Short promotional video",
+          "Brand storyline",
+          "Social cuts",
+          "Master delivery"
+        ],
+        "timeline": "Up to 10 business days",
+        "price": "From 1,800 ILS",
+        "slug": "video-production"
+      },
+      {
+        "title": "Reels Production",
+        "audience": "For fast organic visibility and response.",
+        "features": [
+          "Reels shoot",
+          "Vertical edits",
+          "Subtitles",
+          "Instagram/TikTok-ready"
+        ],
+        "timeline": "Up to 6 business days",
+        "price": "From 1,400 ILS",
+        "slug": "reels-production"
+      },
+      {
+        "title": "Video Editing Package",
+        "audience": "For teams with raw footage that needs conversion-ready output.",
+        "features": [
+          "Commercial edit",
+          "Subtitles",
+          "Message alignment",
+          "Multi-format delivery"
+        ],
+        "timeline": "Up to 5 business days",
+        "price": "From 1,200 ILS",
+        "slug": "editing-package"
+      },
+      {
+        "title": "Full Content Day",
+        "audience": "For businesses planning one full month of assets.",
+        "features": [
+          "Full production day",
+          "Scene planning",
+          "Social batch content",
+          "Structured handoff"
+        ],
+        "timeline": "Up to 8 business days",
+        "price": "From 2,200 ILS",
+        "slug": "content-day"
+      },
+      {
+        "title": "Product / Food Photography",
+        "audience": "For product-led brands and hospitality menus.",
+        "features": [
+          "Basic styling",
+          "Product/menu shoot",
+          "Color processing",
+          "Web + social formats"
+        ],
+        "timeline": "Up to 9 business days",
+        "price": "From 1,900 ILS",
+        "slug": "product-food-photography"
+      }
+    ],
+    "solutionCards": [
+      {
+        "title": "QR Menu + Mini Site",
+        "audience": "For restaurants and cafes.",
+        "features": [
+          "Mobile-first page",
+          "QR routing",
+          "WhatsApp CTA",
+          "Fast setup"
+        ],
+        "timeline": "14-21 days",
+        "price": "From 2,500 ILS",
+        "slug": "qr-menu-mini-site"
+      },
+      {
+        "title": "Content + WhatsApp Funnel",
+        "audience": "For businesses that need daily inquiry flow.",
+        "features": [
+          "Content production",
+          "Inquiry page",
+          "Ad creative set",
+          "Basic tracking"
+        ],
+        "timeline": "14-28 days",
+        "price": "From 3,000 ILS",
+        "slug": "content-whatsapp-funnel"
+      },
+      {
+        "title": "Business Launch Setup",
+        "audience": "For teams launching a new service or offer.",
+        "features": [
+          "Commercial messaging",
+          "Launch assets",
+          "Service page",
+          "Rollout set"
+        ],
+        "timeline": "16-28 days",
+        "price": "From 3,200 ILS",
+        "slug": "business-launch-setup"
+      },
+      {
+        "title": "Beauty Booking Flow",
+        "audience": "For clinics and beauty professionals.",
+        "features": [
+          "Before/after content",
+          "Booking page",
+          "Campaign creatives",
+          "WhatsApp integration"
+        ],
+        "timeline": "14-24 days",
+        "price": "From 2,800 ILS",
+        "slug": "beauty-booking-flow"
+      },
+      {
+        "title": "Quick Start System",
+        "audience": "For early-stage local businesses.",
+        "features": [
+          "Core offer message",
+          "First content batch",
+          "Single page setup",
+          "Launch ad starter"
+        ],
+        "timeline": "10-20 days",
+        "price": "From 2,200 ILS",
+        "slug": "quick-start-system"
+      }
+    ],
+    "orderCta": "Choose on WhatsApp"
+  },
+  "solutionsPage": {
+    "metaTitle": "Solutions | Business Start Studio",
+    "metaDescription": "Industry-focused solution packages for restaurants, bars, beauty, and local services.",
+    "eyebrow": "Solutions by Industry",
+    "title": "Ready business packages for the local market",
+    "description": "Each package is designed around inquiries and bookings.",
+    "cards": [
+      {
+        "title": "QR Menu + Mini Site",
+        "problem": "Guests do not get a fast ordering path from table to action.",
+        "whatWeDo": "We build QR navigation, a mobile mini page, and a clear WhatsApp CTA.",
+        "outcome": "Faster responses and more direct order inquiries.",
+        "timeline": "14-21 days",
+        "price": "From 2,500 ILS",
+        "slug": "qr-menu-mini-site"
+      },
+      {
+        "title": "Content + WhatsApp Funnel",
+        "problem": "Traffic exists but inquiry flow is unstable.",
+        "whatWeDo": "We connect production assets, inquiry page logic, and WhatsApp routing.",
+        "outcome": "Higher inquiry volume with better intent quality.",
+        "timeline": "14-28 days",
+        "price": "From 3,000 ILS",
+        "slug": "content-whatsapp-funnel"
+      },
+      {
+        "title": "Business Launch Setup",
+        "problem": "New offers launch without clear messaging or execution assets.",
+        "whatWeDo": "We define positioning, produce assets, and run a practical launch structure.",
+        "outcome": "Clean launch flow with conversion-ready communication.",
+        "timeline": "16-28 days",
+        "price": "From 3,200 ILS",
+        "slug": "business-launch-setup"
+      },
+      {
+        "title": "Beauty Booking Flow",
+        "problem": "Views do not convert into appointment requests.",
+        "whatWeDo": "We build booking-focused content, page structure, and campaign creatives.",
+        "outcome": "More qualified bookings and fewer low-fit leads.",
+        "timeline": "14-24 days",
+        "price": "From 2,800 ILS",
+        "slug": "beauty-booking-flow"
+      },
+      {
+        "title": "Quick Start System",
+        "problem": "Early-stage businesses lack a practical marketing base.",
+        "whatWeDo": "We set core message, first content batch, one page, and starter promotion assets.",
+        "outcome": "Fast market entry with active inquiry path.",
+        "timeline": "10-20 days",
+        "price": "From 2,200 ILS",
+        "slug": "quick-start-system"
+      }
+    ],
+    "cardCta": "Details",
+    "orderCta": "Choose on WhatsApp"
+  },
+  "pricingPage": {
+    "metaTitle": "Pricing | Business Start Studio",
+    "metaDescription": "Clear pricing architecture: Basic, Growth, and System / Monthly.",
+    "eyebrow": "Pricing",
+    "title": "Three product levels",
+    "description": "So clients can understand fit and budget quickly.",
+    "tiers": [
+      {
+        "title": "Basic",
+        "audience": "For fast entry execution.",
+        "features": [
+          "Single focused service",
+          "Defined scope",
+          "Short turnaround"
+        ],
+        "price": "From 1,200 ILS"
+      },
+      {
+        "title": "Growth",
+        "audience": "For broader outcome needs.",
+        "features": [
+          "Content + service page",
+          "Promotion starter assets",
+          "Commercial message setup"
+        ],
+        "price": "2,500-5,000 ILS"
+      },
+      {
+        "title": "System / Monthly",
+        "audience": "For ongoing support and consistency.",
+        "features": [
+          "Monthly production cycle",
+          "Page optimization",
+          "Ad creative updates",
+          "Continuous support"
+        ],
+        "price": "5,000+ ILS / month"
+      }
+    ],
+    "addonsEyebrow": "Add-ons",
+    "addonsTitle": "Optional extensions",
+    "addonsDescription": "Add extra blocks based on business needs.",
+    "addons": [
+      {
+        "title": "Extra production day",
+        "price": "From 900 ILS"
+      },
+      {
+        "title": "Additional service page",
+        "price": "From 1,200 ILS"
+      },
+      {
+        "title": "Monthly ad creative set",
+        "price": "From 1,000 ILS"
+      }
+    ],
+    "primaryCta": "Check fit on WhatsApp",
+    "note": "Highly custom projects are quoted after a short brief."
+  },
+  "portfolioPage": {
+    "metaTitle": "Portfolio | Business Start Studio",
+    "metaDescription": "Examples of content, service pages, and promotion systems for SMBs.",
+    "eyebrow": "Selected Work",
+    "title": "Built for visibility and response",
+    "description": "Projects across hospitality, beauty, and product-based businesses.",
+    "resultsEyebrow": "Result Focus",
+    "resultsTitle": "What we measure after launch",
+    "resultsDescription": "Simple metrics connected to commercial intent.",
+    "points": [
+      {
+        "label": "Response Speed",
+        "value": "Faster reply cycle"
+      },
+      {
+        "label": "Visual Clarity",
+        "value": "Cleaner business identity"
+      },
+      {
+        "label": "Inquiry Volume",
+        "value": "More relevant incoming leads"
+      }
+    ]
+  },
+  "aboutPage": {
+    "metaTitle": "About | Business Start Studio",
+    "metaDescription": "A practical studio model combining content, web setup, and promotion.",
+    "eyebrow": "About",
+    "title": "A practical growth studio for SMBs",
+    "description": "We work with businesses that need clear commercial outcomes, not conceptual noise.",
+    "points": [
+      "Commercial clarity before decoration",
+      "Customer-response logic in every section",
+      "Fast execution with defined steps",
+      "Clear communication without buzzwords",
+      "Built for local Israeli market context",
+      "Integrated content + web + promotion model"
+    ],
+    "principlesEyebrow": "Working Principles",
+    "principlesTitle": "How decisions are made",
+    "principlesDescription": "Every design and content decision is tested against business action.",
+    "principles": [
+      "Message before styling",
+      "Consistency across touchpoints",
+      "Productized offers with clear scope",
+      "Known delivery windows",
+      "Price transparency whenever possible",
+      "Continuous improvement by market response"
+    ]
+  },
+  "contactPage": {
+    "metaTitle": "Contact | Business Start Studio",
+    "metaDescription": "Contact us on WhatsApp or send a short brief for your business launch.",
+    "eyebrow": "Contact",
+    "title": "Start with a focused launch brief",
+    "description": "Share your business context and we will return with a clear execution path."
+  },
+  "seoPage": {
+    "eyebrow": "Service Direction",
+    "startingPrice": "Starting Price",
+    "primaryCta": "Chat on WhatsApp",
+    "secondaryCta": "Go to Contact"
+  },
+  "seoPages": {
+    "restaurant-content": {
+      "metaTitle": "Restaurant Content Services | Business Start Studio",
+      "metaDescription": "Content and mini-site setup for restaurants that need more orders and inquiries.",
+      "title": "Restaurant Content That Brings Orders",
+      "description": "Food visuals, reels, and QR-ready service setup in one package.",
+      "bullets": [
+        "Food and menu visual content",
+        "Mobile service page",
+        "WhatsApp order button",
+        "Local SEO starter setup"
+      ],
+      "price": "From 2,500 ILS"
+    },
+    "bar-content": {
+      "metaTitle": "Bar Content Services | Business Start Studio",
+      "metaDescription": "Visibility packages for bars: event content, social rollouts, and inquiry flow.",
+      "title": "Content for Bars and Event Nights",
+      "description": "A practical package for events, promotions, and direct inquiries.",
+      "bullets": [
+        "Event-oriented short videos",
+        "Schedule/update page",
+        "Seasonal ad creative set",
+        "Direct WhatsApp CTA"
+      ],
+      "price": "From 2,800 ILS"
+    },
+    "beauty-content": {
+      "metaTitle": "Beauty Content Services | Business Start Studio",
+      "metaDescription": "Beauty content, booking page setup, and ad creatives for first inquiries.",
+      "title": "Beauty Content That Drives Bookings",
+      "description": "Built for clinics and beauty providers who need stronger booking flow.",
+      "bullets": [
+        "Before/after content structure",
+        "Booking-focused mini page",
+        "Campaign creative set",
+        "Direct inquiry routing"
+      ],
+      "price": "From 2,500 ILS"
+    },
+    "qr-menu-mini-site": {
+      "metaTitle": "QR Menu Mini Site | Business Start Studio",
+      "metaDescription": "Fast QR menu + mini-site setup for restaurants and cafes.",
+      "title": "QR Menu and Mini Site Setup",
+      "description": "A fast route from table scan to WhatsApp inquiry or order.",
+      "bullets": [
+        "Mobile-ready mini page",
+        "Clear QR routing",
+        "WhatsApp order action",
+        "Simple content management"
+      ],
+      "price": "From 2,500 ILS"
+    },
+    "chef-personal-brand": {
+      "metaTitle": "Chef Personal Brand Setup | Business Start Studio",
+      "metaDescription": "Personal brand package for chefs: content day, profile page, and campaign assets.",
+      "title": "Personal Brand Setup for Chefs",
+      "description": "For chefs who want stronger professional visibility and partnership opportunities.",
+      "bullets": [
+        "Personal production day",
+        "Profile mini-site",
+        "Reels starter set",
+        "Media launch kit"
+      ],
+      "price": "From 2,400 ILS"
+    },
+    "small-business-quick-start": {
+      "metaTitle": "Small Business Quick Start | Business Start Studio",
+      "metaDescription": "Quick launch package for local SMBs: content, service page, and promotion starter.",
+      "title": "Quick Start for Small Business",
+      "description": "A practical package to launch digital presence without delay.",
+      "bullets": [
+        "Core offer message setup",
+        "First content package",
+        "One service page",
+        "Promotion starter assets"
+      ],
+      "price": "From 2,200 ILS"
+    }
+  },
+  "footer": {
+    "copyright": "© 2026 Business Start Studio",
+    "note": "Content, website, and promotion for businesses that need response."
+  },
+  "whatsapp": {
+    "prefill": "Hi, we want a practical content, page, and promotion setup that drives more inquiries.",
+    "serviceCardTemplate": "Hi, I want details about the service \"{title}\". Fit: {audience}. Timeline: {timeline}. Price: {price}.",
+    "solutionCardTemplate": "Hi, I am interested in the solution \"{title}\". Problem: {problem}. Outcome: {outcome}. Timeline: {timeline}. Price: {price}."
+  },
+  "global": {
+    "whatsappNumber": "+972 50 9656366",
+    "phone": "+972 50 9656366",
+    "email": "nisenem98@gmail.com",
+    "instagram": "emil_nisenblatt"
+  },
+  "testimonials": {
+    "eyebrow": "What Clients Say",
+    "title": "Client Testimonials",
+    "description": "Testimonials are shown only when visible CMS entries exist.",
+    "items": []
+  },
+  "examplesGallery": {
+    "eyebrow": "Examples",
+    "title": "Visual examples of the studio work",
+    "description": "See photo and video outputs first, then choose the right business path.",
+    "items": [
+      {
+        "title": "Local restaurant launch",
+        "subtitle": "Menu visuals and launch content before opening",
+        "category": "restaurant",
+        "mediaType": "image",
+        "src": "/portfolio/helix.svg",
+        "alt": "Restaurant launch visual",
+        "order": 1,
+        "link": "/portfolio"
+      },
+      {
+        "title": "Hospitality social presence",
+        "subtitle": "Visual content set for ongoing promotion",
+        "category": "socialContent",
+        "mediaType": "video",
+        "src": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+        "poster": "/portfolio/nera.svg",
+        "alt": "Video example for social content",
+        "order": 2
+      },
+      {
+        "title": "Hospitality content assets",
+        "subtitle": "Consistent visual language for business identity",
+        "category": "bar",
+        "mediaType": "image",
+        "src": "/portfolio/nera.svg",
+        "alt": "Hospitality content assets",
+        "order": 3,
+        "link": "/portfolio"
+      },
+      {
+        "title": "Product and branding visuals",
+        "subtitle": "Product assets for page, ads, and social",
+        "category": "product",
+        "mediaType": "image",
+        "src": "/portfolio/axis.svg",
+        "alt": "Product visibility example",
+        "order": 4,
+        "link": "/portfolio"
+      }
+    ]
+  },
+  "solutionsPrompt": {
+    "eyebrow": "Solutions",
+    "title": "Choose a business solution path",
+    "description": "Select the package that connects content, page/site, and promotion around your business goal.",
+    "cta": "Explore all solutions",
+    "cards": [
+      {
+        "title": "QR Menu + Mini Site",
+        "problem": "Guests do not get a fast ordering path from table to action.",
+        "outcome": "Faster responses and more direct order inquiries.",
+        "slug": "qr-menu-mini-site"
+      },
+      {
+        "title": "Content + WhatsApp Funnel",
+        "problem": "Traffic exists but inquiry flow is unstable.",
+        "outcome": "Higher inquiry volume with better intent quality.",
+        "slug": "content-whatsapp-funnel"
+      },
+      {
+        "title": "Business Launch Setup",
+        "problem": "New offers launch without clear messaging or execution assets.",
+        "outcome": "Clean launch flow with conversion-ready communication.",
+        "slug": "business-launch-setup"
+      },
+      {
+        "title": "Beauty Booking Flow",
+        "problem": "Views do not convert into appointment requests.",
+        "outcome": "More qualified bookings and fewer low-fit leads.",
+        "slug": "beauty-booking-flow"
+      },
+      {
+        "title": "Quick Start System",
+        "problem": "Early-stage businesses lack a practical marketing base.",
+        "outcome": "Fast market entry with active inquiry path.",
+        "slug": "quick-start-system"
+      }
+    ]
+  },
+  "mediaCategories": {
+    "restaurant": "Restaurants",
+    "bar": "Bars & Hospitality",
+    "food": "Food",
+    "beauty": "Beauty",
+    "product": "Products",
+    "realEstate": "Real Estate",
+    "localService": "Local Services",
+    "branding": "Branding",
+    "socialContent": "Social Content",
+    "general": "General"
+  }
+}

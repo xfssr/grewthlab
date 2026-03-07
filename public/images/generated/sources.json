@@ -1,0 +1,13 @@
+﻿{
+  "hero-blur.webp": {
+    "derivedFrom": "https://images.pexels.com/photos/30135517/pexels-photo-30135517.jpeg?cs=srgb&dl=pexels-teju-215592370-30135517.jpg&fm=jpg",
+    "processing": "Gaussian blur + color and brightness adjustments"
+  },
+  "category-restaurants.webp": "https://images.pexels.com/photos/30135517/pexels-photo-30135517.jpeg?cs=srgb&dl=pexels-teju-215592370-30135517.jpg&fm=jpg",
+  "category-bars.webp": "https://images.pexels.com/photos/16859952/pexels-photo-16859952.jpeg?cs=srgb&dl=pexels-skills-media-437558258-16859952.jpg&fm=jpg",
+  "category-cafes.webp": "https://images.pexels.com/photos/34954240/pexels-photo-34954240.jpeg?cs=srgb&dl=pexels-daven-hsu-5766928-34954240.jpg&fm=jpg",
+  "category-catering.webp": "https://images.pexels.com/photos/30042104/pexels-photo-30042104.jpeg?cs=srgb&dl=pexels-kriss-30042104.jpg&fm=jpg",
+  "case-problem.webp": "https://images.pexels.com/photos/6429597/pexels-photo-6429597.jpeg?cs=srgb&dl=pexels-wender-junior-souza-vieira-9757411-6429597.jpg&fm=jpg",
+  "case-solution.webp": "https://images.pexels.com/photos/30677719/pexels-photo-30677719.jpeg?cs=srgb&dl=pexels-ninthgrid-2149521550-30677719.jpg&fm=jpg",
+  "case-result.webp": "https://images.pexels.com/photos/12385475/pexels-photo-12385475.jpeg?cs=srgb&dl=pexels-followingnyc-12385475.jpg&fm=jpg"
+}

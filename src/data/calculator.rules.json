@@ -1,0 +1,27 @@
+{
+  "currency": "ILS",
+  "roundTo": 50,
+  "packages": [
+    { "id": "qr-menu-mini-site", "basePrice": 2500 },
+    { "id": "content-whatsapp-funnel", "basePrice": 3000 },
+    { "id": "business-launch-setup", "basePrice": 3200 },
+    { "id": "beauty-booking-flow", "basePrice": 2800 },
+    { "id": "quick-start-system", "basePrice": 2200 }
+  ],
+  "nicheMultipliers": {
+    "restaurants": 1,
+    "beauty": 1.08,
+    "real-estate": 1.18,
+    "hotels": 1.12
+  },
+  "deliveryMultipliers": {
+    "standard": 1,
+    "express": 1.2
+  },
+  "addons": [
+    { "id": "extra_production_day", "price": 900 },
+    { "id": "extra_service_page", "price": 1200 },
+    { "id": "monthly_ad_creatives", "price": 1000 },
+    { "id": "whatsapp_crm_setup", "price": 700 }
+  ]
+}

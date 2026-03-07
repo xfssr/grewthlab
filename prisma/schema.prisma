@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid()) @map("id")
+  email        String   @unique @map("email")
+  passwordHash String   @map("password_hash")
+  role         String   @default("admin") @map("role")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Page {
+  id        String   @id @default(cuid()) @map("id")
+  slug      String   @unique @map("slug")
+  title     String   @map("title")
+  subtitle  String   @map("subtitle")
+  heroImage String   @map("hero_image")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("pages")
+}
+
+model GalleryItem {
+  id          String   @id @default(cuid()) @map("id")
+  title       String   @map("title")
+  description String   @default("") @map("description")
+  imageUrl    String   @default("") @map("image_url")
+  videoUrl    String   @default("") @map("video_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("gallery")
+}
+
+model Solution {
+  id          String   @id @default(cuid()) @map("id")
+  title       String   @map("title")
+  description String   @default("") @map("description")
+  price       Decimal  @db.Decimal(10, 2) @map("price")
+  imageUrl    String   @default("") @map("image_url")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("solutions")
+}

@@ -1,0 +1,34 @@
+CREATE TABLE "users" (
+  "id" TEXT PRIMARY KEY,
+  "email" TEXT NOT NULL UNIQUE,
+  "password_hash" TEXT NOT NULL,
+  "role" TEXT NOT NULL DEFAULT 'admin',
+  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "pages" (
+  "id" TEXT PRIMARY KEY,
+  "slug" TEXT NOT NULL UNIQUE,
+  "title" TEXT NOT NULL,
+  "subtitle" TEXT NOT NULL DEFAULT '',
+  "hero_image" TEXT NOT NULL DEFAULT '',
+  "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "gallery" (
+  "id" TEXT PRIMARY KEY,
+  "title" TEXT NOT NULL,
+  "description" TEXT NOT NULL DEFAULT '',
+  "image_url" TEXT NOT NULL DEFAULT '',
+  "video_url" TEXT NOT NULL DEFAULT '',
+  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "solutions" (
+  "id" TEXT PRIMARY KEY,
+  "title" TEXT NOT NULL,
+  "description" TEXT NOT NULL DEFAULT '',
+  "price" DECIMAL(10,2) NOT NULL,
+  "image_url" TEXT NOT NULL DEFAULT '',
+  "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
