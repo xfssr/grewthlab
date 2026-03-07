@@ -38,7 +38,7 @@ function SolutionTile({
   const problemLabel = isRtl ? "הבעיה" : "Problem";
   const includesLabel = isRtl ? "מה כולל" : "Includes";
   const resultLabel = isRtl ? "תוצאה" : "Result";
-  const detailsLabel = isRtl ? "עוד פרטים" : "Подробнее";
+  const detailsLabel = isRtl ? "עוד פרטים" : "More details";
 
   return (
     <SurfaceCard
@@ -48,6 +48,12 @@ function SolutionTile({
           : "border-stroke-subtle bg-surface-base hover:border-stroke-strong"
       }`}
     >
+      {card.imageSrc ? (
+        <div className="mb-4 overflow-hidden rounded-2xl border border-stroke-subtle/80 bg-surface-muted/50">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={card.imageSrc} alt={card.title} className="h-40 w-full object-cover" loading="lazy" decoding="async" />
+        </div>
+      ) : null}
       <p className="ui-kicker">{card.timeline}</p>
       <h3 className="mt-2 text-xl font-semibold leading-tight text-text-primary sm:text-2xl">{card.title}</h3>
 

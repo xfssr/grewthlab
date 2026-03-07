@@ -9,6 +9,7 @@ type PagePayload = {
   title: string;
   subtitle: string;
   heroImage: string;
+  heroVideo: string;
 };
 
 export default function AdminPagesPage() {
@@ -17,9 +18,10 @@ export default function AdminPagesPage() {
     title: "",
     subtitle: "",
     heroImage: "",
+    heroVideo: "",
   });
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploadingField, setUploadingField] = useState<"heroImage" | "heroVideo" | null>(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -37,14 +39,15 @@ export default function AdminPagesPage() {
         title: payload.page?.title || "",
         subtitle: payload.page?.subtitle || "",
         heroImage: payload.page?.heroImage || "",
+        heroVideo: payload.page?.heroVideo || "",
       }));
     }
 
     void load();
   }, []);
 
-  async function handleUpload(file: File) {
-    setUploading(true);
+  async function handleUpload(file: File, field: "heroImage" | "heroVideo") {
+    setUploadingField(field);
     setMessage("");
     try {
       const data = new FormData();
@@ -59,12 +62,12 @@ export default function AdminPagesPage() {
         throw new Error(payload.error || "Upload failed.");
       }
 
-      setForm((prev) => ({ ...prev, heroImage: payload.url || "" }));
+      setForm((prev) => ({ ...prev, [field]: payload.url || "" }));
     } catch (error) {
       const text = error instanceof Error ? error.message : "Upload failed.";
       setMessage(text);
     } finally {
-      setUploading(false);
+      setUploadingField(null);
     }
   }
 
@@ -88,7 +91,7 @@ export default function AdminPagesPage() {
         return;
       }
 
-      setMessage("Page updated.");
+      setMessage("Home page fallback copy and hero media were updated.");
     } finally {
       setSaving(false);
     }
@@ -98,13 +101,18 @@ export default function AdminPagesPage() {
     <div className="space-y-5">
       <header>
         <h1 className="text-2xl font-semibold">Pages</h1>
-        <p className="mt-1 text-sm text-zinc-400">Edit home hero content.</p>
+        <p className="mt-1 text-sm text-zinc-400">
+          Manage the shared home-page hero media. Localized HE/EN copy is edited in the Localized Content tab.
+        </p>
       </header>
 
-      <AdminForm title="Home Page" description="Hero title, subtitle, and hero image.">
+      <AdminForm
+        title="Home Page Hero"
+        description="These title and description fields are shared fallbacks. Image and video are rendered directly on the public site."
+      >
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block">
-            <span className="mb-1 block text-sm text-zinc-300">Hero Title</span>
+            <span className="mb-1 block text-sm text-zinc-300">Fallback hero title</span>
             <input
               value={form.title}
               onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
@@ -114,7 +122,7 @@ export default function AdminPagesPage() {
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm text-zinc-300">Hero Subtitle</span>
+            <span className="mb-1 block text-sm text-zinc-300">Fallback hero description</span>
             <textarea
               value={form.subtitle}
               onChange={(event) => setForm((prev) => ({ ...prev, subtitle: event.target.value }))}
@@ -124,7 +132,7 @@ export default function AdminPagesPage() {
           </label>
 
           <label className="block">
-            <span className="mb-1 block text-sm text-zinc-300">Hero Image URL</span>
+            <span className="mb-1 block text-sm text-zinc-300">Hero image URL</span>
             <input
               value={form.heroImage}
               onChange={(event) => setForm((prev) => ({ ...prev, heroImage: event.target.value }))}
@@ -133,20 +141,47 @@ export default function AdminPagesPage() {
             />
           </label>
 
-          <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+          <label className="block">
+            <span className="mb-1 block text-sm text-zinc-300">Hero video URL</span>
             <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  void handleUpload(file);
-                }
-              }}
+              value={form.heroVideo}
+              onChange={(event) => setForm((prev) => ({ ...prev, heroVideo: event.target.value }))}
+              className="w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm text-zinc-100 outline-none placeholder:text-zinc-500 focus:border-white/30"
+              placeholder="https://..."
             />
-            {uploading ? "Uploading..." : "Upload Image"}
           </label>
+
+          <div className="flex flex-wrap items-center gap-2">
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void handleUpload(file, "heroImage");
+                  }
+                }}
+              />
+              {uploadingField === "heroImage" ? "Uploading image..." : "Upload image"}
+            </label>
+
+            <label className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+              <input
+                type="file"
+                accept="video/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void handleUpload(file, "heroVideo");
+                  }
+                }}
+              />
+              {uploadingField === "heroVideo" ? "Uploading video..." : "Upload video"}
+            </label>
+          </div>
 
           <div className="flex items-center gap-3">
             <button
@@ -163,4 +198,3 @@ export default function AdminPagesPage() {
     </div>
   );
 }
-

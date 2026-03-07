@@ -88,6 +88,7 @@ const messageCatalog: Record<Locale, MessageSchema> = {
 
 const toneCycle: Tone[] = ["bronze", "gold", "stone", "charcoal"];
 const heroBackgroundImageSrc = "/images/generated/hero-blur.webp";
+const heroBackgroundVideoSrc = "/webherobackground.mp4";
 
 const industryImages = [
   {
@@ -1366,6 +1367,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
       primaryCta: localizedCopy.hero.primaryCta,
       secondaryCta: localizedCopy.hero.secondaryCta,
       backgroundImageSrc: heroBackgroundImageSrc,
+      backgroundVideoSrc: heroBackgroundVideoSrc,
     },
     industries,
     industryEyebrow: localizedCopy.industryEyebrow,

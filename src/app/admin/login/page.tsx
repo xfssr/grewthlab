@@ -48,8 +48,8 @@ export default function AdminLoginPage() {
   return (
     <div className="grid min-h-screen place-items-center bg-[#090b10] px-4">
       <div className="w-full max-w-md rounded-xl border border-white/10 bg-[#0f1219] p-6">
-        <h1 className="text-xl font-semibold text-zinc-100">Admin Login</h1>
-        <p className="mt-1 text-sm text-zinc-400">Sign in with your admin password.</p>
+        <h1 className="text-xl font-semibold text-zinc-100">Admin sign in</h1>
+        <p className="mt-1 text-sm text-zinc-400">Use the admin password to access the dashboard.</p>
 
         <form onSubmit={handleSubmit} className="mt-6 space-y-4">
           <label className="block">
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
             disabled={busy}
             className="w-full rounded-md bg-zinc-100 px-3 py-2 text-sm font-medium text-zinc-900 transition hover:bg-white disabled:opacity-60"
           >
-            {busy ? "Signing in..." : "Sign In"}
+            {busy ? "Signing in..." : "Sign in"}
           </button>
         </form>
       </div>

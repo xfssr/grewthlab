@@ -5,7 +5,7 @@ export const siteDescription =
 
 export const homePageTitle = "איך למצוא לקוחות לעסק | How to Get More Clients";
 export const homePageDescription =
-  "איך למצוא לקוחות, למה העסק לא מוכר, למה צריך תוכן ולמה צריך פרסום? פתרונות למסעדות, בתי קפה, נדל\"ן, ביוטי ועסקים מקומיים עם תוכן, דפי נחיתה, WhatsApp ופרסום ממוקד. Learn how content, landing pages, WhatsApp and ads turn attention into sales for restaurants, cafes, real estate, beauty, and local businesses.";
+  "איך למצוא לקוחות, למה העסק לא מוכר, ולמה תוכן, דף נחיתה, WhatsApp ופרסום עובדים יחד. Learn how content, landing pages, WhatsApp, and ads turn attention into real sales for local businesses.";
 
 export const homePageKeywords = [
   "איך למצוא לקוחות לעסק",

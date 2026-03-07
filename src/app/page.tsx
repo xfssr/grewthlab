@@ -4,35 +4,47 @@ import { StructuredData } from "@/components/seo/StructuredData";
 import { LandingPage } from "@/components/landing/LandingPage";
 import { getSiteContent } from "@/core/site.content";
 import { seoProblems, seoProducts } from "@/lib/seo-data";
-import { absoluteUrl, homePageDescription, homePageKeywords, homePageTitle, siteName } from "@/lib/site";
+import { applyDbOverrides } from "@/lib/site-content-overrides";
+import { absoluteUrl, homePageDescription, homePageTitle, siteName } from "@/lib/site";
 
-export const metadata: Metadata = {
-  title: homePageTitle,
-  description: homePageDescription,
-  keywords: homePageKeywords,
-  alternates: {
-    canonical: absoluteUrl("/"),
-  },
-  openGraph: {
-    type: "website",
-    locale: "he_IL",
-    alternateLocale: ["en_US"],
-    url: absoluteUrl("/"),
-    siteName,
-    title: homePageTitle,
-    description: homePageDescription,
-    images: [absoluteUrl("/og-image.jpg")],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: homePageTitle,
-    description: homePageDescription,
-    images: [absoluteUrl("/og-image.jpg")],
-  },
-};
+export const dynamic = "force-dynamic";
 
-export default function HomePage() {
-  const content = getSiteContent("he");
+async function getResolvedHomeContent() {
+  return applyDbOverrides(getSiteContent("he"), "he");
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getResolvedHomeContent();
+  const title = content.hero.title || homePageTitle;
+  const description = content.hero.description || homePageDescription;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: absoluteUrl("/"),
+    },
+    openGraph: {
+      type: "website",
+      locale: "he_IL",
+      alternateLocale: ["en_US"],
+      url: absoluteUrl("/"),
+      siteName,
+      title,
+      description,
+      images: [absoluteUrl("/og-image.jpg")],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [absoluteUrl("/og-image.jpg")],
+    },
+  };
+}
+
+export default async function HomePage() {
+  const content = await getResolvedHomeContent();
 
   return (
     <>
@@ -42,7 +54,7 @@ export default function HomePage() {
           "@type": "WebSite",
           name: siteName,
           url: absoluteUrl("/"),
-          description: homePageDescription,
+          description: content.hero.description || homePageDescription,
           inLanguage: ["he", "en"],
         }}
       />

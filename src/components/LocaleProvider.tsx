@@ -22,17 +22,45 @@ function isLocale(value: string | null): value is Locale {
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocale] = useState<Locale>("he");
+  const [content, setContent] = useState<SiteContentViewModel>(() => getSiteContent("he"));
 
   useEffect(() => {
     const saved = window.localStorage.getItem(LOCALE_STORAGE_KEY);
     if (isLocale(saved)) {
-      // Keep post-mount locale restore to avoid hydration mismatch.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocale(saved);
     }
   }, []);
 
-  const content = useMemo(() => getSiteContent(locale), [locale]);
+  useEffect(() => {
+    // Keep immediate local fallback so UI stays responsive.
+    setContent(getSiteContent(locale));
+  }, [locale]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadServerContent() {
+      try {
+        const response = await fetch(`/api/site-content?locale=${locale}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = (await response.json()) as { content?: SiteContentViewModel };
+        if (payload.content) {
+          setContent(payload.content);
+        }
+      } catch {
+        // Keep local content fallback when API is unavailable.
+      }
+    }
+
+    void loadServerContent();
+    return () => controller.abort();
+  }, [locale]);
 
   useEffect(() => {
     window.localStorage.setItem(LOCALE_STORAGE_KEY, locale);

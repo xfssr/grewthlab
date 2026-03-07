@@ -1,0 +1,9 @@
+ALTER TABLE "pages"
+ADD COLUMN "hero_video" TEXT NOT NULL DEFAULT '';
+
+CREATE TABLE "site_content_overrides" (
+  "id" TEXT PRIMARY KEY,
+  "locale" TEXT NOT NULL UNIQUE,
+  "data" JSONB NOT NULL,
+  "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

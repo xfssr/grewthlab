@@ -83,13 +83,13 @@ export default function AdminSolutionsPage() {
 
       const payload = (await response.json()) as { error?: string };
       if (!response.ok) {
-        setMessage(payload.error || "Create failed.");
+        setMessage(payload.error || "Solution creation failed.");
         return;
       }
 
       setDraft(initialDraft);
       await refresh();
-      setMessage("Solution added.");
+      setMessage("Solution created.");
     } finally {
       setBusy(false);
     }
@@ -104,7 +104,7 @@ export default function AdminSolutionsPage() {
 
     const payload = (await response.json()) as { error?: string };
     if (!response.ok) {
-      setMessage(payload.error || "Update failed.");
+      setMessage(payload.error || "Solution update failed.");
       return;
     }
 
@@ -119,7 +119,7 @@ export default function AdminSolutionsPage() {
 
     const payload = (await response.json()) as { error?: string };
     if (!response.ok) {
-      setMessage(payload.error || "Delete failed.");
+      setMessage(payload.error || "Solution deletion failed.");
       return;
     }
 
@@ -131,10 +131,12 @@ export default function AdminSolutionsPage() {
     <div className="space-y-5">
       <header>
         <h1 className="text-2xl font-semibold">Solutions</h1>
-        <p className="mt-1 text-sm text-zinc-400">Manage service package cards.</p>
+        <p className="mt-1 text-sm text-zinc-400">
+          Solution cards sync to the public site. Uploaded images now render on the storefront cards as well.
+        </p>
       </header>
 
-      <AdminForm title="Add Solution">
+      <AdminForm title="Create Solution">
         <form onSubmit={createItem} className="grid gap-3 md:grid-cols-2">
           <input
             required
@@ -178,7 +180,7 @@ export default function AdminSolutionsPage() {
                 }
               }}
             />
-            {uploading ? "Uploading..." : "Upload Image"}
+            {uploading ? "Uploading image..." : "Upload image"}
           </label>
 
           <button
@@ -186,7 +188,7 @@ export default function AdminSolutionsPage() {
             disabled={busy}
             className="md:col-span-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
           >
-            {busy ? "Saving..." : "Add Solution"}
+            {busy ? "Saving..." : "Create solution"}
           </button>
         </form>
       </AdminForm>
@@ -230,6 +232,7 @@ export default function AdminSolutionsPage() {
                   setItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, imageUrl: event.target.value } : row)))
                 }
                 className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Image URL"
               />
               <div className="md:col-span-2 flex gap-2">
                 <button
@@ -258,4 +261,3 @@ export default function AdminSolutionsPage() {
     </div>
   );
 }
-

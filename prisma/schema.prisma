@@ -23,6 +23,7 @@ model Page {
   title     String   @map("title")
   subtitle  String   @map("subtitle")
   heroImage String   @map("hero_image")
+  heroVideo String   @default("") @map("hero_video")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("pages")
@@ -48,4 +49,13 @@ model Solution {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("solutions")
+}
+
+model SiteContentOverride {
+  id        String   @id @default(cuid()) @map("id")
+  locale    String   @unique @map("locale")
+  data      Json     @map("data")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_content_overrides")
 }

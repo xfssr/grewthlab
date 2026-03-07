@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { getAdminSession } from "@/app/api/_auth";
-import { uploadImageToBlob } from "@/lib/blob";
+import { uploadAssetToBlob } from "@/lib/blob";
 
 export const runtime = "nodejs";
 
@@ -24,11 +24,10 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const url = await uploadImageToBlob(file);
+    const url = await uploadAssetToBlob(file);
     return NextResponse.json({ url });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Upload failed.";
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
-

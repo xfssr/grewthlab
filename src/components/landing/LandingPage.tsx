@@ -93,7 +93,7 @@ export function LandingPage() {
       ),
     [locale, selectedNiche, selectedPackageId, selectedDeliveryMode, selectedAddons, rules],
   );
-  const sharedVideoSrc = "/webherobackground.mp4";
+  const sharedVideoSrc = content.hero.backgroundVideoSrc || "";
 
   const handleSelectPackage = (packageId: PackageId) => {
     setSelectedPackageId(packageId);
@@ -221,7 +221,7 @@ export function LandingPage() {
               primaryCta={content.hero.primaryCta}
               secondaryCta={content.hero.secondaryCta}
               backgroundImageSrc={content.hero.backgroundImageSrc}
-              backgroundVideoSrc={sharedVideoSrc}
+              backgroundVideoSrc={sharedVideoSrc || undefined}
               useSharedBackground={Boolean(sharedVideoSrc)}
               isRtl={content.isRtl}
               stats={content.pricing.stats}
@@ -232,7 +232,7 @@ export function LandingPage() {
               title={content.process.title}
               steps={content.process.steps}
               isRtl={content.isRtl}
-              backgroundVideoSrc={sharedVideoSrc}
+              backgroundVideoSrc={sharedVideoSrc || undefined}
               useSharedBackground={Boolean(sharedVideoSrc)}
             />
           </div>

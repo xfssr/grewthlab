@@ -31,7 +31,7 @@ export default function AdminGalleryPage() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [draft, setDraft] = useState<GalleryDraft>(initialDraft);
   const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [uploadingField, setUploadingField] = useState<"imageUrl" | "videoUrl" | null>(null);
   const [message, setMessage] = useState("");
 
   async function refresh() {
@@ -44,8 +44,8 @@ export default function AdminGalleryPage() {
     void refresh();
   }, []);
 
-  async function uploadImage(file: File) {
-    setUploading(true);
+  async function uploadAsset(file: File, field: "imageUrl" | "videoUrl") {
+    setUploadingField(field);
     setMessage("");
     try {
       const body = new FormData();
@@ -55,12 +55,12 @@ export default function AdminGalleryPage() {
       if (!response.ok || !payload.url) {
         throw new Error(payload.error || "Upload failed.");
       }
-      setDraft((prev) => ({ ...prev, imageUrl: payload.url || "" }));
+      setDraft((prev) => ({ ...prev, [field]: payload.url || "" }));
     } catch (error) {
       const text = error instanceof Error ? error.message : "Upload failed.";
       setMessage(text);
     } finally {
-      setUploading(false);
+      setUploadingField(null);
     }
   }
 
@@ -78,13 +78,13 @@ export default function AdminGalleryPage() {
 
       const payload = (await response.json()) as { error?: string };
       if (!response.ok) {
-        setMessage(payload.error || "Create failed.");
+        setMessage(payload.error || "Gallery item creation failed.");
         return;
       }
 
       setDraft(initialDraft);
       await refresh();
-      setMessage("Item added.");
+      setMessage("Gallery item created.");
     } finally {
       setBusy(false);
     }
@@ -99,11 +99,11 @@ export default function AdminGalleryPage() {
 
     const payload = (await response.json()) as { error?: string };
     if (!response.ok) {
-      setMessage(payload.error || "Update failed.");
+      setMessage(payload.error || "Gallery item update failed.");
       return;
     }
 
-    setMessage("Item updated.");
+    setMessage("Gallery item updated.");
     await refresh();
   }
 
@@ -114,22 +114,24 @@ export default function AdminGalleryPage() {
 
     const payload = (await response.json()) as { error?: string };
     if (!response.ok) {
-      setMessage(payload.error || "Delete failed.");
+      setMessage(payload.error || "Gallery item deletion failed.");
       return;
     }
 
     await refresh();
-    setMessage("Item deleted.");
+    setMessage("Gallery item deleted.");
   }
 
   return (
     <div className="space-y-5">
       <header>
         <h1 className="text-2xl font-semibold">Gallery</h1>
-        <p className="mt-1 text-sm text-zinc-400">Add, edit and remove gallery items.</p>
+        <p className="mt-1 text-sm text-zinc-400">
+          Gallery items render directly in the public showcase section. Upload either an image, a video, or both.
+        </p>
       </header>
 
-      <AdminForm title="Add Item">
+      <AdminForm title="Create Gallery Item">
         <form onSubmit={createItem} className="grid gap-3 md:grid-cols-2">
           <input
             required
@@ -142,14 +144,14 @@ export default function AdminGalleryPage() {
             value={draft.videoUrl}
             onChange={(event) => setDraft((prev) => ({ ...prev, videoUrl: event.target.value }))}
             className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Video URL (optional)"
+            placeholder="Video URL"
           />
           <textarea
             value={draft.description}
             onChange={(event) => setDraft((prev) => ({ ...prev, description: event.target.value }))}
             rows={3}
             className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Description"
+            placeholder="Description / alt text"
           />
           <input
             value={draft.imageUrl}
@@ -157,32 +159,49 @@ export default function AdminGalleryPage() {
             className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
             placeholder="Image URL"
           />
-          <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  void uploadImage(file);
-                }
-              }}
-            />
-            {uploading ? "Uploading..." : "Upload Image"}
-          </label>
+          <div className="flex flex-wrap gap-2">
+            <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void uploadAsset(file, "imageUrl");
+                  }
+                }}
+              />
+              {uploadingField === "imageUrl" ? "Uploading image..." : "Upload image"}
+            </label>
+
+            <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+              <input
+                type="file"
+                accept="video/*"
+                className="hidden"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) {
+                    void uploadAsset(file, "videoUrl");
+                  }
+                }}
+              />
+              {uploadingField === "videoUrl" ? "Uploading video..." : "Upload video"}
+            </label>
+          </div>
 
           <button
             type="submit"
             disabled={busy}
             className="md:col-span-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
           >
-            {busy ? "Saving..." : "Add Item"}
+            {busy ? "Saving..." : "Create item"}
           </button>
         </form>
       </AdminForm>
 
-      <AdminForm title="Manage Items">
+      <AdminForm title="Manage Gallery Items">
         <div className="space-y-3">
           {items.map((item) => (
             <article key={item.id} className="grid gap-2 rounded-md border border-white/10 p-3 md:grid-cols-2">
@@ -199,6 +218,7 @@ export default function AdminGalleryPage() {
                   setItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, videoUrl: event.target.value } : row)))
                 }
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Video URL"
               />
               <textarea
                 value={item.description}
@@ -216,6 +236,7 @@ export default function AdminGalleryPage() {
                   setItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, imageUrl: event.target.value } : row)))
                 }
                 className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Image URL"
               />
               <div className="md:col-span-2 flex gap-2">
                 <button
@@ -236,7 +257,7 @@ export default function AdminGalleryPage() {
             </article>
           ))}
 
-          {items.length === 0 ? <p className="text-sm text-zinc-400">No items yet.</p> : null}
+          {items.length === 0 ? <p className="text-sm text-zinc-400">No gallery items yet.</p> : null}
         </div>
       </AdminForm>
 
@@ -244,4 +265,3 @@ export default function AdminGalleryPage() {
     </div>
   );
 }
-

@@ -116,6 +116,7 @@ export type SolutionCardViewModel = {
   priceLabel: string;
   actionLabel: string;
   tone: Tone;
+  imageSrc?: string;
 };
 
 export type SolutionDiagnosisViewModel = {
@@ -143,6 +144,7 @@ export type SiteContentViewModel = {
     primaryCta: string;
     secondaryCta: string;
     backgroundImageSrc: string;
+    backgroundVideoSrc?: string;
   };
   industries: Array<{ title: string; caption: string; tone: Tone; imageSrc: string; imageAlt: string }>;
   industryEyebrow: string;

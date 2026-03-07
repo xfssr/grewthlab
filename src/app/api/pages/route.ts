@@ -11,6 +11,7 @@ const upsertPageSchema = z.object({
   title: z.string().trim().min(1).max(180),
   subtitle: z.string().trim().max(400).default(""),
   heroImage: z.string().trim().max(1024).default(""),
+  heroVideo: z.string().trim().max(1024).default(""),
 });
 
 export async function GET(request: NextRequest) {
@@ -60,9 +61,9 @@ export async function PUT(request: NextRequest) {
       title: parsed.data.title,
       subtitle: parsed.data.subtitle,
       heroImage: parsed.data.heroImage,
+      heroVideo: parsed.data.heroVideo,
     },
   });
 
   return NextResponse.json({ page });
 }
-

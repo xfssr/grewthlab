@@ -87,7 +87,7 @@ export async function POST(request: NextRequest) {
       return response;
     }
   } catch {
-    // Fallback below handles local login when database is not configured yet.
+    // Fallback below handles local login when the database is not configured yet.
   }
 
   if (parsed.data.password === FALLBACK_ADMIN_PASSWORD) {
@@ -110,7 +110,7 @@ export async function POST(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.json({ error: "Invalid credentials." }, { status: 401 });
+  return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
 }
 
 export async function DELETE() {
