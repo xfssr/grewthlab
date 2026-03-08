@@ -73,6 +73,8 @@ export type MediaAsset = {
 
 export type LocalizedMediaAsset = {
   id: string;
+  title: string;
+  tier: string;
   type: "image" | "video";
   src: string;
   poster?: string;

@@ -87,7 +87,16 @@ export function GallerySection({ title, description, detailsCta, cardNote, items
     : "Scroll or swipe to browse content";
   const autoplayLabel = isHebrewUi ? "\u05e0\u05d9\u05d2\u05d5\u05df \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9" : "Autoplay";
 
-  const galleryItems = useMemo(() => items.slice(0, 10), [items]);
+  const galleryItems = useMemo(() => {
+    const grouped = new Map<string, LocalizedMediaAsset>();
+    for (const item of items) {
+      const key = item.tier.trim() || item.title.trim() || item.id;
+      if (!grouped.has(key)) {
+        grouped.set(key, item);
+      }
+    }
+    return Array.from(grouped.values()).slice(0, 10);
+  }, [items]);
   const reduceMotion = useReducedMotionPreference();
   const reveal = revealWhileInView(reduceMotion, 0.2);
 
@@ -386,7 +395,7 @@ export function GallerySection({ title, description, detailsCta, cardNote, items
                     )}
                   </div>
                   <div className="px-4 pt-3">
-                    <p className="line-clamp-2 text-sm text-text-muted">{item.alt}</p>
+                    <p className="line-clamp-2 text-sm text-text-muted">{item.tier || item.title || item.alt}</p>
                   </div>
                 </button>
                 <div className="px-4 pb-4 pt-2">

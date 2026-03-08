@@ -832,6 +832,8 @@ function extractPhoneDigits(messages: MessageSchema): string {
 function mapMedia(locale: Locale): LocalizedMediaAsset[] {
   return mediaDemo.map((item) => ({
     id: item.id,
+    title: locale === "he" ? item.altHe : item.altEn,
+    tier: item.tags[0] || item.id,
     type: item.type,
     src: item.src,
     poster: item.poster,
@@ -982,32 +984,6 @@ const moduleWorkflowSteps: Record<Locale, string[]> = {
   ],
 };
 
-function stableHash(value: string): number {
-  let hash = 0;
-  for (let index = 0; index < value.length; index += 1) {
-    hash = (hash * 31 + value.charCodeAt(index)) >>> 0;
-  }
-  return hash;
-}
-
-function dedupeMediaById(items: LocalizedMediaAsset[]): LocalizedMediaAsset[] {
-  const seen = new Set<string>();
-  const unique: LocalizedMediaAsset[] = [];
-  for (const item of items) {
-    if (seen.has(item.id)) {
-      continue;
-    }
-    seen.add(item.id);
-    unique.push(item);
-  }
-  return unique;
-}
-
-function sharedTagScore(baseTags: string[], candidateTags: string[]): number {
-  const tagSet = new Set(baseTags.map((tag) => tag.toLowerCase()));
-  return candidateTags.reduce((score, tag) => (tagSet.has(tag.toLowerCase()) ? score + 1 : score), 0);
-}
-
 function detectTheme(tags: string[]): ContentTheme {
   const lowered = tags.map((tag) => tag.toLowerCase());
 
@@ -1030,33 +1006,6 @@ function detectTheme(tags: string[]): ContentTheme {
   return "general";
 }
 
-function pickMedia(
-  galleryItem: LocalizedMediaAsset,
-  allMedia: LocalizedMediaAsset[],
-  mediaType: LocalizedMediaAsset["type"],
-  seed: number,
-): LocalizedMediaAsset | null {
-  const related = allMedia
-    .filter((candidate) => candidate.id !== galleryItem.id && candidate.type === mediaType)
-    .map((candidate) => ({
-      item: candidate,
-      score: sharedTagScore(galleryItem.tags, candidate.tags),
-    }))
-    .sort((left, right) => right.score - left.score);
-
-  const boosted = related.filter((entry) => entry.score > 0).map((entry) => entry.item);
-  const globalPool = related.map((entry) => entry.item);
-  const sourcePool = dedupeMediaById(
-    [galleryItem, ...boosted, ...globalPool].filter((item) => item.type === mediaType),
-  );
-
-  if (!sourcePool.length) {
-    return null;
-  }
-
-  return sourcePool[seed % sourcePool.length];
-}
-
 function trimTopic(value: string, maxLength = 82): string {
   const compact = value.trim().replace(/[.!?]\s*$/, "");
   if (compact.length <= maxLength) {
@@ -1067,23 +1016,40 @@ function trimTopic(value: string, maxLength = 82): string {
 
 export function buildContentArchiveModules(locale: Locale, galleryItems: LocalizedMediaAsset[]): ContentArchiveModule[] {
   const baseItems = mapContentArchive(locale);
+  const groupedItems = new Map<string, LocalizedMediaAsset[]>();
 
-  return galleryItems.map((galleryItem, moduleIndex) => {
-    const topic = trimTopic(galleryItem.alt);
-    const theme = detectTheme(galleryItem.tags);
+  for (const item of galleryItems) {
+    const key = item.tier.trim() || item.title.trim() || item.id;
+    const current = groupedItems.get(key) ?? [];
+    current.push(item);
+    groupedItems.set(key, current);
+  }
+
+  return Array.from(groupedItems.entries()).map(([, group], moduleIndex) => {
+    const primaryItem = group[0];
+    const topic = trimTopic(primaryItem.tier || primaryItem.title || primaryItem.alt);
+    const theme = detectTheme(primaryItem.tags);
     const themeContext = themeCopy[locale][theme];
-    const moduleSeed = stableHash(galleryItem.id);
-    const moduleImageFallback = pickMedia(galleryItem, galleryItems, "image", moduleSeed) ?? galleryItem;
-    const moduleVideoFallback = pickMedia(galleryItem, galleryItems, "video", moduleSeed + 1);
+    const categoryTag =
+      primaryItem.tags.find((tag) => {
+        const lowered = tag.toLowerCase();
+        return lowered !== "admin" && lowered !== "gallery";
+      }) || "";
+
+    const relatedPool = group.filter((item) =>
+      categoryTag ? item.tags.some((tag) => tag.toLowerCase() === categoryTag.toLowerCase()) : true,
+    );
+    const normalizedPool = relatedPool.length > 0 ? relatedPool : [primaryItem];
+    const videoPool = normalizedPool.filter((item) => item.type === "video");
+    const imagePool = normalizedPool.filter((item) => item.type === "image");
+    const moduleImageFallback = imagePool[0] || normalizedPool[0] || primaryItem;
+    const moduleVideoFallback = videoPool[0] || null;
     const description =
       locale === "he"
         ? `${themeContext.modulePrefix}: ${topic}. ${themeContext.focus}.`
         : `${themeContext.modulePrefix}: ${topic}. ${themeContext.focus}.`;
 
     const items = baseItems.map((baseItem, itemIndex) => {
-      const itemSeed = stableHash(`${galleryItem.id}-${baseItem.id}-${itemIndex + 1}`);
-      const chosenImage = pickMedia(galleryItem, galleryItems, "image", itemSeed + moduleSeed);
-      const chosenVideo = pickMedia(galleryItem, galleryItems, "video", itemSeed + moduleSeed + 17);
       const angle = itemAngleCopy[locale][itemIndex % itemAngleCopy[locale].length];
       const title = locale === "he" ? `${themeContext.label} • ${angle}` : `${angle} • ${themeContext.label}`;
       const caption =
@@ -1091,32 +1057,31 @@ export function buildContentArchiveModules(locale: Locale, galleryItems: Localiz
           ? `${themeContext.focus}. ${baseItem.caption} ${themeContext.cta}.`
           : `${themeContext.focus}. ${baseItem.caption} ${themeContext.cta}.`;
 
-      if (baseItem.mediaType === "video") {
-        return {
-          ...baseItem,
-          id: `${galleryItem.id}-${baseItem.id}-${itemIndex + 1}`,
-          src: chosenVideo?.src ?? moduleVideoFallback?.src ?? baseItem.src,
-          poster: chosenVideo?.poster || chosenImage?.src || moduleImageFallback.src || baseItem.poster,
-          title,
-          caption,
-          alt: locale === "he" ? `${topic} | וידאו` : `${topic} | video`,
-        };
-      }
-
+      const targetPool =
+        baseItem.mediaType === "video"
+          ? (videoPool.length > 0 ? videoPool : imagePool.length > 0 ? imagePool : normalizedPool)
+          : (imagePool.length > 0 ? imagePool : videoPool.length > 0 ? videoPool : normalizedPool);
+      const selectedMedia = targetPool[itemIndex % targetPool.length] || primaryItem;
+      const mediaIsVideo = selectedMedia.type === "video";
       return {
         ...baseItem,
-        id: `${galleryItem.id}-${baseItem.id}-${itemIndex + 1}`,
-        src: chosenImage?.src ?? moduleImageFallback.src ?? baseItem.src,
-        poster: chosenImage?.src ?? moduleImageFallback.src ?? baseItem.poster,
+        id: `${primaryItem.id}-${baseItem.id}-${itemIndex + 1}`,
+        format: mediaIsVideo ? "reel" : "photo",
+        mediaType: mediaIsVideo ? "video" : "image",
+        src: selectedMedia.src,
+        poster: mediaIsVideo
+          ? (selectedMedia.poster || moduleImageFallback.src || moduleVideoFallback?.poster || moduleVideoFallback?.src)
+          : (selectedMedia.src || moduleImageFallback.src),
+        duration: mediaIsVideo ? baseItem.duration : (locale === "he" ? "תמונה" : "Photo"),
         title,
         caption,
-        alt: locale === "he" ? `${topic} | תמונה` : `${topic} | image`,
+        alt: locale === "he" ? `${topic} | ${mediaIsVideo ? "וידאו" : "תמונה"}` : `${topic} | ${mediaIsVideo ? "video" : "image"}`,
       };
     });
 
     return {
-      id: `module-${moduleIndex + 1}-${galleryItem.id}`,
-      sourceCardId: galleryItem.id,
+      id: `module-${moduleIndex + 1}-${primaryItem.id}`,
+      sourceCardId: primaryItem.id,
       title: topic,
       description,
       workflowSteps: moduleWorkflowSteps[locale],

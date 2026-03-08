@@ -5,6 +5,7 @@ import { getCalculatorRules, getSiteContent } from "@/core/site.content";
 import { buildWhatsAppMessage } from "@/core/pricing/whatsapp-template";
 import { calculateQuote, QuoteEngineError } from "@/core/pricing/quote-engine";
 import { ADDON_IDS, DELIVERY_MODES, LOCALES, NICHE_IDS, PACKAGE_IDS } from "@/core/site.types";
+import { applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
 
 export const runtime = "nodejs";
 
@@ -42,7 +43,8 @@ export async function POST(request: NextRequest) {
 
   const input = parsed.data;
   const content = getSiteContent(input.locale);
-  const rules = getCalculatorRules();
+  const pricingSettings = await getPricingSettings();
+  const rules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
 
   try {
     const quote = calculateQuote(input, rules);

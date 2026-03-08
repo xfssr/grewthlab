@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
   const product = seoProductBySlug.get(slug);
-  const card = product ? getSeoProductCard(product.packageId) : null;
+  const card = product ? await getSeoProductCard(product.packageId) : null;
 
   if (!product || !card) {
     return {};
@@ -58,8 +58,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const card = getSeoProductCard(product.packageId);
-  const basePrice = getSeoProductPrice(product.packageId);
+  const [card, basePrice] = await Promise.all([
+    getSeoProductCard(product.packageId),
+    getSeoProductPrice(product.packageId),
+  ]);
 
   if (!card) {
     notFound();

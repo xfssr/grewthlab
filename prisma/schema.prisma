@@ -43,6 +43,7 @@ model GalleryItem {
 
 model Solution {
   id          String   @id @default(cuid()) @map("id")
+  slug        String   @unique @map("slug")
   title       String   @map("title")
   description String   @default("") @map("description")
   price       Decimal  @db.Decimal(10, 2) @map("price")
@@ -59,4 +60,12 @@ model SiteContentOverride {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("site_content_overrides")
+}
+
+model PricingSettings {
+  id              String   @id @default("default") @map("id")
+  discountPercent Int      @default(0) @map("discount_percent")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@map("pricing_settings")
 }

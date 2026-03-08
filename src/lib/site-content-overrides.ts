@@ -1,7 +1,8 @@
-import { buildContentArchiveModules } from "@/core/site.content";
-import type { Locale, LocalizedMediaAsset, SiteContentViewModel } from "@/core/site.types";
+import { buildContentArchiveModules, getCalculatorRules } from "@/core/site.content";
+import type { Locale, LocalizedMediaAsset, PackageId, SiteContentViewModel } from "@/core/site.types";
 import { PACKAGE_IDS } from "@/core/site.types";
 import { prisma } from "@/lib/db";
+import { applyDiscount, applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
 
 type SiteContentOverrideData = Partial<SiteContentViewModel>;
 
@@ -109,6 +110,8 @@ function mapGalleryItems(
 
     mapped.push({
       id: row.id,
+      title: row.title?.trim() || alt,
+      tier: normalizedTier || row.title?.trim() || row.id,
       type: hasVideo ? "video" : "image",
       src: mediaSrc,
       poster: hasVideo ? row.imageUrl?.trim() || undefined : undefined,
@@ -158,7 +161,7 @@ export async function saveSiteContentOverride(locale: Locale, data: unknown): Pr
 
 export async function applyDbOverrides(content: SiteContentViewModel, locale: Locale): Promise<SiteContentViewModel> {
   try {
-    const [contentOverride, page, galleryRows, solutionRows] = await Promise.all([
+    const [contentOverride, page, galleryRows, solutionRows, pricingSettings] = await Promise.all([
       getSiteContentOverride(locale),
       prisma.page.findUnique({ where: { slug: "home" } }),
       prisma.galleryItem.findMany({
@@ -175,15 +178,20 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
       prisma.solution.findMany({
         orderBy: { createdAt: "asc" },
         select: {
+          slug: true,
           title: true,
           description: true,
           price: true,
           imageUrl: true,
         },
       }),
+      getPricingSettings(),
     ]);
 
     const next = structuredClone(content) as SiteContentViewModel;
+    const discountedRules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
+    const discountedPackagePrices = new Map(discountedRules.packages.map((item) => [item.id, item.basePrice]));
+    const discountedAddonPrices = new Map(discountedRules.addons.map((item) => [item.id, item.price]));
 
     if (page) {
       if (page.title?.trim()) {
@@ -211,35 +219,62 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
 
     withLocalizedCopy.contentArchive.modules = buildContentArchiveModules(locale, withLocalizedCopy.gallery.items);
 
-    if (solutionRows.length > 0) {
-      const cardById = new Map(withLocalizedCopy.solutions.cards.map((card) => [card.id, card]));
-      const updatedCards = PACKAGE_IDS.map((packageId, index) => {
-        const baseCard = cardById.get(packageId);
-        const row = solutionRows[index];
-        if (!baseCard || !row) {
-          return baseCard;
-        }
-
-        const description = row.description?.trim();
-        return {
-          ...baseCard,
-          title: row.title?.trim() || baseCard.title,
-          problem: description || baseCard.problem,
-          whatWeDo: description || baseCard.whatWeDo,
-          outcome: description || baseCard.outcome,
-          priceLabel: formatPriceLabel(Number(row.price), locale),
-          imageSrc: row.imageUrl?.trim() || baseCard.imageSrc,
-        };
-      }).filter((item): item is SiteContentViewModel["solutions"]["cards"][number] => Boolean(item));
-
-      if (updatedCards.length > 0) {
-        withLocalizedCopy.solutions.cards = updatedCards;
-        withLocalizedCopy.pricing.packageOptions = updatedCards.map((item) => ({
-          id: item.id,
-          label: item.title,
-        }));
+    const rowBySlug = new Map(solutionRows.map((row) => [row.slug, row]));
+    const cardById = new Map(withLocalizedCopy.solutions.cards.map((card) => [card.id, card]));
+    const updatedCards = PACKAGE_IDS.map((packageId) => {
+      const baseCard = cardById.get(packageId);
+      if (!baseCard) {
+        return null;
       }
+
+      const row = rowBySlug.get(packageId);
+      const description = row?.description?.trim();
+      const displayPrice = row
+        ? applyDiscount(Number(row.price), pricingSettings.discountPercent)
+        : (discountedPackagePrices.get(packageId) ?? 0);
+
+      return {
+        ...baseCard,
+        title: row?.title?.trim() || baseCard.title,
+        problem: description || baseCard.problem,
+        whatWeDo: description || baseCard.whatWeDo,
+        outcome: description || baseCard.outcome,
+        priceLabel: formatPriceLabel(displayPrice, locale),
+        imageSrc: row?.imageUrl?.trim() || baseCard.imageSrc,
+      };
+    }).filter((item): item is SiteContentViewModel["solutions"]["cards"][number] => Boolean(item));
+
+    if (updatedCards.length > 0) {
+      withLocalizedCopy.solutions.cards = updatedCards;
+      withLocalizedCopy.pricing.packageOptions = updatedCards.map((item) => ({
+        id: item.id,
+        label: item.title,
+      }));
     }
+
+    withLocalizedCopy.pricing.addonOptions = withLocalizedCopy.pricing.addonOptions.map((item) => ({
+      ...item,
+      priceLabel: formatPriceLabel(discountedAddonPrices.get(item.id) ?? 0, locale),
+    }));
+
+    const statsPackageOrder: PackageId[] = [
+      "qr-menu-mini-site",
+      "content-whatsapp-funnel",
+      "business-launch-setup",
+    ];
+    withLocalizedCopy.pricing.stats = withLocalizedCopy.pricing.stats.map((item, index) => {
+      if (index < statsPackageOrder.length) {
+        return {
+          ...item,
+          value: formatPriceLabel(discountedPackagePrices.get(statsPackageOrder[index]) ?? 0, locale),
+        };
+      }
+
+      return {
+        ...item,
+        value: formatPriceLabel(discountedAddonPrices.get("extra_production_day") ?? 0, locale),
+      };
+    });
 
     return withLocalizedCopy;
   } catch {

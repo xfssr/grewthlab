@@ -1,6 +1,8 @@
 import { getCalculatorRules, getSiteContent } from "@/core/site.content";
 import type { PackageId } from "@/core/site.types";
+import { applyDbOverrides } from "@/lib/site-content-overrides";
 import { absoluteUrl } from "@/lib/site";
+import { applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
 
 export type SeoProductPage = {
   slug: string;
@@ -302,13 +304,14 @@ export const seoProductBySlug = new Map(seoProducts.map((item) => [item.slug, it
 export const seoProblemBySlug = new Map(seoProblems.map((item) => [item.slug, item]));
 export const productSlugByPackageId = new Map(seoProducts.map((item) => [item.packageId, item.slug]));
 
-export function getSeoProductCard(packageId: PackageId) {
-  const content = getSiteContent("he");
+export async function getSeoProductCard(packageId: PackageId) {
+  const content = await applyDbOverrides(getSiteContent("he"), "he");
   return content.solutions.cards.find((item) => item.id === packageId) ?? null;
 }
 
-export function getSeoProductPrice(packageId: PackageId): number | null {
-  const rules = getCalculatorRules();
+export async function getSeoProductPrice(packageId: PackageId): Promise<number | null> {
+  const pricingSettings = await getPricingSettings();
+  const rules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
   const match = rules.packages.find((item) => item.id === packageId);
   return match?.basePrice ?? null;
 }

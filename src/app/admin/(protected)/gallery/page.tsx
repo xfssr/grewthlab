@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @next/next/no-img-element */
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
@@ -46,14 +47,29 @@ export default function AdminGalleryPage() {
   const [editingUploadField, setEditingUploadField] = useState<UploadTarget | null>(null);
   const [message, setMessage] = useState("");
 
+  useEffect(() => {
+    void refresh();
+  }, []);
+
   const tierOptions = useMemo(() => {
     return Array.from(
-      new Set(
-        items
-          .map((item) => item.tier.trim() || item.title.trim())
-          .filter(Boolean),
-      ),
+      new Set(items.map((item) => item.tier.trim() || item.title.trim()).filter(Boolean)),
     ).sort((a, b) => a.localeCompare(b));
+  }, [items]);
+
+  const groupedItems = useMemo(() => {
+    const groups = new Map<string, GalleryItem[]>();
+    for (const item of items) {
+      const key = item.tier.trim() || item.title.trim() || item.id;
+      const current = groups.get(key) ?? [];
+      current.push(item);
+      groups.set(key, current);
+    }
+
+    return Array.from(groups.entries()).map(([tier, mediaItems]) => ({
+      tier,
+      mediaItems,
+    }));
   }, [items]);
 
   async function refresh() {
@@ -61,10 +77,6 @@ export default function AdminGalleryPage() {
     const payload = (await response.json()) as { items: GalleryItem[] };
     setItems(payload.items || []);
   }
-
-  useEffect(() => {
-    void refresh();
-  }, []);
 
   async function uploadAsset(file: File) {
     const body = new FormData();
@@ -94,6 +106,7 @@ export default function AdminGalleryPage() {
     if (!editing) {
       return;
     }
+
     setEditingUploadField(field);
     setMessage("");
     try {
@@ -122,9 +135,10 @@ export default function AdminGalleryPage() {
         setMessage(payload.error || "Gallery item creation failed.");
         return;
       }
+
       setDraft(initialDraft);
       await refresh();
-      setMessage("Gallery item created.");
+      setMessage("Media item created.");
     } finally {
       setBusy(false);
     }
@@ -148,7 +162,7 @@ export default function AdminGalleryPage() {
 
     setEditing(null);
     await refresh();
-    setMessage("Gallery item updated.");
+    setMessage("Media item updated.");
   }
 
   async function deleteItem(id: string) {
@@ -158,11 +172,24 @@ export default function AdminGalleryPage() {
       setMessage(payload.error || "Gallery item deletion failed.");
       return;
     }
+
     if (editing?.id === id) {
       setEditing(null);
     }
+
     await refresh();
-    setMessage("Gallery item deleted.");
+    setMessage("Media item deleted.");
+  }
+
+  function startAddToTier(tier: string) {
+    setDraft({
+      title: "",
+      tier,
+      description: "",
+      imageUrl: "",
+      videoUrl: "",
+    });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const draftMediaMode = getMediaMode(draft);
@@ -173,39 +200,36 @@ export default function AdminGalleryPage() {
       <header>
         <h1 className="text-2xl font-semibold">Gallery</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Редактируйте карточки из עבודות נבחרות через модалку: фото/видео 9:16 и категория tier.
+          Manage modal preview media by card category. One `tier` equals one card on the site, and each card can contain
+          multiple photos and videos.
         </p>
       </header>
 
-      <AdminForm title="Create Gallery Item">
+      <AdminForm title="Add Media Item">
         <form onSubmit={createItem} className="grid gap-3 md:grid-cols-2">
           <input
             required
             value={draft.title}
             onChange={(event) => setDraft((prev) => ({ ...prev, title: event.target.value }))}
             className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Card title"
+            placeholder="Media title"
           />
-          <div>
-            <input
-              value={draft.tier}
-              onChange={(event) => setDraft((prev) => ({ ...prev, tier: event.target.value }))}
-              list="tier-options"
-              className="w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-              placeholder="Tier category"
-            />
-          </div>
+          <input
+            value={draft.tier}
+            onChange={(event) => setDraft((prev) => ({ ...prev, tier: event.target.value }))}
+            list="tier-options"
+            className="w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+            placeholder="Card category (tier)"
+          />
           <select
             value={draftMediaMode}
             onChange={(event) =>
-              setDraft((prev) =>
-                event.target.value === "photo" ? { ...prev, videoUrl: "" } : prev,
-              )
+              setDraft((prev) => (event.target.value === "photo" ? { ...prev, videoUrl: "" } : prev))
             }
             className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
           >
-            <option value="photo">Фото</option>
-            <option value="video">Видео</option>
+            <option value="photo">Photo</option>
+            <option value="video">Video</option>
           </select>
           <input
             value={draft.videoUrl}
@@ -217,7 +241,7 @@ export default function AdminGalleryPage() {
             value={draft.imageUrl}
             onChange={(event) => setDraft((prev) => ({ ...prev, imageUrl: event.target.value }))}
             className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Image URL (9:16 poster/photo)"
+            placeholder="Image URL or video poster"
           />
           <textarea
             value={draft.description}
@@ -261,37 +285,62 @@ export default function AdminGalleryPage() {
             disabled={busy}
             className="md:col-span-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
           >
-            {busy ? "Saving..." : "Create item"}
+            {busy ? "Saving..." : "Add media"}
           </button>
         </form>
       </AdminForm>
 
-      <AdminForm title="Manage Gallery Items">
-        <div className="space-y-3">
-          {items.map((item) => (
-            <article key={item.id} className="rounded-md border border-white/10 p-3">
+      <AdminForm title="Manage Gallery Cards">
+        <div className="space-y-4">
+          {groupedItems.map((group) => (
+            <article key={group.tier} className="rounded-xl border border-white/10 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-sm font-medium text-zinc-100">{item.title}</p>
-                  <p className="text-xs text-zinc-400">Tier: {item.tier || item.title}</p>
-                  <p className="text-xs text-zinc-500">{item.videoUrl ? "Видео 9:16" : "Фото 9:16"}</p>
+                  <p className="text-sm font-medium text-zinc-100">{group.tier}</p>
+                  <p className="text-xs text-zinc-400">{group.mediaItems.length} media items in this site card</p>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setEditing(item)}
-                    className="rounded-md border border-white/20 px-3 py-1.5 text-sm hover:border-white/35"
-                  >
-                    Edit modal
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => void deleteItem(item.id)}
-                    className="rounded-md border border-rose-300/40 px-3 py-1.5 text-sm text-rose-200 hover:border-rose-300/60"
-                  >
-                    Delete
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => startAddToTier(group.tier)}
+                  className="rounded-md border border-white/20 px-3 py-1.5 text-sm hover:border-white/35"
+                >
+                  Add media to this card
+                </button>
+              </div>
+
+              <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {group.mediaItems.map((item) => (
+                  <div key={item.id} className="rounded-lg border border-white/10 bg-black/20 p-3">
+                    <div className="mb-3 aspect-[9/16] overflow-hidden rounded-lg bg-black/30">
+                      {item.videoUrl ? (
+                        <video src={item.videoUrl} poster={item.imageUrl || undefined} className="h-full w-full object-cover" />
+                      ) : item.imageUrl ? (
+                        <img src={item.imageUrl} alt={item.title} className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="flex h-full items-center justify-center text-xs text-zinc-500">No preview</div>
+                      )}
+                    </div>
+                    <p className="text-sm text-zinc-100">{item.title}</p>
+                    <p className="mt-1 line-clamp-2 text-xs text-zinc-400">{item.description || item.title}</p>
+                    <p className="mt-1 text-xs text-zinc-500">{item.videoUrl ? "Video 9:16" : "Photo 9:16"}</p>
+                    <div className="mt-3 flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setEditing(item)}
+                        className="rounded-md border border-white/20 px-3 py-1.5 text-sm hover:border-white/35"
+                      >
+                        Edit media
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => void deleteItem(item.id)}
+                        className="rounded-md border border-rose-300/40 px-3 py-1.5 text-sm text-rose-200 hover:border-rose-300/60"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </article>
           ))}
@@ -303,7 +352,7 @@ export default function AdminGalleryPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
           <div className="w-full max-w-2xl rounded-xl border border-white/15 bg-[#0f1219] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-sm font-medium text-zinc-100">Edit gallery card</p>
+              <p className="text-sm font-medium text-zinc-100">Edit media item</p>
               <button
                 type="button"
                 onClick={() => setEditing(null)}
@@ -318,14 +367,14 @@ export default function AdminGalleryPage() {
                 value={editing.title}
                 onChange={(event) => setEditing((prev) => (prev ? { ...prev, title: event.target.value } : prev))}
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-                placeholder="Card title"
+                placeholder="Media title"
               />
               <input
                 value={editing.tier}
                 onChange={(event) => setEditing((prev) => (prev ? { ...prev, tier: event.target.value } : prev))}
                 list="tier-options"
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-                placeholder="Tier category"
+                placeholder="Card category (tier)"
               />
               <select
                 value={editingMediaMode}
@@ -336,8 +385,8 @@ export default function AdminGalleryPage() {
                 }
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
               >
-                <option value="photo">Фото</option>
-                <option value="video">Видео</option>
+                <option value="photo">Photo</option>
+                <option value="video">Video</option>
               </select>
               <input
                 value={editing.videoUrl}
@@ -349,7 +398,7 @@ export default function AdminGalleryPage() {
                 value={editing.imageUrl}
                 onChange={(event) => setEditing((prev) => (prev ? { ...prev, imageUrl: event.target.value } : prev))}
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-                placeholder="Image URL (9:16 poster/photo)"
+                placeholder="Image URL or video poster"
               />
               <textarea
                 value={editing.description}

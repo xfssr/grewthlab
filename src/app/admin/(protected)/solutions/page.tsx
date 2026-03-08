@@ -1,11 +1,12 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { AdminForm } from "@/components/AdminForm";
 
 type SolutionItem = {
   id: string;
+  slug: string;
   title: string;
   description: string;
   price: number;
@@ -13,40 +14,50 @@ type SolutionItem = {
   createdAt: string;
 };
 
-type SolutionDraft = {
-  title: string;
-  description: string;
-  price: string;
-  imageUrl: string;
-};
-
-const initialDraft: SolutionDraft = {
-  title: "",
-  description: "",
-  price: "",
-  imageUrl: "",
+type PricingSettings = {
+  discountPercent: number;
 };
 
 export default function AdminSolutionsPage() {
   const [items, setItems] = useState<SolutionItem[]>([]);
-  const [draft, setDraft] = useState<SolutionDraft>(initialDraft);
-  const [busy, setBusy] = useState(false);
-  const [uploading, setUploading] = useState(false);
+  const [discountPercent, setDiscountPercent] = useState("0");
+  const [loading, setLoading] = useState(true);
+  const [savingSlug, setSavingSlug] = useState("");
+  const [uploadingSlug, setUploadingSlug] = useState("");
+  const [savingDiscount, setSavingDiscount] = useState(false);
   const [message, setMessage] = useState("");
 
   async function refresh() {
-    const response = await fetch("/api/solutions", { cache: "no-store" });
-    const payload = (await response.json()) as { items: SolutionItem[] };
-    setItems(payload.items || []);
+    setLoading(true);
+
+    try {
+      const [solutionsResponse, settingsResponse] = await Promise.all([
+        fetch("/api/solutions", { cache: "no-store" }),
+        fetch("/api/pricing-settings", { cache: "no-store" }),
+      ]);
+
+      const solutionsPayload = (await solutionsResponse.json()) as { items?: SolutionItem[]; error?: string };
+      const settingsPayload = (await settingsResponse.json()) as { settings?: PricingSettings };
+
+      setItems(solutionsPayload.items || []);
+      setDiscountPercent(String(settingsPayload.settings?.discountPercent ?? 0));
+
+      if (solutionsPayload.error) {
+        setMessage(solutionsPayload.error);
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     void refresh();
   }, []);
 
-  async function uploadImage(file: File) {
-    setUploading(true);
+  async function uploadImage(slug: string, file: File) {
+    setUploadingSlug(slug);
     setMessage("");
+
     try {
       const body = new FormData();
       body.append("file", file);
@@ -55,76 +66,69 @@ export default function AdminSolutionsPage() {
       if (!response.ok || !payload.url) {
         throw new Error(payload.error || "Upload failed.");
       }
-      setDraft((prev) => ({ ...prev, imageUrl: payload.url || "" }));
+
+      setItems((prev) => prev.map((item) => (item.slug === slug ? { ...item, imageUrl: payload.url || "" } : item)));
     } catch (error) {
-      const text = error instanceof Error ? error.message : "Upload failed.";
-      setMessage(text);
+      setMessage(error instanceof Error ? error.message : "Upload failed.");
     } finally {
-      setUploading(false);
+      setUploadingSlug("");
     }
   }
 
-  async function createItem(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setBusy(true);
+  async function saveItem(item: SolutionItem) {
+    setSavingSlug(item.slug);
     setMessage("");
 
     try {
       const response = await fetch("/api/solutions", {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: draft.title,
-          description: draft.description,
-          price: Number(draft.price),
-          imageUrl: draft.imageUrl,
+          slug: item.slug,
+          title: item.title,
+          description: item.description,
+          price: item.price,
+          imageUrl: item.imageUrl,
         }),
       });
 
       const payload = (await response.json()) as { error?: string };
       if (!response.ok) {
-        setMessage(payload.error || "Solution creation failed.");
+        setMessage(payload.error || "Solution update failed.");
         return;
       }
 
-      setDraft(initialDraft);
       await refresh();
-      setMessage("Solution created.");
+      setMessage(`Solution "${item.slug}" updated.`);
     } finally {
-      setBusy(false);
+      setSavingSlug("");
     }
   }
 
-  async function updateItem(item: SolutionItem) {
-    const response = await fetch("/api/solutions", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(item),
-    });
+  async function saveDiscount() {
+    setSavingDiscount(true);
+    setMessage("");
 
-    const payload = (await response.json()) as { error?: string };
-    if (!response.ok) {
-      setMessage(payload.error || "Solution update failed.");
-      return;
+    try {
+      const response = await fetch("/api/pricing-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          discountPercent: Number(discountPercent),
+        }),
+      });
+
+      const payload = (await response.json()) as { error?: string; settings?: PricingSettings };
+      if (!response.ok) {
+        setMessage(payload.error || "Discount update failed.");
+        return;
+      }
+
+      setDiscountPercent(String(payload.settings?.discountPercent ?? 0));
+      setMessage("Global discount saved.");
+    } finally {
+      setSavingDiscount(false);
     }
-
-    setMessage("Solution updated.");
-    await refresh();
-  }
-
-  async function deleteItem(id: string) {
-    const response = await fetch(`/api/solutions?id=${encodeURIComponent(id)}`, {
-      method: "DELETE",
-    });
-
-    const payload = (await response.json()) as { error?: string };
-    if (!response.ok) {
-      setMessage(payload.error || "Solution deletion failed.");
-      return;
-    }
-
-    await refresh();
-    setMessage("Solution deleted.");
   }
 
   return (
@@ -132,77 +136,47 @@ export default function AdminSolutionsPage() {
       <header>
         <h1 className="text-2xl font-semibold">Solutions</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Solution cards sync to the public site. Uploaded images now render on the storefront cards as well.
+          Edit the existing solution packages, update their prices, and apply one discount to all calculated prices.
         </p>
       </header>
 
-      <AdminForm title="Create Solution">
-        <form onSubmit={createItem} className="grid gap-3 md:grid-cols-2">
-          <input
-            required
-            value={draft.title}
-            onChange={(event) => setDraft((prev) => ({ ...prev, title: event.target.value }))}
-            className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Title"
-          />
-          <input
-            required
-            type="number"
-            min={0}
-            step="1"
-            value={draft.price}
-            onChange={(event) => setDraft((prev) => ({ ...prev, price: event.target.value }))}
-            className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Price"
-          />
-          <textarea
-            value={draft.description}
-            onChange={(event) => setDraft((prev) => ({ ...prev, description: event.target.value }))}
-            rows={3}
-            className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Description"
-          />
-          <input
-            value={draft.imageUrl}
-            onChange={(event) => setDraft((prev) => ({ ...prev, imageUrl: event.target.value }))}
-            className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            placeholder="Image URL"
-          />
-          <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-white/15 px-3 py-2 text-sm text-zinc-300 hover:border-white/25">
+      <AdminForm title="Global Discount" description="Applies to solution prices, calculator package prices, and add-ons.">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end">
+          <label className="flex-1">
+            <span className="mb-2 block text-sm text-zinc-300">Discount percent</span>
             <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={(event) => {
-                const file = event.target.files?.[0];
-                if (file) {
-                  void uploadImage(file);
-                }
-              }}
+              type="number"
+              min={0}
+              max={100}
+              step="1"
+              value={discountPercent}
+              onChange={(event) => setDiscountPercent(event.target.value)}
+              className="w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
             />
-            {uploading ? "Uploading image..." : "Upload image"}
           </label>
-
           <button
-            type="submit"
-            disabled={busy}
-            className="md:col-span-2 rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
+            type="button"
+            onClick={() => void saveDiscount()}
+            disabled={savingDiscount}
+            className="rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
           >
-            {busy ? "Saving..." : "Create solution"}
+            {savingDiscount ? "Saving..." : "Save discount"}
           </button>
-        </form>
+        </div>
       </AdminForm>
 
-      <AdminForm title="Manage Solutions">
+      <AdminForm title="Manage Existing Solutions" description="Each row is tied to a fixed package slug on the public site.">
         <div className="space-y-3">
           {items.map((item) => (
-            <article key={item.id} className="grid gap-2 rounded-md border border-white/10 p-3 md:grid-cols-2">
+            <article key={item.slug} className="grid gap-2 rounded-md border border-white/10 p-3 md:grid-cols-2">
+              <div className="md:col-span-2 text-xs uppercase tracking-[0.2em] text-zinc-500">{item.slug}</div>
               <input
                 value={item.title}
                 onChange={(event) =>
-                  setItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, title: event.target.value } : row)))
+                  setItems((prev) => prev.map((row) => (row.slug === item.slug ? { ...row, title: event.target.value } : row)))
                 }
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Title"
               />
               <input
                 type="number"
@@ -211,49 +185,59 @@ export default function AdminSolutionsPage() {
                 value={item.price}
                 onChange={(event) =>
                   setItems((prev) =>
-                    prev.map((row) => (row.id === item.id ? { ...row, price: Number(event.target.value) } : row)),
+                    prev.map((row) => (row.slug === item.slug ? { ...row, price: Number(event.target.value) } : row)),
                   )
                 }
                 className="rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Price"
               />
               <textarea
                 value={item.description}
                 onChange={(event) =>
                   setItems((prev) =>
-                    prev.map((row) => (row.id === item.id ? { ...row, description: event.target.value } : row)),
+                    prev.map((row) => (row.slug === item.slug ? { ...row, description: event.target.value } : row)),
                   )
                 }
-                rows={2}
+                rows={3}
                 className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
+                placeholder="Description"
               />
               <input
                 value={item.imageUrl}
                 onChange={(event) =>
-                  setItems((prev) => prev.map((row) => (row.id === item.id ? { ...row, imageUrl: event.target.value } : row)))
+                  setItems((prev) => prev.map((row) => (row.slug === item.slug ? { ...row, imageUrl: event.target.value } : row)))
                 }
                 className="md:col-span-2 rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
                 placeholder="Image URL"
               />
-              <div className="md:col-span-2 flex gap-2">
+              <div className="md:col-span-2 flex flex-wrap gap-2">
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-white/15 px-3 py-1.5 text-sm text-zinc-300 hover:border-white/25">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      if (file) {
+                        void uploadImage(item.slug, file);
+                      }
+                    }}
+                  />
+                  {uploadingSlug === item.slug ? "Uploading image..." : "Upload image"}
+                </label>
                 <button
                   type="button"
-                  onClick={() => void updateItem(item)}
-                  className="rounded-md border border-white/20 px-3 py-1.5 text-sm hover:border-white/35"
+                  onClick={() => void saveItem(item)}
+                  disabled={savingSlug === item.slug}
+                  className="rounded-md border border-white/20 px-3 py-1.5 text-sm hover:border-white/35 disabled:opacity-60"
                 >
-                  Save
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void deleteItem(item.id)}
-                  className="rounded-md border border-rose-300/40 px-3 py-1.5 text-sm text-rose-200 hover:border-rose-300/60"
-                >
-                  Delete
+                  {savingSlug === item.slug ? "Saving..." : "Save"}
                 </button>
               </div>
             </article>
           ))}
 
-          {items.length === 0 ? <p className="text-sm text-zinc-400">No solutions yet.</p> : null}
+          {!loading && items.length === 0 ? <p className="text-sm text-zinc-400">No solutions available.</p> : null}
         </div>
       </AdminForm>
 
