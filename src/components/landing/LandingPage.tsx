@@ -255,6 +255,7 @@ export function LandingPage() {
             isRtl={content.isRtl}
             selectedPackageId={selectedPackageId}
             onSelectPackage={handleSelectPackage}
+            onOpenQuote={() => scrollToSection("quote")}
           />
         </div>
         <div className="order-4">

@@ -109,7 +109,8 @@ export type ContentArchiveModule = {
 };
 
 export type SolutionCardViewModel = {
-  id: PackageId;
+  id: string;
+  packageId?: PackageId;
   title: string;
   problem: string;
   whatWeDo: string;

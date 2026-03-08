@@ -16,6 +16,7 @@ type ShowcaseSectionProps = {
   isRtl: boolean;
   selectedPackageId: PackageId;
   onSelectPackage: (packageId: PackageId) => void;
+  onOpenQuote: () => void;
 };
 
 type SolutionTileProps = {
@@ -23,8 +24,8 @@ type SolutionTileProps = {
   isActive: boolean;
   isExpanded: boolean;
   isRtl: boolean;
-  onToggleDetails: (packageId: PackageId) => void;
-  onSelect: (packageId: PackageId) => void;
+  onToggleDetails: (cardId: string) => void;
+  onSelect: (card: SolutionCardViewModel) => void;
 };
 
 function SolutionTile({
@@ -39,6 +40,7 @@ function SolutionTile({
   const includesLabel = isRtl ? "מה כולל" : "Includes";
   const resultLabel = isRtl ? "תוצאה" : "Result";
   const detailsLabel = isRtl ? "עוד פרטים" : "More details";
+  const actionLabel = card.packageId ? card.actionLabel : (isRtl ? "צור קשר" : "Contact");
 
   return (
     <SurfaceCard
@@ -64,8 +66,8 @@ function SolutionTile({
         <BrandButton onClick={() => onToggleDetails(card.id)} variant={isExpanded ? "solid" : "outline"} size="sm">
           {detailsLabel}
         </BrandButton>
-        <BrandButton onClick={() => onSelect(card.id)} variant={isActive ? "solid" : "outline"} size="sm">
-          {card.actionLabel}
+        <BrandButton onClick={() => onSelect(card)} variant={isActive ? "solid" : "outline"} size="sm">
+          {actionLabel}
         </BrandButton>
       </div>
 
@@ -87,13 +89,22 @@ function SolutionTile({
   );
 }
 
-export function ShowcaseSection({ title, description, cards, isRtl, selectedPackageId, onSelectPackage }: ShowcaseSectionProps) {
+export function ShowcaseSection({ title, description, cards, isRtl, selectedPackageId, onSelectPackage, onOpenQuote }: ShowcaseSectionProps) {
   const reduceMotion = useReducedMotionPreference();
   const reveal = revealWhileInView(reduceMotion, 0.2);
-  const [expandedCardId, setExpandedCardId] = useState<PackageId | null>(null);
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);
 
-  const handleToggleDetails = (packageId: PackageId) => {
-    setExpandedCardId((current) => (current === packageId ? null : packageId));
+  const handleToggleDetails = (cardId: string) => {
+    setExpandedCardId((current) => (current === cardId ? null : cardId));
+  };
+
+  const handleCardAction = (card: SolutionCardViewModel) => {
+    if (card.packageId) {
+      onSelectPackage(card.packageId);
+      return;
+    }
+
+    onOpenQuote();
   };
 
   return (
@@ -110,15 +121,15 @@ export function ShowcaseSection({ title, description, cards, isRtl, selectedPack
       />
 
       <motion.div variants={staggerParent} {...reveal} className="mt-7 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {cards.slice(0, 5).map((card) => (
+        {cards.map((card) => (
           <motion.div key={card.id} variants={fadeUp}>
             <SolutionTile
               card={card}
-              isActive={selectedPackageId === card.id}
+              isActive={card.packageId === selectedPackageId}
               isExpanded={expandedCardId === card.id}
               isRtl={isRtl}
               onToggleDetails={handleToggleDetails}
-              onSelect={onSelectPackage}
+              onSelect={handleCardAction}
             />
           </motion.div>
         ))}

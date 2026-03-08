@@ -843,7 +843,7 @@ function mapMedia(locale: Locale): LocalizedMediaAsset[] {
 }
 
 function mapContentArchive(locale: Locale): ContentArchiveItem[] {
-  return archiveItemsRaw.map((item) => ({
+  return archiveItemsRaw.map<ContentArchiveItem>((item) => ({
     id: item.id,
     format: item.format,
     productionType: item.productionType,
@@ -1049,7 +1049,7 @@ export function buildContentArchiveModules(locale: Locale, galleryItems: Localiz
         ? `${themeContext.modulePrefix}: ${topic}. ${themeContext.focus}.`
         : `${themeContext.modulePrefix}: ${topic}. ${themeContext.focus}.`;
 
-    const items = baseItems.map((baseItem, itemIndex) => {
+    const items: ContentArchiveItem[] = baseItems.map((baseItem, itemIndex): ContentArchiveItem => {
       const angle = itemAngleCopy[locale][itemIndex % itemAngleCopy[locale].length];
       const title = locale === "he" ? `${themeContext.label} • ${angle}` : `${angle} • ${themeContext.label}`;
       const caption =
@@ -1063,11 +1063,14 @@ export function buildContentArchiveModules(locale: Locale, galleryItems: Localiz
           : (imagePool.length > 0 ? imagePool : videoPool.length > 0 ? videoPool : normalizedPool);
       const selectedMedia = targetPool[itemIndex % targetPool.length] || primaryItem;
       const mediaIsVideo = selectedMedia.type === "video";
+      const format: ContentArchiveItem["format"] = mediaIsVideo ? "reel" : "photo";
+      const mediaType: ContentArchiveItem["mediaType"] = mediaIsVideo ? "video" : "image";
+
       return {
         ...baseItem,
         id: `${primaryItem.id}-${baseItem.id}-${itemIndex + 1}`,
-        format: mediaIsVideo ? "reel" : "photo",
-        mediaType: mediaIsVideo ? "video" : "image",
+        format,
+        mediaType,
         src: selectedMedia.src,
         poster: mediaIsVideo
           ? (selectedMedia.poster || moduleImageFallback.src || moduleVideoFallback?.poster || moduleVideoFallback?.src)
@@ -1202,6 +1205,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     const copy = solutionOverrides[locale][packageId];
     return {
       id: packageId,
+      packageId,
       title: copy?.title ?? raw?.title ?? "",
       problem: copy?.problem ?? raw?.problem ?? "",
       whatWeDo: copy?.whatWeDo ?? raw?.whatWeDo ?? "",
@@ -1218,7 +1222,9 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     ctaLabel: localizedCopy.solutions.diagnosisCta,
   }));
 
-  const packageOptions = solutions.map((item) => ({ id: item.id, label: item.title }));
+  const packageOptions = solutions
+    .filter((item): item is SolutionCardViewModel & { packageId: PackageId } => Boolean(item.packageId))
+    .map((item) => ({ id: item.packageId, label: item.title }));
 
   const audience = messages.audience?.categories ?? [];
   const industries = NICHE_IDS.map((nicheId, index) => ({
@@ -1269,7 +1275,9 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     };
   });
 
-  const rawCases = solutions.slice(0, 4);
+  const rawCases = solutions
+    .filter((item): item is SolutionCardViewModel & { packageId: PackageId } => Boolean(item.packageId))
+    .slice(0, 4);
   const cases = rawCases.map((item, index) => {
     const caseTitles = isRtl ? ["בעיה", "פתרון", "תוצאה", "תוצאה"] : ["Problem", "Solution", "Result", "Result"];
     const bullets =
@@ -1283,7 +1291,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
       title: caseTitles[index],
       bullets: bullets.filter(Boolean),
       action: messages.solutionsPage?.orderCta || (isRtl ? "בחירה ב-WhatsApp" : "Choose on WhatsApp"),
-      packageId: item.id,
+      packageId: item.packageId,
       tone: item.tone,
       imageSrc: caseStageImages[Math.min(index, caseStageImages.length - 1)].src,
       imageAlt: isRtl

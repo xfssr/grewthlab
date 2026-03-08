@@ -221,10 +221,12 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
 
     const rowBySlug = new Map(solutionRows.map((row) => [row.slug, row]));
     const cardById = new Map(withLocalizedCopy.solutions.cards.map((card) => [card.id, card]));
-    const updatedCards = PACKAGE_IDS.map((packageId) => {
+    const updatedCards: SiteContentViewModel["solutions"]["cards"] = [];
+
+    for (const packageId of PACKAGE_IDS) {
       const baseCard = cardById.get(packageId);
       if (!baseCard) {
-        return null;
+        continue;
       }
 
       const row = rowBySlug.get(packageId);
@@ -233,21 +235,40 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         ? applyDiscount(Number(row.price), pricingSettings.discountPercent)
         : (discountedPackagePrices.get(packageId) ?? 0);
 
-      return {
+      updatedCards.push({
         ...baseCard,
+        packageId: baseCard.packageId ?? packageId,
         title: row?.title?.trim() || baseCard.title,
         problem: description || baseCard.problem,
         whatWeDo: description || baseCard.whatWeDo,
         outcome: description || baseCard.outcome,
         priceLabel: formatPriceLabel(displayPrice, locale),
         imageSrc: row?.imageUrl?.trim() || baseCard.imageSrc,
-      };
-    }).filter((item): item is SiteContentViewModel["solutions"]["cards"][number] => Boolean(item));
+      });
+    }
+
+    const customCards = solutionRows
+      .filter((row) => !PACKAGE_IDS.includes(row.slug as PackageId))
+      .map((row, index) => {
+        const description = row.description?.trim();
+        return {
+          id: row.slug,
+          title: row.title?.trim() || row.slug,
+          problem: description || (locale === "he" ? "פתרון מותאם לעסק" : "Custom business solution"),
+          whatWeDo: description || (locale === "he" ? "פרטי הפתרון זמינים לפי בקשה." : "Solution details available on request."),
+          outcome: description || (locale === "he" ? "מתאים לצורך עסקי ממוקד." : "Built for a focused business need."),
+          timeline: locale === "he" ? "מותאם אישית" : "Custom scope",
+          priceLabel: formatPriceLabel(applyDiscount(Number(row.price), pricingSettings.discountPercent), locale),
+          actionLabel: locale === "he" ? "קבלו פרטים" : "Get details",
+          tone: updatedCards[index % updatedCards.length]?.tone ?? "stone",
+          imageSrc: row.imageUrl?.trim() || undefined,
+        };
+      });
 
     if (updatedCards.length > 0) {
-      withLocalizedCopy.solutions.cards = updatedCards;
+      withLocalizedCopy.solutions.cards = [...updatedCards, ...customCards];
       withLocalizedCopy.pricing.packageOptions = updatedCards.map((item) => ({
-        id: item.id,
+        id: item.packageId ?? (item.id as PackageId),
         label: item.title,
       }));
     }

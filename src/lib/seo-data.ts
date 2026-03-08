@@ -306,7 +306,7 @@ export const productSlugByPackageId = new Map(seoProducts.map((item) => [item.pa
 
 export async function getSeoProductCard(packageId: PackageId) {
   const content = await applyDbOverrides(getSiteContent("he"), "he");
-  return content.solutions.cards.find((item) => item.id === packageId) ?? null;
+  return content.solutions.cards.find((item) => item.packageId === packageId) ?? null;
 }
 
 export async function getSeoProductPrice(packageId: PackageId): Promise<number | null> {
