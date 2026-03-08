@@ -2,21 +2,35 @@ import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
-async function safeCount(operation: Promise<number>) {
+async function loadDashboardCounts() {
   try {
-    return await operation;
+    const [pagesCount, galleryCount, solutionsCount, localizedContentCount] = await prisma.$transaction([
+      prisma.page.count(),
+      prisma.galleryItem.count(),
+      prisma.solution.count(),
+      prisma.siteContentOverride.count(),
+    ]);
+
+    return {
+      pagesCount,
+      galleryCount,
+      solutionsCount,
+      localizedContentCount,
+      databaseOnline: true,
+    };
   } catch {
-    return 0;
+    return {
+      pagesCount: 0,
+      galleryCount: 0,
+      solutionsCount: 0,
+      localizedContentCount: 0,
+      databaseOnline: false,
+    };
   }
 }
 
 export default async function AdminDashboardPage() {
-  const [pagesCount, galleryCount, solutionsCount, localizedContentCount] = await Promise.all([
-    safeCount(prisma.page.count()),
-    safeCount(prisma.galleryItem.count()),
-    safeCount(prisma.solution.count()),
-    safeCount(prisma.siteContentOverride.count()),
-  ]);
+  const { pagesCount, galleryCount, solutionsCount, localizedContentCount, databaseOnline } = await loadDashboardCounts();
 
   const cards = [
     { label: "Pages", value: pagesCount },
@@ -32,6 +46,11 @@ export default async function AdminDashboardPage() {
         <p className="mt-1 text-sm text-zinc-400">
           Manage localized copy, hero media, gallery assets, and solution cards that render on the public site.
         </p>
+        {!databaseOnline ? (
+          <p className="mt-3 rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+            Database is temporarily unavailable. Counts are shown as `0` until the connection is restored.
+          </p>
+        ) : null}
       </header>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
