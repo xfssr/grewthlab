@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
-import { StructuredData } from "@/components/seo/StructuredData";
 import { LandingPage } from "@/components/landing/LandingPage";
+import { StructuredData } from "@/components/seo/StructuredData";
 import { getSiteContent } from "@/core/site.content";
 import { seoProblems, seoProducts } from "@/lib/seo-data";
 import { applyDbOverrides } from "@/lib/site-content-overrides";
 import { absoluteUrl, homePageDescription, homePageTitle, siteName } from "@/lib/site";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 async function getResolvedHomeContent() {
   return applyDbOverrides(getSiteContent("he"), "he");

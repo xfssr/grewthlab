@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+﻿import { NextRequest } from "next/server";
 
 import { GET, POST } from "@/app/api/leads/route";
 
@@ -27,13 +27,12 @@ describe("/api/leads route", () => {
     expect(res.status).toBe(400);
   });
 
-  it("returns list response shape", async () => {
+  it("returns 401 for unauthenticated lead list access", async () => {
     const req = new NextRequest("http://localhost/api/leads?limit=2", {
       method: "GET",
     });
+
     const res = await GET(req);
-    expect(res.status).toBe(200);
-    const body = (await res.json()) as { items: unknown[] };
-    expect(Array.isArray(body.items)).toBe(true);
+    expect(res.status).toBe(401);
   });
 });

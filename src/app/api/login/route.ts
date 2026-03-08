@@ -1,4 +1,4 @@
-import bcrypt from "bcryptjs";
+﻿import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -11,8 +11,9 @@ const loginSchema = z.object({
   password: z.string().min(5).max(120),
 });
 
-const FALLBACK_ADMIN_LOGIN = (process.env.ADMIN_EMAIL || "admin1").toLowerCase();
-const FALLBACK_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "22445";
+const FALLBACK_ADMIN_LOGIN = (process.env.ADMIN_EMAIL || "admin-dev").toLowerCase();
+const FALLBACK_ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ALLOW_DEV_FALLBACK = process.env.NODE_ENV !== "production" && Boolean(FALLBACK_ADMIN_PASSWORD);
 
 export async function GET(request: NextRequest) {
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Fallback below handles local login when the database is not configured yet.
   }
 
-  if (parsed.data.password === FALLBACK_ADMIN_PASSWORD) {
+  if (ALLOW_DEV_FALLBACK && parsed.data.password === FALLBACK_ADMIN_PASSWORD) {
     const token = await createSessionToken({
       sub: `local-${FALLBACK_ADMIN_LOGIN}`,
       email: FALLBACK_ADMIN_LOGIN,

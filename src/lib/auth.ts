@@ -1,4 +1,4 @@
-import { jwtVerify, SignJWT } from "jose";
+﻿import { jwtVerify, SignJWT } from "jose";
 
 export const AUTH_COOKIE_NAME = "admin_session";
 const SESSION_TTL_SECONDS = 60 * 60 * 24 * 7;
@@ -10,7 +10,16 @@ export type AdminSession = {
 };
 
 function getAuthSecret(): string {
-  return process.env.AUTH_SECRET || "dev-only-auth-secret-change-in-production";
+  const secret = process.env.AUTH_SECRET?.trim();
+  if (secret) {
+    return secret;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("AUTH_SECRET must be configured in production.");
+  }
+
+  return "dev-only-auth-secret-change-in-production";
 }
 
 function getSecretKey(): Uint8Array {
@@ -59,4 +68,3 @@ export function getSessionCookieOptions() {
     maxAge: SESSION_TTL_SECONDS,
   };
 }
-

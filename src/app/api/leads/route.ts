@@ -1,8 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
+﻿import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { appendLead, listLeads } from "@/lib/db";
+import { getAdminSession } from "@/app/api/_auth";
 import { LOCALES, PACKAGE_IDS } from "@/core/site.types";
+import { appendLead, listLeads } from "@/lib/db";
 
 export const runtime = "nodejs";
 
@@ -28,6 +29,11 @@ const leadSchema = z.object({
 });
 
 export async function GET(request: NextRequest) {
+  const session = await getAdminSession(request);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   const limitRaw = request.nextUrl.searchParams.get("limit") ?? "20";
   const limitParsed = z.coerce.number().int().min(1).max(100).safeParse(limitRaw);
   if (!limitParsed.success) {
