@@ -20,21 +20,24 @@ function isLocale(value: string | null): value is Locale {
   return value === "en" || value === "he";
 }
 
-export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<Locale>("he");
-  const [content, setContent] = useState<SiteContentViewModel>(() => getSiteContent("he"));
+type LocaleProviderProps = {
+  children: ReactNode;
+  initialLocale?: Locale;
+  initialContent?: SiteContentViewModel;
+};
 
-  useEffect(() => {
-    const saved = window.localStorage.getItem(LOCALE_STORAGE_KEY);
-    if (isLocale(saved)) {
-      setLocale(saved);
+export function LocaleProvider({ children, initialLocale = "he", initialContent }: LocaleProviderProps) {
+  const [locale, setLocale] = useState<Locale>(() => {
+    if (typeof window === "undefined") {
+      return initialLocale;
     }
-  }, []);
-
-  useEffect(() => {
-    // Keep immediate local fallback so UI stays responsive.
-    setContent(getSiteContent(locale));
-  }, [locale]);
+    const saved = window.localStorage.getItem(LOCALE_STORAGE_KEY);
+    return isLocale(saved) ? saved : initialLocale;
+  });
+  const [contentByLocale, setContentByLocale] = useState<Partial<Record<Locale, SiteContentViewModel>>>(() => ({
+    [initialLocale]: initialContent ?? getSiteContent(initialLocale),
+  }));
+  const content = contentByLocale[locale] ?? getSiteContent(locale);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -51,10 +54,16 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
         const payload = (await response.json()) as { content?: SiteContentViewModel };
         if (payload.content) {
-          setContent(payload.content);
+          setContentByLocale((prev) => ({ ...prev, [locale]: payload.content }));
         }
       } catch {
         // Keep local content fallback when API is unavailable.
+        setContentByLocale((prev) => {
+          if (prev[locale]) {
+            return prev;
+          }
+          return { ...prev, [locale]: getSiteContent(locale) };
+        });
       }
     }
 

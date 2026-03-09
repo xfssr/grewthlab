@@ -227,6 +227,8 @@ export default function AdminContentPage() {
   const [form, setForm] = useState<EditableContentForm | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [resetting, setResetting] = useState(false);
+  const [refreshToken, setRefreshToken] = useState(0);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -261,7 +263,7 @@ export default function AdminContentPage() {
     return () => {
       cancelled = true;
     };
-  }, [locale]);
+  }, [locale, refreshToken]);
 
   async function handleSave() {
     if (!form) {
@@ -290,6 +292,28 @@ export default function AdminContentPage() {
       setMessage(error instanceof Error ? error.message : "Failed to save localized content.");
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleResetOverrides() {
+    setResetting(true);
+    setMessage("");
+
+    try {
+      const response = await fetch("/api/site-content?scope=all", {
+        method: "DELETE",
+      });
+      const payload = (await response.json()) as { error?: string };
+      if (!response.ok) {
+        throw new Error(payload.error || "Failed to reset localized overrides.");
+      }
+
+      setMessage("HE/EN overrides were reset to base content.");
+      setRefreshToken((prev) => prev + 1);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Failed to reset localized overrides.");
+    } finally {
+      setResetting(false);
     }
   }
 
@@ -1096,10 +1120,18 @@ export default function AdminContentPage() {
         <button
           type="button"
           onClick={() => void handleSave()}
-          disabled={saving || loading}
+          disabled={saving || resetting || loading}
           className="rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 transition hover:bg-white disabled:opacity-60"
         >
           {saving ? "Saving..." : "Save localized content"}
+        </button>
+        <button
+          type="button"
+          onClick={() => void handleResetOverrides()}
+          disabled={saving || resetting || loading}
+          className="rounded-md border border-amber-300/40 bg-amber-400/10 px-4 py-2 text-sm font-medium text-amber-100 transition hover:border-amber-300/60 hover:bg-amber-400/15 disabled:opacity-60"
+        >
+          {resetting ? "Resetting..." : "Reset HE/EN overrides"}
         </button>
         {message ? <p className="text-sm text-zinc-300">{message}</p> : null}
       </div>

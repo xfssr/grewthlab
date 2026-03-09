@@ -159,6 +159,22 @@ export async function saveSiteContentOverride(locale: Locale, data: unknown): Pr
   return normalizeOverrideData(row.data);
 }
 
+export async function clearSiteContentOverrides(locales: Locale[]): Promise<void> {
+  if (!locales.length) {
+    return;
+  }
+
+  try {
+    await prisma.siteContentOverride.deleteMany({
+      where: {
+        locale: { in: locales },
+      },
+    });
+  } catch {
+    // Keep silent: callers can continue with base content fallback.
+  }
+}
+
 export async function applyDbOverrides(content: SiteContentViewModel, locale: Locale): Promise<SiteContentViewModel> {
   try {
     const [contentOverride, page, galleryRows, solutionRows, pricingSettings] = await Promise.all([

@@ -5,6 +5,7 @@ import { getSiteContent } from "@/core/site.content";
 import type { Locale } from "@/core/site.types";
 import {
   applyDbOverrides,
+  clearSiteContentOverrides,
   getSiteContentOverride,
   sanitizeSiteContentOverrideData,
   saveSiteContentOverride,
@@ -56,4 +57,23 @@ export async function PUT(request: NextRequest) {
   const content = await applyDbOverrides(getSiteContent(locale), locale);
 
   return NextResponse.json({ content, override });
+}
+
+export async function DELETE(request: NextRequest) {
+  const session = await getAdminSession(request);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
+  const scope = request.nextUrl.searchParams.get("scope");
+  const locales: Locale[] = scope === "all" ? ["he", "en"] : [resolveLocale(request.nextUrl.searchParams.get("locale"))];
+
+  await clearSiteContentOverrides(locales);
+  const refreshed = await Promise.all(locales.map(async (locale) => applyDbOverrides(getSiteContent(locale), locale)));
+
+  return NextResponse.json({
+    ok: true,
+    clearedLocales: locales,
+    content: refreshed[0],
+  });
 }

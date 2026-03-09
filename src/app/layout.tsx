@@ -3,6 +3,8 @@ import { Heebo, Manrope, Playfair_Display } from "next/font/google";
 
 import { Analytics } from "@/components/Analytics";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { getSiteContent } from "@/core/site.content";
+import { applyDbOverrides } from "@/lib/site-content-overrides";
 import { absoluteUrl, getSiteUrl, siteDescription, siteName, siteTitle } from "@/lib/site";
 
 import "./globals.css";
@@ -75,12 +77,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+async function getInitialLocaleContent() {
+  return applyDbOverrides(getSiteContent("he"), "he");
+}
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const initialContent = await getInitialLocaleContent();
+
   return (
     <html lang="he">
       <body className={`${sans.variable} ${display.variable} ${hebrew.variable} bg-bg-base font-sans text-text-primary antialiased`}>
         <Analytics />
-        <LocaleProvider>{children}</LocaleProvider>
+        <LocaleProvider initialLocale="he" initialContent={initialContent}>
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );
