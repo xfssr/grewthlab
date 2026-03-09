@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { LanguageToggle } from "@/components/LanguageToggle";
 import { BrandButton } from "@/components/landing/ui/BrandButton";
 import type { SectionId } from "@/core/site.types";
@@ -15,8 +17,9 @@ export function SiteNav({ brandName, navLinks, navQuoteCta, activeSection, isRtl
     <header className="sticky top-0 z-50 border-b border-stroke-subtle bg-[#0b0e14]/92 backdrop-blur">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <nav className="flex h-16 items-center justify-between gap-3" aria-label="Primary">
-          <a href="#top" className="font-display text-lg tracking-tight text-text-primary sm:text-xl">
-            {brandName}
+          <a href="#top" className="inline-flex items-center gap-2 font-display text-lg tracking-tight text-text-primary sm:text-xl">
+            <Image src="/icon.svg" alt={`${brandName} logo`} width={28} height={28} className="h-7 w-7 rounded-md" />
+            <span>{brandName}</span>
           </a>
           <ul className="hidden items-center gap-2 md:flex">
             {navLinks.map((link) => {

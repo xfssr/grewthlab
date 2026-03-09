@@ -43,12 +43,9 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/ss-space-icon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "any" },
-      { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
-      { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
+      { url: "/icon.svg", type: "image/svg+xml" },
     ],
-    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+    apple: [{ url: "/icon.svg", type: "image/svg+xml" }],
   },
   openGraph: {
     type: "website",

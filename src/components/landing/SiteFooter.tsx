@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 import { fadeUp, revealWhileInView, staggerParent, useReducedMotionPreference } from "@/components/landing/motion";
@@ -38,7 +39,10 @@ export function SiteFooter({
       <motion.div variants={staggerParent} {...reveal} className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 rounded-[2rem] border border-stroke-subtle bg-surface-base p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
           <motion.div variants={fadeUp}>
-            <h2 className="font-display text-3xl leading-none">{brandName}</h2>
+            <h2 className="inline-flex items-center gap-2 font-display text-3xl leading-none">
+              <Image src="/icon.svg" alt={`${brandName} logo`} width={32} height={32} className="h-8 w-8 rounded-md" />
+              <span>{brandName}</span>
+            </h2>
             <p className="mt-3 text-sm text-text-muted">{note}</p>
           </motion.div>
           <motion.div variants={fadeUp}>
