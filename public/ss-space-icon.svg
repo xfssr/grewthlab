@@ -1,0 +1,25 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="SS Space icon">
+  <defs>
+    <linearGradient id="ss-bg" x1="64" y1="40" x2="448" y2="472" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#11141B" />
+      <stop offset="1" stop-color="#0B0D12" />
+    </linearGradient>
+    <linearGradient id="ss-core" x1="224" y1="214" x2="292" y2="304" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F5F4F1" />
+      <stop offset="1" stop-color="#B6BCC8" />
+    </linearGradient>
+  </defs>
+
+  <rect x="24" y="24" width="464" height="464" rx="108" fill="url(#ss-bg)" />
+
+  <circle cx="154" cy="192" r="8" fill="#8A93A5" />
+  <circle cx="356" cy="168" r="8" fill="#8A93A5" />
+  <circle cx="392" cy="304" r="10" fill="#D9A260" />
+
+  <path d="M256 256L356 168" stroke="#3B4459" stroke-width="6" stroke-linecap="round" />
+  <path d="M256 256L392 304" stroke="#D9A260" stroke-width="6" stroke-linecap="round" />
+  <path d="M256 256L154 192" stroke="#3B4459" stroke-width="6" stroke-linecap="round" opacity="0.9" />
+
+  <circle cx="256" cy="256" r="42" fill="url(#ss-core)" />
+  <path d="M244 236L286 256L244 276V236Z" fill="#141924" />
+</svg>

@@ -157,11 +157,11 @@ const archiveItemsRaw = [
     poster: "/images/generated/category-bars.webp",
     duration: "00:20",
     platform: "YouTube",
-    titleHe: "UGC Shorts למוצר חדש",
+    titleHe: "שורטס UGC למוצר חדש",
     titleEn: "UGC product launch short",
     captionHe: "סרטון קצר בסגנון UGC להדגמת מוצר חדש.",
     captionEn: "UGC-style short focused on a new product launch.",
-    altHe: "וידאו Shorts אנכי בפורמט 9:16.",
+    altHe: "וידאו שורטס אנכי בפורמט 9:16.",
     altEn: "Vertical 9:16 shorts video preview.",
   },
   {
@@ -189,11 +189,11 @@ const archiveItemsRaw = [
     poster: "/images/generated/category-catering.webp",
     duration: "00:14",
     platform: "TikTok",
-    titleHe: "Shorts פרודקשן לתפריט",
+    titleHe: "שורטס פרודקשן לתפריט",
     titleEn: "Lighting menu short",
-    captionHe: "Shorts קצר עם דגש תאורה לאוכל וצילום פרימיום.",
+    captionHe: "שורטס קצר עם דגש תאורה לאוכל וצילום פרימיום.",
     captionEn: "Short-form clip with food lighting and premium framing.",
-    altHe: "Shorts אנכי עם דגש תאורה וצילום.",
+    altHe: "שורטס אנכי עם דגש תאורה וצילום.",
     altEn: "Vertical short with lighting and production styling.",
   },
   {
@@ -221,11 +221,11 @@ const archiveItemsRaw = [
     poster: "/images/generated/case-result.webp",
     duration: "00:12",
     platform: "YouTube",
-    titleHe: "AI Shorts לתוצאה",
+    titleHe: "שורטס AI לתוצאה",
     titleEn: "AI-assisted result short",
-    captionHe: "Shorts קצר שמציג תוצאה עם גרפיקה וטקסט בעזרת AI.",
+    captionHe: "שורטס קצר שמציג תוצאה עם גרפיקה וטקסט בעזרת AI.",
     captionEn: "Result-focused short using AI for overlays and pacing.",
-    altHe: "Shorts אנכי עם שילוב AI לגרפיקה.",
+    altHe: "שורטס אנכי עם שילוב AI לגרפיקה.",
     altEn: "Vertical short with AI-enhanced graphic overlays.",
   },
   {
@@ -263,7 +263,7 @@ const archiveItemsRaw = [
 ] as const;
 
 const heroLeadLineByLocale: Record<Locale, string> = {
-  he: "מצלמים, בונים דף נחיתה ומביאים פניות איכותיות ל-WhatsApp.",
+  he: "מצלמים, בונים דף נחיתה ומביאים פניות איכותיות לוואטסאפ.",
   en: "We shoot, build a landing page, and drive qualified inquiries to WhatsApp.",
 };
 
@@ -362,7 +362,7 @@ const localizedSectionCopy: Record<
         },
         {
           title: "בונים עמוד נחיתה",
-          subtitle: "מקימים עמוד ברור עם הצעה, הוכחה וכפתור WhatsApp.",
+          subtitle: "מקימים עמוד ברור עם הצעה, הוכחה וכפתור וואטסאפ.",
         },
         {
           title: "מחברים פרסום",
@@ -370,7 +370,7 @@ const localizedSectionCopy: Record<
         },
         {
           title: "לקוחות כותבים",
-          subtitle: "הלקוחות פונים ישירות ל-WhatsApp עם כוונת רכישה ברורה.",
+          subtitle: "הלקוחות פונים ישירות לוואטסאפ עם כוונת רכישה ברורה.",
         },
       ],
     },
@@ -383,7 +383,7 @@ const localizedSectionCopy: Record<
         "מתעניינים",
         "צופים בתוכן",
         "בונים אמון",
-        "כותבים ב-WhatsApp",
+        "כותבים בוואטסאפ",
         "קונים",
       ],
       diagnosticsTitle: "הבעיות האמיתיות שבעל עסק פוגש",
@@ -409,14 +409,14 @@ const localizedSectionCopy: Record<
       description: "מודול הדגמה ללקוח: פורמטים אנכיים 9:16 לפי סוג פרודקשן.",
       filters: {
         all: "הכל",
-        reel: "Reels",
-        short: "Shorts",
-        photo: "Photo",
+        reel: "רילסים",
+        short: "שורטס",
+        photo: "תמונות",
       },
       productionFilters: {
         all: "כל הסוגים",
         ugc: "UGC",
-        lighting: "Lighting",
+        lighting: "תאורה",
         ai: "AI",
       },
       emptyLabel: "אין פריטים לסינון הזה כרגע.",
@@ -443,14 +443,14 @@ const localizedSectionCopy: Record<
         },
         {
           question: "איך מקבלים פניות בפועל?",
-          answer: "הפניות מגיעות ישירות ל-WhatsApp עם הודעה מוכנה מראש.",
+          answer: "הפניות מגיעות ישירות לוואטסאפ עם הודעה מוכנה מראש.",
         },
       ],
     },
     quote: {
       title: "קבלו הצעת מחיר מהירה",
       nameLabel: "שם מלא",
-      phoneLabel: "טלפון / WhatsApp",
+      phoneLabel: "טלפון / וואטסאפ",
       businessLabel: "שם העסק",
       messageLabel: "מה המטרה שלכם?",
       submitLabel: "שליחה",
@@ -462,7 +462,7 @@ const localizedSectionCopy: Record<
       navTitle: "ניווט",
       contactTitle: "יצירת קשר",
       ctaTitle: "התחלה מהירה",
-      ctaButton: "לדבר איתנו ב-WhatsApp",
+      ctaButton: "לדבר איתנו בוואטסאפ",
       location: "ישראל",
     },
   },
@@ -604,28 +604,28 @@ const diagnosisOverrides: Record<Locale, Array<Omit<SolutionDiagnosisViewModel, 
       id: "visibility-gap",
       title: "לא רואים את העסק",
       problem: "יש עסק טוב, אבל לקוחות חדשים כמעט לא מכירים אותו.",
-      symptoms: ["Instagram ריק", "אין תמונות חזקות", "Google Business נראה לא פעיל"],
+      symptoms: ["עמוד אינסטגרם ריק", "אין תמונות חזקות", "פרופיל העסק בגוגל נראה לא פעיל"],
       mappedPackageId: "quick-start-system",
     },
     {
       id: "views-no-messages",
       title: "צופים אבל לא כותבים",
       problem: "יש צפיות, אבל אין מעבר לפנייה אמיתית.",
-      symptoms: ["אין CTA ברור", "אין עמוד ממיר", "הלקוח לא מבין מה הצעד הבא"],
+      symptoms: ["אין קריאה ברורה לפעולה", "אין עמוד ממיר", "הלקוח לא מבין מה הצעד הבא"],
       mappedPackageId: "content-whatsapp-funnel",
     },
     {
       id: "restaurant-empty",
       title: "המסעדה יפה אבל ריקה",
       problem: "המקום טוב, אבל ברשת הוא לא נראה מספיק מזמין.",
-      symptoms: ["אוכל לא מצולם נכון", "אין Reels קבועים", "אין חוויית מותג באונליין"],
+      symptoms: ["אוכל לא מצולם נכון", "אין רילסים קבועים", "אין חוויית מותג באונליין"],
       mappedPackageId: "qr-menu-mini-site",
     },
     {
       id: "listing-stuck",
       title: "הנכס מוצג אבל לא נמכר",
       problem: "הנכס לא מוצג בצורה שמייצרת עניין ובקשות סיור.",
-      symptoms: ["תמונות חלשות", "אין וידאו walkthrough", "אין עמוד נכס ממוקד"],
+      symptoms: ["תמונות חלשות", "אין וידאו סיור", "אין עמוד נכס ממוקד"],
       mappedPackageId: "beauty-booking-flow",
     },
     {
@@ -709,42 +709,42 @@ const solutionOverrides: Record<
 > = {
   he: {
     "qr-menu-mini-site": {
-      title: "Restaurant Growth System",
+      title: "מערכת צמיחה למסעדות",
       problem: "המסעדה נראית טוב במציאות, אבל באונליין לא נוצרת תנועה מספקת של אורחים.",
       whatWeDo:
-        "• צילום אוכל מקצועי\n• צילום אווירה ושירות\n• 10-15 Reels\n• QR menu נוח\n• עמוד מסעדה + אינטגרציית WhatsApp",
+        "• צילום אוכל מקצועי\n• צילום אווירה ושירות\n• 10-15 רילסים\n• תפריט QR נוח\n• עמוד מסעדה + אינטגרציית וואטסאפ",
       outcome: "התוצאה: תוכן חזק שמביא יותר תנועה, יותר פניות ויותר הזמנות.",
       timeline: "10-18 ימים",
     },
     "content-whatsapp-funnel": {
-      title: "WhatsApp Conversion System",
+      title: "מערכת המרה לוואטסאפ",
       problem: "אנשים צופים בעמודים וברשתות, אבל לא עוברים לשיחה או השארת פרטים.",
       whatWeDo:
-        "• עמוד נחיתה ברור\n• כפתור WhatsApp בולט\n• CTA לקבלת מחיר\n• הודעות פתיחה מהירות\n• תבניות תגובה לצוות",
+        "• עמוד נחיתה ברור\n• כפתור וואטסאפ בולט\n• קריאה לפעולה לקבלת מחיר\n• הודעות פתיחה מהירות\n• תבניות תגובה לצוות",
       outcome: "התוצאה: מעבר ישיר מצפייה לפנייה עם יותר לידים רלוונטיים.",
       timeline: "10-18 ימים",
     },
     "business-launch-setup": {
-      title: "Business Launch System",
+      title: "מערכת השקה לעסק",
       problem: "עסק חדש עולה לאוויר בלי מערכת שיווק אחידה, ולכן מאבד מומנטום כבר בהתחלה.",
       whatWeDo:
-        "• צילום פתיחה לעסק\n• סט תוכן לרשתות\n• אתר/עמוד שירות\n• הקמת Google Business\n• פרסום בסיס ממוקד",
+        "• צילום פתיחה לעסק\n• סט תוכן לרשתות\n• אתר/עמוד שירות\n• הקמת פרופיל עסק בגוגל\n• פרסום בסיס ממוקד",
       outcome: "התוצאה: השקה דיגיטלית מסודרת עם טראפיק ופניות מהיום הראשון.",
       timeline: "10-21 ימים",
     },
     "beauty-booking-flow": {
-      title: "Real Estate Listing System",
+      title: "מערכת שיווק לנכס נדל\"ן",
       problem: "נכס לא נסגר כי ההצגה שלו חלשה ולא יוצרת ערך נתפס גבוה.",
       whatWeDo:
-        "• צילום נדל\"ן מקצועי\n• וידאו walkthrough\n• Reels לנכס\n• עמוד נחיתה ייעודי\n• כפתור פנייה מהירה",
+        "• צילום נדל\"ן מקצועי\n• וידאו סיור\n• רילסים לנכס\n• עמוד נחיתה ייעודי\n• כפתור פנייה מהירה",
       outcome: "התוצאה: הנכס נראה יקר ומקצועי יותר ומייצר יותר צפיות ובקשות סיור.",
       timeline: "7-16 ימים",
     },
     "quick-start-system": {
-      title: "Digital Presence Starter",
+      title: "חבילת פתיחה לנוכחות דיגיטלית",
       problem: "העסק כמעט לא נראה באינטרנט ולכן לקוחות לא בונים אמון ולא פונים.",
       whatWeDo:
-        "• יום צילום עסק\n• 10 סרטוני Reels קצרים\n• עיצוב Instagram\n• עיצוב Google Business\n• דף נחיתה בסיסי + WhatsApp",
+        "• יום צילום עסק\n• 10 סרטוני רילס קצרים\n• עיצוב אינסטגרם\n• עיצוב פרופיל העסק בגוגל\n• דף נחיתה בסיסי + וואטסאפ",
       outcome: "התוצאה: העסק נראה חי ומקצועי, ולקוחות מתחילים לכתוב.",
       timeline: "5-12 ימים",
     },
@@ -868,7 +868,7 @@ const themeCopy: Record<
     restaurant: {
       label: "מסעדות ובתי קפה",
       focus: "חוויית אירוח, מנות ותנועה להזמנות",
-      cta: "קריאה ברורה להזמנה ב-WhatsApp",
+      cta: "קריאה ברורה להזמנה בוואטסאפ",
       modulePrefix: "מודול תוכן למסעדה",
     },
     beauty: {
@@ -944,14 +944,14 @@ const themeCopy: Record<
 
 const itemAngleCopy: Record<Locale, string[]> = {
   he: [
-    "Hook לפתיחה",
+    "פתיח חזק",
     "אווירה וסטייל",
     "הצעת ערך",
     "הוכחה חברתית",
     "לפני/אחרי",
     "תסריט AI",
     "מסר קצר לסטורי",
-    "סגירה עם CTA",
+    "סגירה עם קריאה לפעולה",
   ],
   en: [
     "Opening hook",
@@ -970,7 +970,7 @@ const moduleWorkflowSteps: Record<Locale, string[]> = {
     "יוצרים קונספט ברור לתוכן ולמטרה.",
     "מגדירים תגיות תוכן לפי קהל יעד ונושא.",
     "מצלמים וידאו איכותי עם תאורה נכונה.",
-    "כותבים תסריט קצר עם Hook ו-CTA.",
+    "כותבים תסריט קצר עם פתיח חזק וקריאה לפעולה.",
     "אורזים את החומרים לפורמטים של רילס/שורטס.",
     "מפרסמים לרשתות החברתיות ועוקבים אחרי תגובה.",
   ],
@@ -1106,7 +1106,7 @@ function addonLabelFromMessages(locale: Locale, messages: MessageSchema, addonId
       extra_production_day: "יום הפקה נוסף",
       extra_service_page: "עמוד שירות נוסף",
       monthly_ad_creatives: "סט קריאייטיב חודשי",
-      whatsapp_crm_setup: "הקמת WhatsApp CRM",
+      whatsapp_crm_setup: "הקמת CRM לוואטסאפ",
     },
   };
 
@@ -1155,7 +1155,7 @@ function localizedPricingLabels(locale: Locale) {
       notes: "הערות",
       breakdown: "פירוט חישוב",
       notesPlaceholder: "כתבו מטרה עסקית, תקציב חודשי ואזור פעילות.",
-      openWhatsAppCta: "פתיחה ב-WhatsApp",
+      openWhatsAppCta: "פתיחה בוואטסאפ",
       saveLeadCta: "שליחת פנייה",
       vatNote: "מע״מ לא כלול.",
     };
@@ -1290,7 +1290,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     return {
       title: caseTitles[index],
       bullets: bullets.filter(Boolean),
-      action: messages.solutionsPage?.orderCta || (isRtl ? "בחירה ב-WhatsApp" : "Choose on WhatsApp"),
+      action: messages.solutionsPage?.orderCta || (isRtl ? "בחירה בוואטסאפ" : "Choose on WhatsApp"),
       packageId: item.packageId,
       tone: item.tone,
       imageSrc: caseStageImages[Math.min(index, caseStageImages.length - 1)].src,
@@ -1300,14 +1300,14 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     };
   });
 
-  const footerCopyright = messages.footer?.copyright || "© 2026 Business Start Studio";
+  const footerCopyright = messages.footer?.copyright || "© 2026 SS Space";
   const phoneDigits = extractPhoneDigits(messages);
 
   return {
     locale,
     dir: toDirection(locale),
     isRtl,
-    brandName: messages.brand?.name || "Business Start Studio",
+    brandName: messages.brand?.name || "SS Space",
     whatsappPhoneDigits: phoneDigits,
     navQuoteCta: localizedCopy.navQuoteCta,
     navLinks: [
@@ -1450,4 +1450,5 @@ export function isDeliveryMode(value: string): value is DeliveryMode {
 export function isAddonId(value: string): value is AddonId {
   return (ADDON_IDS as readonly string[]).includes(value);
 }
+
 

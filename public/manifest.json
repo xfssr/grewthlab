@@ -1,6 +1,6 @@
-{
-  "name": "Business Start Studio",
-  "short_name": "BusinessStart",
+﻿{
+  "name": "SS Space",
+  "short_name": "SSSpace",
   "description": "Content, landing pages, WhatsApp flows, and local-business growth systems.",
   "start_url": "/",
   "scope": "/",
@@ -8,6 +8,12 @@
   "background_color": "#0b1018",
   "theme_color": "#d9a260",
   "icons": [
+    {
+      "src": "/ss-space-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
     {
       "src": "/favicon-16.png",
       "sizes": "16x16",
@@ -25,3 +31,4 @@
     }
   ]
 }
+

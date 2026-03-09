@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Business Start Studio | תוכן, אתר ופרסום לעסקים",
+    "title": "SS Space | תוכן, אתר ופרסום לעסקים",
     "description": "סטודיו צמיחה לעסקים: תוכן, מיני-אתר, פרסום והשקה שמביאים פניות ראשונות."
   },
   "brand": {
-    "label": "BUSINESS START STUDIO",
-    "name": "Business Start Studio"
+    "label": "SS SPACE",
+    "name": "SS Space"
   },
   "ui": {
     "languageToggle": "החלפת שפה"
@@ -307,7 +307,7 @@
     }
   },
   "servicesPage": {
-    "metaTitle": "שירותים | Business Start Studio",
+    "metaTitle": "שירותים | SS Space",
     "metaDescription": "שירותי תוכן, עמודי שירות ונכסי פרסום לעסקים שרוצים פניות ראשונות.",
     "eyebrow": "דף שירותים",
     "title": "שירותים שאפשר להזמין לפי צורך",
@@ -454,7 +454,7 @@
     "orderCta": "בחירה ב-WhatsApp"
   },
   "solutionsPage": {
-    "metaTitle": "פתרונות עסקיים | Business Start Studio",
+    "metaTitle": "פתרונות עסקיים | SS Space",
     "metaDescription": "פתרונות משולבים לפי תחום: מסעדות, ברים, ביוטי ושירותים מקומיים.",
     "eyebrow": "פתרונות לפי תחום",
     "title": "חבילות עבודה מוכנות לשוק הישראלי",
@@ -510,7 +510,7 @@
     "orderCta": "בחירה ב-WhatsApp"
   },
   "pricingPage": {
-    "metaTitle": "מחירים | Business Start Studio",
+    "metaTitle": "מחירים | SS Space",
     "metaDescription": "טווחי מחירים ברורים: Basic, Growth, System / Monthly.",
     "eyebrow": "מחירים",
     "title": "שלוש רמות מוצר ברורות",
@@ -569,7 +569,7 @@
     "note": "פרויקטים מורכבים במיוחד מתומחרים אחרי בריף קצר."
   },
   "portfolioPage": {
-    "metaTitle": "תיק עבודות | Business Start Studio",
+    "metaTitle": "תיק עבודות | SS Space",
     "metaDescription": "דוגמאות תוכן, עמודי שירות ונכסי השקה לעסקים.",
     "eyebrow": "עבודות נבחרות",
     "title": "תוכן ונראות שבנויים לתוצאה עסקית",
@@ -593,7 +593,7 @@
     ]
   },
   "aboutPage": {
-    "metaTitle": "אודות | Business Start Studio",
+    "metaTitle": "אודות | SS Space",
     "metaDescription": "סטודיו צמיחה לעסקים שמשלב תוכן, אתר ופרסום תחת מערכת אחת.",
     "eyebrow": "אודות",
     "title": "סטודיו פרקטי לצמיחה עסקית",
@@ -619,7 +619,7 @@
     ]
   },
   "contactPage": {
-    "metaTitle": "יצירת קשר | Business Start Studio",
+    "metaTitle": "יצירת קשר | SS Space",
     "metaDescription": "פנו אלינו ב-WhatsApp או השאירו פרטים לקבלת מסלול התחלה לעסק.",
     "eyebrow": "יצירת קשר",
     "title": "בואו נבנה מסלול התחלה לעסק שלכם",
@@ -633,7 +633,7 @@
   },
   "seoPages": {
     "restaurant-content": {
-      "metaTitle": "תוכן למסעדות | Business Start Studio",
+      "metaTitle": "תוכן למסעדות | SS Space",
       "metaDescription": "תוכן ועמוד שירות למסעדות שרוצות יותר הזמנות ופניות.",
       "title": "תוכן למסעדות שמביא הזמנות",
       "description": "צילום אוכל, רילס, QR ותפריט דיגיטלי במסלול אחד.",
@@ -646,7 +646,7 @@
       "price": "החל מ-2,500 ₪"
     },
     "bar-content": {
-      "metaTitle": "תוכן לברים | Business Start Studio",
+      "metaTitle": "תוכן לברים | SS Space",
       "metaDescription": "נראות דיגיטלית לברים: תוכן, אירועים וקידום.",
       "title": "תוכן לברים והפקות לילה",
       "description": "פתרון לנראות אירועים, פרסום ותנועה לקהל חדש.",
@@ -659,7 +659,7 @@
       "price": "החל מ-2,800 ₪"
     },
     "beauty-content": {
-      "metaTitle": "תוכן לביוטי | Business Start Studio",
+      "metaTitle": "תוכן לביוטי | SS Space",
       "metaDescription": "פתרון תוכן והזמנות לקליניקות ועסקי ביוטי.",
       "title": "תוכן לביוטי שמביא הזמנות",
       "description": "מתאים לקליניקות ואנשי מקצוע שרוצים יותר תיאומים.",
@@ -672,7 +672,7 @@
       "price": "החל מ-2,500 ₪"
     },
     "qr-menu-mini-site": {
-      "metaTitle": "QR תפריט ומיני-אתר | Business Start Studio",
+      "metaTitle": "QR תפריט ומיני-אתר | SS Space",
       "metaDescription": "פתרון מהיר למסעדות: QR menu + עמוד שירות לנייד.",
       "title": "QR תפריט + מיני-אתר לעסקי אוכל",
       "description": "מסלול קצר שמחבר בין שולחן, תפריט ופנייה מהירה.",
@@ -685,7 +685,7 @@
       "price": "החל מ-2,500 ₪"
     },
     "chef-personal-brand": {
-      "metaTitle": "מותג אישי לשף | Business Start Studio",
+      "metaTitle": "מותג אישי לשף | SS Space",
       "metaDescription": "נראות דיגיטלית לשפים: תוכן, עמוד אישי וקמפיין.",
       "title": "מותג אישי לשף וליוצר קולינרי",
       "description": "למי שרוצה לבנות תדמית מקצועית ולמשוך שיתופי פעולה.",
@@ -698,7 +698,7 @@
       "price": "החל מ-2,400 ₪"
     },
     "small-business-quick-start": {
-      "metaTitle": "התחלה מהירה לעסק קטן | Business Start Studio",
+      "metaTitle": "התחלה מהירה לעסק קטן | SS Space",
       "metaDescription": "פתרון מהיר לעסקים קטנים: תוכן, עמוד ופרסום ראשוני.",
       "title": "התחלה מהירה לעסק קטן",
       "description": "חבילה לעסקים שרוצים לעלות לאוויר בלי סרבול.",
@@ -712,7 +712,7 @@
     }
   },
   "footer": {
-    "copyright": "© 2026 Business Start Studio",
+    "copyright": "© 2026 SS Space",
     "note": "תוכן, אתר ופרסום לעסקים שרוצים תוצאה."
   },
   "whatsapp": {

@@ -1,11 +1,11 @@
 {
   "meta": {
-    "title": "Business Start Studio | Content, Website, and Promotion for Business Growth",
+    "title": "SS Space | Content, Website, and Promotion for Business Growth",
     "description": "Commercial content, digital packaging, and promotion for SMBs that need more inquiries and bookings."
   },
   "brand": {
-    "label": "BUSINESS START STUDIO",
-    "name": "Business Start Studio"
+    "label": "SS SPACE",
+    "name": "SS Space"
   },
   "ui": {
     "languageToggle": "Switch language",
@@ -274,7 +274,7 @@
     }
   },
   "servicesPage": {
-    "metaTitle": "Services | Business Start Studio",
+    "metaTitle": "Services | SS Space",
     "metaDescription": "Content production, service pages, and promotion packages for businesses that need inquiries.",
     "eyebrow": "Services",
     "title": "Book by service type",
@@ -438,7 +438,7 @@
     "orderCta": "Choose on WhatsApp"
   },
   "solutionsPage": {
-    "metaTitle": "Solutions | Business Start Studio",
+    "metaTitle": "Solutions | SS Space",
     "metaDescription": "Industry-focused solution packages for restaurants, bars, beauty, and local services.",
     "eyebrow": "Solutions by Industry",
     "title": "Ready business packages for the local market",
@@ -494,7 +494,7 @@
     "orderCta": "Choose on WhatsApp"
   },
   "pricingPage": {
-    "metaTitle": "Pricing | Business Start Studio",
+    "metaTitle": "Pricing | SS Space",
     "metaDescription": "Clear pricing architecture: Basic, Growth, and System / Monthly.",
     "eyebrow": "Pricing",
     "title": "Three product levels",
@@ -553,7 +553,7 @@
     "note": "Highly custom projects are quoted after a short brief."
   },
   "portfolioPage": {
-    "metaTitle": "Portfolio | Business Start Studio",
+    "metaTitle": "Portfolio | SS Space",
     "metaDescription": "Examples of content, service pages, and promotion systems for SMBs.",
     "eyebrow": "Selected Work",
     "title": "Built for visibility and response",
@@ -577,7 +577,7 @@
     ]
   },
   "aboutPage": {
-    "metaTitle": "About | Business Start Studio",
+    "metaTitle": "About | SS Space",
     "metaDescription": "A practical studio model combining content, web setup, and promotion.",
     "eyebrow": "About",
     "title": "A practical growth studio for SMBs",
@@ -603,7 +603,7 @@
     ]
   },
   "contactPage": {
-    "metaTitle": "Contact | Business Start Studio",
+    "metaTitle": "Contact | SS Space",
     "metaDescription": "Contact us on WhatsApp or send a short brief for your business launch.",
     "eyebrow": "Contact",
     "title": "Start with a focused launch brief",
@@ -617,7 +617,7 @@
   },
   "seoPages": {
     "restaurant-content": {
-      "metaTitle": "Restaurant Content Services | Business Start Studio",
+      "metaTitle": "Restaurant Content Services | SS Space",
       "metaDescription": "Content and mini-site setup for restaurants that need more orders and inquiries.",
       "title": "Restaurant Content That Brings Orders",
       "description": "Food visuals, reels, and QR-ready service setup in one package.",
@@ -630,7 +630,7 @@
       "price": "From 2,500 ILS"
     },
     "bar-content": {
-      "metaTitle": "Bar Content Services | Business Start Studio",
+      "metaTitle": "Bar Content Services | SS Space",
       "metaDescription": "Visibility packages for bars: event content, social rollouts, and inquiry flow.",
       "title": "Content for Bars and Event Nights",
       "description": "A practical package for events, promotions, and direct inquiries.",
@@ -643,7 +643,7 @@
       "price": "From 2,800 ILS"
     },
     "beauty-content": {
-      "metaTitle": "Beauty Content Services | Business Start Studio",
+      "metaTitle": "Beauty Content Services | SS Space",
       "metaDescription": "Beauty content, booking page setup, and ad creatives for first inquiries.",
       "title": "Beauty Content That Drives Bookings",
       "description": "Built for clinics and beauty providers who need stronger booking flow.",
@@ -656,7 +656,7 @@
       "price": "From 2,500 ILS"
     },
     "qr-menu-mini-site": {
-      "metaTitle": "QR Menu Mini Site | Business Start Studio",
+      "metaTitle": "QR Menu Mini Site | SS Space",
       "metaDescription": "Fast QR menu + mini-site setup for restaurants and cafes.",
       "title": "QR Menu and Mini Site Setup",
       "description": "A fast route from table scan to WhatsApp inquiry or order.",
@@ -669,7 +669,7 @@
       "price": "From 2,500 ILS"
     },
     "chef-personal-brand": {
-      "metaTitle": "Chef Personal Brand Setup | Business Start Studio",
+      "metaTitle": "Chef Personal Brand Setup | SS Space",
       "metaDescription": "Personal brand package for chefs: content day, profile page, and campaign assets.",
       "title": "Personal Brand Setup for Chefs",
       "description": "For chefs who want stronger professional visibility and partnership opportunities.",
@@ -682,7 +682,7 @@
       "price": "From 2,400 ILS"
     },
     "small-business-quick-start": {
-      "metaTitle": "Small Business Quick Start | Business Start Studio",
+      "metaTitle": "Small Business Quick Start | SS Space",
       "metaDescription": "Quick launch package for local SMBs: content, service page, and promotion starter.",
       "title": "Quick Start for Small Business",
       "description": "A practical package to launch digital presence without delay.",
@@ -696,7 +696,7 @@
     }
   },
   "footer": {
-    "copyright": "© 2026 Business Start Studio",
+    "copyright": "Â© 2026 SS Space",
     "note": "Content, website, and promotion for businesses that need response."
   },
   "whatsapp": {
@@ -814,3 +814,4 @@
     "general": "General"
   }
 }
+

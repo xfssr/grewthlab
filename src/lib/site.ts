@@ -1,5 +1,5 @@
-export const siteName = "Business Start Studio";
-export const siteTitle = "Business Start Studio | Growth systems for local businesses";
+﻿export const siteName = "SS Space";
+export const siteTitle = "SS Space | Growth systems for local businesses";
 export const siteDescription =
   "Growth systems for local businesses: content, landing pages, WhatsApp, and ads that bring qualified inquiries.";
 
@@ -60,3 +60,4 @@ export function absoluteUrl(path = "/"): string {
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return new URL(normalizedPath, `${base}/`).toString();
 }
+
