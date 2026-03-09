@@ -263,8 +263,8 @@ const archiveItemsRaw = [
 ] as const;
 
 const heroLeadLineByLocale: Record<Locale, string> = {
-  he: "מצלמים, בונים דף נחיתה ומביאים פניות איכותיות לוואטסאפ.",
-  en: "We shoot, build a landing page, and drive qualified inquiries to WhatsApp.",
+  he: "אנחנו בונים לעסק מערכת ברורה שמביאה פניות איכותיות לוואטסאפ.",
+  en: "We create a clear growth system that drives qualified WhatsApp inquiries.",
 };
 
 const industryCaptionOverrides: Record<Locale, string[]> = {
@@ -347,8 +347,8 @@ const localizedSectionCopy: Record<
     },
     hero: {
       eyebrow: "אנחנו לא רק מצלמים",
-      title: "מצלמים, עורכים, אורזים ומפרסמים",
-      accent: "ומביאים לכם לקוחות בפועל",
+      title: "מצלמים, בונים מערכת ומביאים לקוחות",
+      accent: "תוכן + דף נחיתה + פרסום לעסקים מקומיים",
       primaryCta: "לפתרונות",
       secondaryCta: "למחיר מהיר",
     },
@@ -467,7 +467,7 @@ const localizedSectionCopy: Record<
     },
   },
   en: {
-    navQuoteCta: "Get Quote",
+    navQuoteCta: "Get quote",
     nav: {
       solutions: "Solutions",
       gallery: "Gallery",
@@ -476,8 +476,8 @@ const localizedSectionCopy: Record<
     },
     hero: {
       eyebrow: "We do more than just shooting",
-      title: "We shoot, edit, package, and run ads",
-      accent: "to bring you real clients",
+      title: "We build content systems that bring real clients",
+      accent: "Content + landing page + ads for local businesses",
       primaryCta: "View solutions",
       secondaryCta: "Quick pricing",
     },
