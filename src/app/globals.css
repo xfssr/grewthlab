@@ -127,3 +127,35 @@ a {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.premium-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--stroke-strong) 74%, transparent);
+  background:
+    linear-gradient(138deg, rgba(24, 31, 45, 0.72) 0%, rgba(16, 22, 33, 0.76) 54%, rgba(14, 19, 29, 0.82) 100%);
+  box-shadow: var(--shadow-panel);
+  backdrop-filter: blur(1.5px);
+}
+
+.premium-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 14% -8%, rgba(217, 162, 96, 0.14), transparent 34%),
+    radial-gradient(circle at 92% 108%, rgba(86, 109, 158, 0.14), transparent 38%);
+}
+
+.premium-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.premium-shell {
+  border: 1px solid color-mix(in srgb, var(--stroke-strong) 70%, transparent);
+  background:
+    linear-gradient(128deg, rgba(20, 25, 36, 0.82) 0%, rgba(12, 17, 27, 0.84) 100%);
+  box-shadow: 0 14px 34px rgba(1, 2, 6, 0.34);
+}

@@ -34,9 +34,17 @@ export function SectionShell({
       aria-labelledby={ariaLabelledBy}
       variants={motionVariant}
       {...reveal}
-      className={className}
+      className={`relative isolate ${className ?? ""}`}
     >
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(217,162,96,0.28),transparent)]"
+        aria-hidden="true"
+      />
       <div className={`mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 ${containerClassName ?? ""}`}>{children}</div>
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[linear-gradient(90deg,transparent,rgba(86,109,158,0.2),transparent)]"
+        aria-hidden="true"
+      />
     </motion.section>
   );
 }

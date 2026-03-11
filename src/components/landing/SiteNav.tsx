@@ -14,10 +14,13 @@ type SiteNavProps = {
 
 export function SiteNav({ brandName, navLinks, navQuoteCta, activeSection, isRtl }: SiteNavProps) {
   return (
-    <header className="sticky top-0 z-50 border-b border-stroke-subtle bg-[#0b0e14]/92 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-stroke-subtle/85 bg-[linear-gradient(180deg,rgba(10,13,19,0.94),rgba(9,12,18,0.88))] backdrop-blur">
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <nav className="flex h-16 items-center justify-between gap-3" aria-label="Primary">
-          <a href="#top" className="inline-flex items-center gap-2 font-display text-lg tracking-tight text-text-primary sm:text-xl">
+          <a
+            href="#top"
+            className="premium-shell inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-display text-lg tracking-tight text-text-primary sm:text-xl"
+          >
             <Image src="/icon.svg" alt={`${brandName} logo`} width={28} height={28} className="h-7 w-7 rounded-md" />
             <span>{brandName}</span>
           </a>
@@ -29,7 +32,9 @@ export function SiteNav({ brandName, navLinks, navQuoteCta, activeSection, isRtl
                   <a
                     href={link.href}
                     className={`relative rounded-full px-4 py-2 text-sm font-medium transition ${
-                      isActive ? "text-text-primary" : "text-text-muted hover:text-text-primary"
+                      isActive
+                        ? "premium-shell text-text-primary shadow-soft"
+                        : "border border-transparent text-text-muted hover:border-stroke-subtle hover:bg-surface-base/45 hover:text-text-primary"
                     }`}
                   >
                     {link.label}
@@ -48,7 +53,7 @@ export function SiteNav({ brandName, navLinks, navQuoteCta, activeSection, isRtl
           </ul>
           <div className="flex items-center gap-2">
             <LanguageToggle />
-            <BrandButton as="a" href="#quote" size="sm" className="hidden sm:inline-flex">
+            <BrandButton as="a" href="#quote" size="sm" className="hidden sm:inline-flex sm:shadow-glow">
               {navQuoteCta}
             </BrandButton>
           </div>
@@ -62,8 +67,8 @@ export function SiteNav({ brandName, navLinks, navQuoteCta, activeSection, isRtl
                 href={link.href}
                 className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition ${
                   isActive
-                    ? "border-accent-primary bg-accent-soft text-[#efc58f]"
-                    : "border-stroke-subtle bg-surface-base text-text-muted"
+                    ? "premium-shell border-accent-primary/55 text-[#efc58f]"
+                    : "border-stroke-subtle bg-surface-base/75 text-text-muted"
                 } ${isRtl ? "ml-1" : "mr-1"}`}
               >
                 {link.label}

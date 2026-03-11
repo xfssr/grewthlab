@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { StructuredData } from "@/components/seo/StructuredData";
-import { productSlugByPackageId, seoProblemBySlug, seoProducts } from "@/lib/seo-data";
+import { SeoIntentBanner } from "@/components/seo/SeoIntentBanner";
+import { getSeoBannerVariant, productSlugByPackageId, seoProblemBySlug, seoProducts } from "@/lib/seo-data";
 import { absoluteUrl } from "@/lib/site";
 
 type ProblemPageProps = {
@@ -50,6 +51,7 @@ export async function generateMetadata({ params }: ProblemPageProps): Promise<Me
 export default async function ProblemPage({ params }: ProblemPageProps) {
   const { slug } = await params;
   const page = seoProblemBySlug.get(slug);
+  const bannerVariant = getSeoBannerVariant(`problems:${slug}`);
 
   if (!page) {
     notFound();
@@ -60,7 +62,12 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
   const url = absoluteUrl(`/problems/${slug}`);
 
   return (
-    <main className="min-h-screen bg-bg-base text-text-primary">
+    <main className="relative min-h-screen overflow-hidden bg-bg-base text-text-primary">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 top-0 h-[420px] bg-[radial-gradient(circle_at_15%_0%,rgba(217,162,96,0.2),transparent_42%),radial-gradient(circle_at_84%_10%,rgba(92,114,158,0.18),transparent_40%)]" />
+        <div className="absolute -left-20 top-28 h-72 w-72 rounded-full bg-[#d9a260]/11 blur-3xl" />
+        <div className="absolute -right-24 top-36 h-80 w-80 rounded-full bg-[#4f6998]/15 blur-3xl" />
+      </div>
       <StructuredData
         data={{
           "@context": "https://schema.org",
@@ -101,7 +108,7 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
           ],
         }}
       />
-      <section className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
+      <section className="relative z-10 mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <p className="ui-kicker">SEO problem page</p>
         <h1 className="mt-4 max-w-4xl font-display text-4xl leading-[1.02] sm:text-5xl lg:text-6xl">{page.title}</h1>
         <p className="mt-5 max-w-3xl text-base leading-relaxed text-text-muted sm:text-lg">{page.description}</p>
@@ -113,6 +120,8 @@ export default async function ProblemPage({ params }: ProblemPageProps) {
             </span>
           ))}
         </div>
+
+        <SeoIntentBanner variant={bannerVariant} />
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <article className="rounded-[1.25rem] border border-stroke-subtle bg-surface-base p-5 md:col-span-2">

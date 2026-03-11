@@ -25,7 +25,7 @@ export function SurfaceCard({ as = "article", id, ariaLabel, ariaLabelledBy, cla
       aria-labelledby={ariaLabelledBy}
       variants={fadeUp}
       {...reveal}
-      className={`rounded-3xl border border-stroke-subtle bg-surface-base shadow-panel ${className ?? ""}`}
+      className={`premium-card rounded-[1.5rem] border-white/14 ${className ?? ""}`}
     >
       {children}
     </MotionTag>

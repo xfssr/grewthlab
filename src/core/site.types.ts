@@ -198,6 +198,17 @@ export type SiteContentViewModel = {
     emptyLabel: string;
     modules: ContentArchiveModule[];
   };
+  bridge: {
+    eyebrow: string;
+    title: string;
+    beforeLabel: string;
+    beforeText: string;
+    buildLabel: string;
+    buildItems: string[];
+    resultLabel: string;
+    resultText: string;
+    cta: string;
+  };
   pricing: {
     title: string;
     description: string;

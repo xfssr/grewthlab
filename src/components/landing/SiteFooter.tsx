@@ -35,9 +35,12 @@ export function SiteFooter({
   const reveal = revealWhileInView(reduceMotion, 0.15);
 
   return (
-    <footer className="border-t border-stroke-subtle bg-[#090c12] py-12 text-text-primary" aria-label="Footer">
+    <footer
+      className="border-t border-stroke-subtle bg-[linear-gradient(180deg,#090c12_0%,#070a10_100%)] py-12 text-text-primary"
+      aria-label="Footer"
+    >
       <motion.div variants={staggerParent} {...reveal} className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-6 rounded-[2rem] border border-stroke-subtle bg-surface-base p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
+        <div className="premium-card grid gap-6 rounded-[2rem] p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
           <motion.div variants={fadeUp}>
             <h2 className="inline-flex items-center gap-2 font-display text-3xl leading-none">
               <Image src="/icon.svg" alt={`${brandName} logo`} width={32} height={32} className="h-8 w-8 rounded-md" />
@@ -50,7 +53,7 @@ export function SiteFooter({
             <ul className="mt-3 space-y-2 text-sm text-text-muted">
               {navLinks.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="transition hover:text-text-primary">
+                  <a href={link.href} className="transition hover:text-accent-primary">
                     {link.label}
                   </a>
                 </li>
@@ -67,7 +70,7 @@ export function SiteFooter({
           </motion.div>
           <motion.div variants={fadeUp}>
             <h3 className="text-xs font-semibold uppercase tracking-[0.18em] text-text-soft">{ctaTitle}</h3>
-            <BrandButton as="a" href="#quote" className="mt-3">
+            <BrandButton as="a" href="#quote" className="mt-3 shadow-glow">
               {ctaButton}
             </BrandButton>
           </motion.div>

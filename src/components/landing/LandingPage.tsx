@@ -1,22 +1,44 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 
 import { useLocaleContent } from "@/components/LocaleProvider";
-import { FaqAndQuote } from "@/components/landing/FaqAndQuote";
 import { GallerySection } from "@/components/landing/GallerySection";
 import { Hero } from "@/components/landing/Hero";
-import { IndustryCards } from "@/components/landing/IndustryCards";
-import { PricingSection } from "@/components/landing/PricingSection";
-import { PricingStats } from "@/components/landing/PricingStats";
 import { ProcessFlow } from "@/components/landing/ProcessFlow";
-import { ShowcaseSection } from "@/components/landing/ShowcaseSection";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteNav } from "@/components/landing/SiteNav";
+import { SystemBridgeSection } from "@/components/landing/SystemBridgeSection";
 import { getCalculatorRules } from "@/core/site.content";
 import { calculateQuote } from "@/core/pricing/quote-engine";
 import { buildWhatsAppMessage, toWhatsAppUrl } from "@/core/pricing/whatsapp-template";
 import type { AddonId, DeliveryMode, NicheId, PackageId, SectionId } from "@/core/site.types";
+
+function SectionLoading({ minHeight }: { minHeight: string }) {
+  return (
+    <div className="border-b border-stroke-subtle py-10 sm:py-12">
+      <div className={`mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 ${minHeight}`}>
+        <div className="h-full w-full animate-pulse rounded-[1.25rem] border border-stroke-subtle bg-surface-base/70" />
+      </div>
+    </div>
+  );
+}
+
+const ShowcaseSection = dynamic(
+  () => import("@/components/landing/ShowcaseSection").then((mod) => mod.ShowcaseSection),
+  { loading: () => <SectionLoading minHeight="min-h-[420px]" /> },
+);
+
+const PricingSection = dynamic(
+  () => import("@/components/landing/PricingSection").then((mod) => mod.PricingSection),
+  { loading: () => <SectionLoading minHeight="min-h-[480px]" /> },
+);
+
+const FaqAndQuote = dynamic(
+  () => import("@/components/landing/FaqAndQuote").then((mod) => mod.FaqAndQuote),
+  { loading: () => <SectionLoading minHeight="min-h-[380px]" /> },
+);
 
 function scrollToSection(id: string) {
   const element = document.getElementById(id);
@@ -186,7 +208,12 @@ export function LandingPage() {
   };
 
   return (
-    <div dir={dir} className={content.isRtl ? "text-right" : "text-left"}>
+    <div dir={dir} className={`relative ${content.isRtl ? "text-right" : "text-left"}`}>
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute inset-x-0 top-0 h-[460px] bg-[radial-gradient(circle_at_18%_0%,rgba(217,162,96,0.16),transparent_44%),radial-gradient(circle_at_84%_6%,rgba(86,109,158,0.15),transparent_40%)]" />
+        <div className="absolute inset-x-0 top-[34%] h-[420px] bg-[radial-gradient(circle_at_52%_20%,rgba(217,162,96,0.08),transparent_58%)]" />
+        <div className="absolute inset-x-0 bottom-0 h-[560px] bg-[radial-gradient(circle_at_24%_100%,rgba(86,109,158,0.11),transparent_48%),radial-gradient(circle_at_80%_100%,rgba(217,162,96,0.1),transparent_52%)]" />
+      </div>
       <SiteNav
         brandName={content.brandName}
         navLinks={content.navLinks}
@@ -194,18 +221,20 @@ export function LandingPage() {
         activeSection={activeSection}
         isRtl={content.isRtl}
       />
-      <main className="flex flex-col">
+      <main className="relative z-10 flex flex-col">
         <div className="relative order-1 isolate overflow-hidden">
           {sharedVideoSrc ? (
             <>
               <div className="pointer-events-none absolute inset-0" aria-hidden="true">
                 <video
                   src={sharedVideoSrc}
+                  poster={content.hero.backgroundImageSrc}
                   autoPlay
                   muted
                   loop
                   playsInline
-                  className="h-full w-full object-cover opacity-[0.36] blur-[1px]"
+                  preload="metadata"
+                  className="h-full w-full object-cover opacity-[0.34]"
                   style={{ transform: content.isRtl ? "scaleX(-1) scale(1.03)" : "scale(1.03)" }}
                 />
               </div>
@@ -241,13 +270,25 @@ export function LandingPage() {
           <GallerySection
             title={content.gallery.title}
             description={content.gallery.description}
-            detailsCta={content.gallery.detailsCta}
-            cardNote={content.gallery.cardNote}
             items={content.gallery.items}
-            archive={content.contentArchive}
+            isRtl={content.isRtl}
           />
         </div>
         <div className="order-3">
+          <SystemBridgeSection
+            eyebrow={content.bridge.eyebrow}
+            title={content.bridge.title}
+            beforeLabel={content.bridge.beforeLabel}
+            beforeText={content.bridge.beforeText}
+            buildLabel={content.bridge.buildLabel}
+            buildItems={content.bridge.buildItems}
+            resultLabel={content.bridge.resultLabel}
+            resultText={content.bridge.resultText}
+            cta={content.bridge.cta}
+            isRtl={content.isRtl}
+          />
+        </div>
+        <div className="order-4">
           <ShowcaseSection
             title={content.solutions.title}
             description={content.solutions.description}
@@ -258,13 +299,7 @@ export function LandingPage() {
             onOpenQuote={() => scrollToSection("quote")}
           />
         </div>
-        <div className="order-4">
-          <IndustryCards cards={content.industries} eyebrow={content.industryEyebrow} />
-        </div>
         <div className="order-5">
-          <PricingStats stats={content.pricing.stats} />
-        </div>
-        <div className="order-6">
           <PricingSection
             locale={locale}
             title={content.pricing.title}
@@ -292,7 +327,7 @@ export function LandingPage() {
             onOpenWhatsApp={handleOpenWhatsApp}
           />
         </div>
-        <div className="order-7">
+        <div className="order-6">
           <FaqAndQuote
             faqTitle={content.faq.title}
             faqItems={content.faq.items}

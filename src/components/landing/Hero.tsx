@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { fadeUp, revealWhileInView, staggerParent, useReducedMotionPreference } from "@/components/landing/motion";
 import { BrandButton } from "@/components/landing/ui/BrandButton";
 import { MetricChip } from "@/components/landing/ui/MetricChip";
+import { SpotlightFrame } from "@/components/landing/ui/SpotlightFrame";
 
 type HeroProps = {
   eyebrow: string;
@@ -33,12 +34,12 @@ export function Hero({
 }: HeroProps) {
   const reduceMotion = useReducedMotionPreference();
   const reveal = revealWhileInView(reduceMotion, 0.12);
-  const statsLabel = /[\u0590-\u05FF]/.test(`${title} ${description}`) ? "מדדי מפתח" : "Key metrics";
+  const statsLabel = /[\u0590-\u05FF]/.test(`${title} ${description}`) ? "\u05de\u05d3\u05d3\u05d9 \u05de\u05e4\u05ea\u05d7" : "Key metrics";
 
   return (
     <motion.section
       id="top"
-      className={`relative overflow-hidden pb-14 pt-16 text-text-primary sm:pb-16 sm:pt-20 ${
+      className={`relative overflow-hidden pb-6 pt-8 text-text-primary sm:pb-8 sm:pt-10 lg:pb-10 lg:pt-11 ${
         useSharedBackground ? "" : "border-b border-stroke-subtle"
       }`}
       aria-labelledby="hero-title"
@@ -50,17 +51,19 @@ export function Hero({
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <video
               src={backgroundVideoSrc}
+              poster={backgroundImageSrc}
               autoPlay
               muted
               loop
               playsInline
-              className="h-full w-full object-cover opacity-[0.42] blur-[1px]"
-              style={{ transform: isRtl ? "scaleX(-1) scale(1.05)" : "scale(1.05)" }}
+              preload="metadata"
+              className="h-full w-full object-cover opacity-[0.36]"
+              style={{ transform: isRtl ? "scaleX(-1) scale(1.04)" : "scale(1.04)" }}
             />
           </div>
         ) : (
           <div
-            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-50"
+            className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-45"
             style={{ backgroundImage: `url(${backgroundImageSrc})` }}
             aria-hidden="true"
           />
@@ -72,38 +75,51 @@ export function Hero({
       <div className="pointer-events-none absolute -left-14 top-10 h-44 w-44 rounded-full bg-[#d9a260]/20 blur-3xl" />
       <div className="pointer-events-none absolute -right-16 top-20 h-56 w-56 rounded-full bg-[#5572a7]/18 blur-3xl" />
 
-      <div className="relative mx-auto grid w-full max-w-6xl gap-8 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:px-8">
+      <div className="relative mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div variants={fadeUp}>
-          <p className="ui-kicker">{eyebrow}</p>
-          <h1
-            id="hero-title"
-            className="mt-6 max-w-4xl font-display text-5xl leading-[0.92] text-text-primary sm:text-6xl lg:text-7xl"
+          <SpotlightFrame
+            imageSrc={backgroundImageSrc}
+            imageAlt={/[\u0590-\u05FF]/.test(`${title} ${description}`) ? "\u05e8\u05d0\u05e9 \u05d4\u05e2\u05de\u05d5\u05d3" : "Hero background"}
+            imageOpacityClassName="opacity-[0.28]"
+            contentClassName="p-4 sm:p-5 lg:p-6"
+            asideClassName="hidden md:block"
+            aside={
+              <>
+                <p className="mb-3 text-[0.67rem] font-semibold uppercase tracking-[0.18em] text-text-soft">{statsLabel}</p>
+                <div className="space-y-3">
+                  {stats.slice(0, 3).map((item) => (
+                    <MetricChip
+                      key={`${item.label}-${item.value}`}
+                      label={item.label}
+                      value={item.value}
+                      className="border border-white/12 bg-black/26"
+                    />
+                  ))}
+                </div>
+              </>
+            }
           >
-            {title}
-            <span className="mt-3 block text-accent-primary">{accent}</span>
-          </h1>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-text-muted sm:text-lg">{description}</p>
-          <div className="mt-8 hidden flex-col items-start gap-3 sm:flex-row md:flex">
-            <BrandButton as="a" href="#gallery" variant="solid" className="w-full sm:w-auto">
-              {primaryCta}
-            </BrandButton>
-            <BrandButton as="a" href="#pricing" variant="outline" className="w-full sm:w-auto">
-              {secondaryCta}
-            </BrandButton>
-          </div>
+            <p className="ui-kicker">{eyebrow}</p>
+            <h1
+              id="hero-title"
+              className="mt-3 max-w-4xl font-display text-[1.95rem] leading-[0.95] text-text-primary sm:mt-4 sm:text-[2.55rem] lg:text-[3.25rem]"
+            >
+              {title}
+              <span className="mt-2 block text-[1.08rem] leading-[1.1] text-accent-primary sm:text-[1.35rem] lg:text-[1.72rem]">
+                {accent}
+              </span>
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-relaxed text-text-muted sm:text-base">{description}</p>
+            <div className="mt-4 flex flex-col items-start gap-2.5 sm:flex-row">
+              <BrandButton as="a" href="#gallery" variant="solid" className="w-full px-6 sm:w-auto">
+                {primaryCta}
+              </BrandButton>
+              <BrandButton as="a" href="#pricing" variant="outline" className="w-full px-6 sm:w-auto">
+                {secondaryCta}
+              </BrandButton>
+            </div>
+          </SpotlightFrame>
         </motion.div>
-
-        <motion.aside
-          variants={fadeUp}
-          className="hidden rounded-3xl border border-stroke-subtle bg-surface-base p-4 shadow-panel sm:p-5 md:block"
-        >
-          <p className="mb-3 text-[0.67rem] font-semibold uppercase tracking-[0.18em] text-text-soft">{statsLabel}</p>
-          <div className="space-y-3">
-            {stats.slice(0, 3).map((item) => (
-              <MetricChip key={`${item.label}-${item.value}`} label={item.label} value={item.value} className="bg-surface-muted" />
-            ))}
-          </div>
-        </motion.aside>
       </div>
     </motion.section>
   );

@@ -28,7 +28,7 @@ export function SectionHeading({
       {eyebrow ? <p className={`ui-kicker ${center ? "mx-auto" : ""}`}>{eyebrow}</p> : null}
       <h2
         id={id}
-        className={`mt-3 font-display text-4xl leading-[1.05] text-text-primary sm:text-5xl lg:text-6xl ${
+        className={`mt-3 max-w-5xl font-display text-[2rem] leading-[1.06] text-text-primary drop-shadow-[0_8px_22px_rgba(0,0,0,0.38)] sm:text-[2.55rem] lg:text-[3.15rem] ${
           center ? "mx-auto text-center" : ""
         }`}
       >
@@ -36,7 +36,7 @@ export function SectionHeading({
       </h2>
       {description ? (
         <p
-          className={`ui-subtle mt-4 max-w-3xl text-base leading-relaxed sm:text-lg ${
+          className={`ui-subtle mt-4 max-w-2xl text-[15px] leading-relaxed sm:text-base ${
             center ? "mx-auto text-center" : ""
           }`}
         >

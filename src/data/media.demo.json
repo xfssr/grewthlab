@@ -2,83 +2,123 @@
   {
     "id": "media-photo-1",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Restaurant interior with warm lighting and tables prepared for guests.",
     "altHe": "חלל מסעדה עם תאורה חמה ושולחנות מוכנים לאירוח.",
-    "tags": ["restaurant", "interior", "hospitality"]
+    "tags": [
+      "restaurant",
+      "interior",
+      "hospitality"
+    ]
   },
   {
     "id": "media-photo-2",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Beauty professional working with a client in a studio.",
     "altHe": "אשת מקצוע בתחום הביוטי עובדת עם לקוחה בסטודיו.",
-    "tags": ["beauty", "service", "portrait"]
+    "tags": [
+      "beauty",
+      "service",
+      "portrait"
+    ]
   },
   {
     "id": "media-photo-3",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Modern house exterior for real-estate marketing.",
     "altHe": "חזית בית מודרני עבור שיווק נדל\"ן.",
-    "tags": ["real-estate", "property", "architecture"]
+    "tags": [
+      "real-estate",
+      "property",
+      "architecture"
+    ]
   },
   {
     "id": "media-photo-4",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Hotel room with clean composition and premium styling.",
     "altHe": "חדר מלון בקומפוזיציה נקייה ומראה יוקרתי.",
-    "tags": ["hotel", "room", "hospitality"]
+    "tags": [
+      "hotel",
+      "room",
+      "hospitality"
+    ]
   },
   {
     "id": "media-photo-5",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Storefront scene used for local business campaign visuals.",
     "altHe": "חזית עסק מקומי המשמשת לוויזואלים לקמפיין.",
-    "tags": ["business", "storefront", "campaign"]
+    "tags": [
+      "business",
+      "storefront",
+      "campaign"
+    ]
   },
   {
     "id": "media-photo-6",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Product and menu styling close-up for promotional assets.",
     "altHe": "קלוז-אפ של סטיילינג מוצר/תפריט לנכסי פרסום.",
-    "tags": ["product", "menu", "commercial"]
+    "tags": [
+      "product",
+      "menu",
+      "commercial"
+    ]
   },
   {
     "id": "media-photo-7",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Team planning campaign strategy in an office environment.",
     "altHe": "צוות מתכנן אסטרטגיית קמפיין בסביבת משרד.",
-    "tags": ["team", "strategy", "planning"]
+    "tags": [
+      "team",
+      "strategy",
+      "planning"
+    ]
   },
   {
     "id": "media-photo-8",
     "type": "image",
-    "src": "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1400&q=80",
+    "src": "https://images.unsplash.com/photo-1556740738-b6a63e27c4df?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Client reception point highlighting service experience.",
     "altHe": "עמדת קבלת לקוחות המדגישה חוויית שירות.",
-    "tags": ["service", "reception", "experience"]
+    "tags": [
+      "service",
+      "reception",
+      "experience"
+    ]
   },
   {
     "id": "media-video-1",
     "type": "video",
     "src": "https://samplelib.com/lib/preview/mp4/sample-5s.mp4",
-    "poster": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1400&q=80",
+    "poster": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Short demo video placeholder for campaign reel.",
     "altHe": "וידאו דמו קצר המשמש כריל לקמפיין.",
-    "tags": ["video", "reel", "campaign"]
+    "tags": [
+      "video",
+      "reel",
+      "campaign"
+    ]
   },
   {
     "id": "media-video-2",
     "type": "video",
     "src": "https://samplelib.com/lib/preview/mp4/sample-10s.mp4",
-    "poster": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1400&q=80",
+    "poster": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=72",
     "altEn": "Second short video placeholder for showcase block.",
     "altHe": "וידאו דמו נוסף עבור בלוק תצוגה.",
-    "tags": ["video", "showcase", "demo"]
+    "tags": [
+      "video",
+      "showcase",
+      "demo"
+    ]
   }
 ]

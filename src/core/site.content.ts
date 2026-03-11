@@ -314,6 +314,17 @@ const localizedSectionCopy: Record<
       productionFilters: { all: string; ugc: string; lighting: string; ai: string };
       emptyLabel: string;
     };
+    bridge: {
+      eyebrow: string;
+      title: string;
+      beforeLabel: string;
+      beforeText: string;
+      buildLabel: string;
+      buildItems: string[];
+      resultLabel: string;
+      resultText: string;
+      cta: string;
+    };
     pricing: { title: string; description: string };
     casesTitle: string;
     faq: { title: string; items: Array<{ question: string; answer: string }> };
@@ -348,7 +359,7 @@ const localizedSectionCopy: Record<
     hero: {
       eyebrow: "אנחנו לא רק מצלמים",
       title: "מצלמים, בונים מערכת ומביאים לקוחות",
-      accent: "תוכן + דף נחיתה + פרסום לעסקים מקומיים",
+      accent: "תוכן, דף נחיתה וזרימת פניות לוואטסאפ - כמערכת אחת שמביאה לקוחות.",
       primaryCta: "לפתרונות",
       secondaryCta: "למחיר מהיר",
     },
@@ -357,20 +368,20 @@ const localizedSectionCopy: Record<
       title: "איך זה עובד",
       steps: [
         {
-          title: "מצלמים תוכן",
-          subtitle: "מצלמים את העסק, המוצרים והשירותים בפורמט שמתאים לרשתות.",
+          title: "יוצרים תוכן מדויק לעסק",
+          subtitle: "מזקקים מסר, מצלמים את מה שבאמת מוכר, ובונים נכסים שמתאימים לקהל המקומי.",
         },
         {
-          title: "בונים עמוד נחיתה",
-          subtitle: "מקימים עמוד ברור עם הצעה, הוכחה וכפתור וואטסאפ.",
+          title: "בונים עמוד ברור שממיר",
+          subtitle: "מחברים הצעה, הוכחה וקריאה לפעולה אחת ברורה שמובילה לשיחה.",
         },
         {
-          title: "מחברים פרסום",
-          subtitle: "מעלים קמפיינים ממוקדים ומחברים אותם לעמוד ולתוכן.",
+          title: "מחברים פרסום ומסלול פנייה",
+          subtitle: "הקמפיין והתוכן מובילים לאותו מסלול WhatsApp מדיד, בלי פערים באמצע.",
         },
         {
-          title: "לקוחות כותבים",
-          subtitle: "הלקוחות פונים ישירות לוואטסאפ עם כוונת רכישה ברורה.",
+          title: "מקבלים פניות אמיתיות",
+          subtitle: "יותר אמון, יותר הודעות, ויותר הזמנות מעסקים שמחפשים תוצאה ולא רעש.",
         },
       ],
     },
@@ -399,7 +410,7 @@ const localizedSectionCopy: Record<
     },
     gallery: {
       title: "עבודות נבחרות",
-      description: "כך נראים פרויקטים שמייצרים עניין, אמון ופנייה.",
+      description: "לא רק עיצוב יפה - כל נכס כאן תומך במהלך שמוביל לפניות ולמכירה.",
       detailsCta: "למודול תוכן",
       cardNote: "זה תוכן שאנחנו יוצרים לעסקים.",
     },
@@ -420,6 +431,22 @@ const localizedSectionCopy: Record<
         ai: "AI",
       },
       emptyLabel: "אין פריטים לסינון הזה כרגע.",
+    },
+    bridge: {
+      eyebrow: "איך זה נהיה מערכת",
+      title: "מנראות יפה לנוכחות שמביאה פניות",
+      beforeLabel: "לפני",
+      beforeText: "העסק נראה מצוין במציאות, אבל אונליין המסר מפוזר והלקוח לא מתקדם לפנייה.",
+      buildLabel: "מה אנחנו בונים",
+      buildItems: [
+        "תוכן שמדבר לקהל הנכון",
+        "עמוד נחיתה ממוקד הצעה ותוצאה",
+        "קריאייטיב והצעה לפרסום",
+        "זרימת WhatsApp קצרה וברורה",
+      ],
+      resultLabel: "התוצאה",
+      resultText: "יותר אמון כבר במפגש הראשון, יותר פניות רלוונטיות, ויותר הזמנות/סגירות.",
+      cta: "למחשבון מחיר מהיר",
     },
     pricing: {
       title: "מחשבון מחיר מהיר",
@@ -542,6 +569,22 @@ const localizedSectionCopy: Record<
         ai: "AI",
       },
       emptyLabel: "No items in this filter yet.",
+    },
+    bridge: {
+      eyebrow: "From Assets to System",
+      title: "We turn good-looking brands into inquiry engines",
+      beforeLabel: "Before",
+      beforeText: "The business looks strong in real life, but online touchpoints are fragmented and under-converting.",
+      buildLabel: "What we build",
+      buildItems: [
+        "Content that matches buyer intent",
+        "Conversion-focused landing page",
+        "Offer + ad creative alignment",
+        "Simple WhatsApp inquiry flow",
+      ],
+      resultLabel: "Result",
+      resultText: "Higher trust, more qualified inquiries, and more bookings/orders from one connected system.",
+      cta: "Open quick pricing",
     },
     pricing: {
       title: "Quick pricing calculator",
@@ -807,6 +850,26 @@ function toShekelLabel(value: string | undefined): string {
   }
 
   return value.replace(/\bILS\b/gi, "₪");
+}
+
+function hasHebrewCharacters(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+  return /[\u0590-\u05FF]/u.test(value);
+}
+
+function localizedText(locale: Locale, candidate: string | undefined, fallback: string): string {
+  const value = candidate?.trim();
+  if (!value) {
+    return fallback;
+  }
+
+  if (locale === "he" && !hasHebrewCharacters(value)) {
+    return fallback;
+  }
+
+  return value;
 }
 
 function formatShekel(amount: number): string {
@@ -1111,13 +1174,13 @@ function addonLabelFromMessages(locale: Locale, messages: MessageSchema, addonId
   };
 
   if (addonId === "extra_production_day" && pricingAddons[0]?.title) {
-    return pricingAddons[0].title;
+    return localizedText(locale, pricingAddons[0].title, fallbackMap[locale][addonId]);
   }
   if (addonId === "extra_service_page" && pricingAddons[1]?.title) {
-    return pricingAddons[1].title;
+    return localizedText(locale, pricingAddons[1].title, fallbackMap[locale][addonId]);
   }
   if (addonId === "monthly_ad_creatives" && pricingAddons[2]?.title) {
-    return pricingAddons[2].title;
+    return localizedText(locale, pricingAddons[2].title, fallbackMap[locale][addonId]);
   }
 
   return fallbackMap[locale][addonId];
@@ -1227,8 +1290,11 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     .map((item) => ({ id: item.packageId, label: item.title }));
 
   const audience = messages.audience?.categories ?? [];
+  const industryFallbackLabels = isRtl
+    ? ["מסעדות", "ביוטי וטיפוח", "נדל\"ן", "מלונאות ואירוח"]
+    : ["Restaurants", "Beauty and wellness", "Real estate", "Hotels and hospitality"];
   const industries = NICHE_IDS.map((nicheId, index) => ({
-    title: audience[index] || nicheId,
+    title: localizedText(locale, audience[index], industryFallbackLabels[index] || nicheId),
     caption:
       industryCaptionOverrides[locale][index] ||
       solutions[index]?.problem ||
@@ -1244,26 +1310,26 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
   const pricingAddons = messages.pricingPage?.addons ?? [];
   const stats = [
     {
-      label: pricingTiers[0]?.title || (isRtl ? "בסיס" : "Basic"),
+      label: localizedText(locale, pricingTiers[0]?.title, isRtl ? "בסיס" : "Basic"),
       value: toShekelLabel(pricingTiers[0]?.price) || formatShekel(1200),
     },
     {
-      label: pricingTiers[1]?.title || (isRtl ? "צמיחה" : "Growth"),
+      label: localizedText(locale, pricingTiers[1]?.title, isRtl ? "צמיחה" : "Growth"),
       value: toShekelLabel(pricingTiers[1]?.price) || formatShekel(3000),
     },
     {
-      label: pricingTiers[2]?.title || (isRtl ? "מערכת" : "System"),
+      label: localizedText(locale, pricingTiers[2]?.title, isRtl ? "מערכת" : "System"),
       value: toShekelLabel(pricingTiers[2]?.price) || formatShekel(5000),
     },
     {
-      label: pricingAddons[0]?.title || (isRtl ? "תוספת" : "Add-on"),
+      label: localizedText(locale, pricingAddons[0]?.title, isRtl ? "תוספת" : "Add-on"),
       value: toShekelLabel(pricingAddons[0]?.price) || formatShekel(900),
     },
   ];
 
   const niches = NICHE_IDS.map((id, index) => ({
     id,
-    label: audience[index] || id,
+    label: localizedText(locale, audience[index], industryFallbackLabels[index] || id),
   }));
 
   const addonOptions = ADDON_IDS.map((id) => {
@@ -1290,7 +1356,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     return {
       title: caseTitles[index],
       bullets: bullets.filter(Boolean),
-      action: messages.solutionsPage?.orderCta || (isRtl ? "בחירה בוואטסאפ" : "Choose on WhatsApp"),
+      action: localizedText(locale, messages.solutionsPage?.orderCta, isRtl ? "בחירה בוואטסאפ" : "Choose on WhatsApp"),
       packageId: item.packageId,
       tone: item.tone,
       imageSrc: caseStageImages[Math.min(index, caseStageImages.length - 1)].src,
@@ -1380,6 +1446,17 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
       productionFilters: localizedCopy.contentArchive.productionFilters,
       emptyLabel: localizedCopy.contentArchive.emptyLabel,
       modules: contentArchiveModules,
+    },
+    bridge: {
+      eyebrow: localizedCopy.bridge.eyebrow,
+      title: localizedCopy.bridge.title,
+      beforeLabel: localizedCopy.bridge.beforeLabel,
+      beforeText: localizedCopy.bridge.beforeText,
+      buildLabel: localizedCopy.bridge.buildLabel,
+      buildItems: localizedCopy.bridge.buildItems,
+      resultLabel: localizedCopy.bridge.resultLabel,
+      resultText: localizedCopy.bridge.resultText,
+      cta: localizedCopy.bridge.cta,
     },
     pricing: {
       title: localizedCopy.pricing.title,

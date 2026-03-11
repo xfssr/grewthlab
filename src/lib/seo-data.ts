@@ -26,6 +26,70 @@ export type SeoProblemPage = {
   faqs: Array<{ question: string; answer: string }>;
 };
 
+export type SeoBannerVariant = {
+  id: "diagnostic" | "system-offer" | "results" | "speed" | "calculator";
+  title: string;
+  subtitle: string;
+  primaryCta: { label: string; href: string };
+  secondaryCta: { label: string; href: string };
+  linkCta: { label: string; href: string };
+  imageSrc: string;
+  imageAlt: string;
+};
+
+export const seoBannerVariants: SeoBannerVariant[] = [
+  {
+    id: "diagnostic",
+    title: "יש צפיות אבל אין פניות?",
+    subtitle: "נראה לך ב-60 שניות איפה הלקוח נתקע בדרך לוואטסאפ.",
+    primaryCta: { label: "קבלו אבחון מהיר", href: "/#quote" },
+    secondaryCta: { label: "צפו בעבודות", href: "/#gallery" },
+    linkCta: { label: "איך זה עובד", href: "/#solutions" },
+    imageSrc: "/images/generated/case-problem.webp",
+    imageAlt: "Business diagnosis concept image",
+  },
+  {
+    id: "system-offer",
+    title: "תוכן + דף נחיתה + וואטסאפ במערכת אחת",
+    subtitle: "במקום שירותים מפוזרים — מסלול ברור שמייצר פניות לעסק המקומי.",
+    primaryCta: { label: "קבלו הצעת מחיר", href: "/#pricing" },
+    secondaryCta: { label: "ראו חבילות", href: "/#solutions" },
+    linkCta: { label: "פירוט התהליך", href: "/#solutions" },
+    imageSrc: "/images/generated/category-restaurants.webp",
+    imageAlt: "Integrated growth system concept image",
+  },
+  {
+    id: "results",
+    title: "יותר אמון. יותר פניות. יותר הזמנות.",
+    subtitle: "כך בונים נוכחות דיגיטלית שמביאה לקוחות אמיתיים, לא רק לייקים.",
+    primaryCta: { label: "התחילו בוואטסאפ", href: "/#pricing" },
+    secondaryCta: { label: "דוגמאות לתוצאות", href: "/#gallery" },
+    linkCta: { label: "מה כולל השירות", href: "/#solutions" },
+    imageSrc: "/images/generated/case-result.webp",
+    imageAlt: "Growth results concept image",
+  },
+  {
+    id: "speed",
+    title: "אפשר לעלות לאוויר תוך 14 יום",
+    subtitle: "צילום, עמוד ממיר וקריאייטיב פרסומי — הכל מוכן להשקה.",
+    primaryCta: { label: "בנו לי מסלול מהיר", href: "/#quote" },
+    secondaryCta: { label: "צפו בקייסים", href: "/#gallery" },
+    linkCta: { label: "שאלות נפוצות", href: "/#faq" },
+    imageSrc: "/images/generated/case-solution.webp",
+    imageAlt: "Fast launch concept image",
+  },
+  {
+    id: "calculator",
+    title: "רוצים לדעת כמה זה יעלה לעסק שלכם?",
+    subtitle: "מחשבון מהיר + המלצה למסלול שמתאים לתחום וליעד שלכם.",
+    primaryCta: { label: "לחישוב מחיר מהיר", href: "/#pricing" },
+    secondaryCta: { label: "דברו איתנו בוואטסאפ", href: "/#quote" },
+    linkCta: { label: "השוואת חבילות", href: "/#solutions" },
+    imageSrc: "/images/generated/hero-blur.webp",
+    imageAlt: "Pricing and calculator concept image",
+  },
+];
+
 export const seoProducts: SeoProductPage[] = [
   {
     slug: "digital-presence-starter",
@@ -303,6 +367,21 @@ export const seoProblems: SeoProblemPage[] = [
 export const seoProductBySlug = new Map(seoProducts.map((item) => [item.slug, item]));
 export const seoProblemBySlug = new Map(seoProblems.map((item) => [item.slug, item]));
 export const productSlugByPackageId = new Map(seoProducts.map((item) => [item.packageId, item.slug]));
+
+function stableHashSeed(value: string): number {
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) | 0;
+  }
+  return Math.abs(hash);
+}
+
+export function getSeoBannerVariant(seed: string): SeoBannerVariant {
+  if (seoBannerVariants.length === 0) {
+    throw new Error("seoBannerVariants is empty.");
+  }
+  return seoBannerVariants[stableHashSeed(seed) % seoBannerVariants.length];
+}
 
 export async function getSeoProductCard(packageId: PackageId) {
   const content = await applyDbOverrides(getSiteContent("he"), "he");

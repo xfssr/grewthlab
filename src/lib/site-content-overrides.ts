@@ -6,6 +6,26 @@ import { applyDiscount, applyDiscountToRules, getPricingSettings } from "@/lib/p
 
 type SiteContentOverrideData = Partial<SiteContentViewModel>;
 
+function hasHebrewCharacters(value: string | undefined): boolean {
+  if (!value) {
+    return false;
+  }
+  return /[\u0590-\u05FF]/u.test(value);
+}
+
+function localizedText(locale: Locale, candidate: string | undefined, fallback: string): string {
+  const value = candidate?.trim();
+  if (!value) {
+    return fallback;
+  }
+
+  if (locale === "he" && !hasHebrewCharacters(value)) {
+    return fallback;
+  }
+
+  return value;
+}
+
 function formatPriceLabel(value: number, locale: Locale): string {
   return new Intl.NumberFormat(locale === "he" ? "he-IL" : "en-US", {
     style: "currency",
@@ -104,14 +124,18 @@ function mapGalleryItems(
       continue;
     }
 
-    const alt = row.description?.trim() || row.title?.trim() || (locale === "he" ? "פריט גלריה" : "Gallery item");
+    const alt = localizedText(
+      locale,
+      row.description,
+      localizedText(locale, row.title, locale === "he" ? "פריט גלריה" : "Gallery item"),
+    );
 
     const normalizedTier = row.tier?.trim() || row.title?.trim();
 
     mapped.push({
       id: row.id,
-      title: row.title?.trim() || alt,
-      tier: normalizedTier || row.title?.trim() || row.id,
+      title: localizedText(locale, row.title, alt),
+      tier: localizedText(locale, normalizedTier, localizedText(locale, row.title, row.id)),
       type: hasVideo ? "video" : "image",
       src: mediaSrc,
       poster: hasVideo ? row.imageUrl?.trim() || undefined : undefined,
@@ -211,10 +235,10 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
 
     if (page) {
       if (page.title?.trim()) {
-        next.hero.title = page.title.trim();
+        next.hero.title = localizedText(locale, page.title, next.hero.title);
       }
       if (page.subtitle?.trim()) {
-        next.hero.description = page.subtitle.trim();
+        next.hero.description = localizedText(locale, page.subtitle, next.hero.description);
       }
       if (page.heroImage?.trim()) {
         next.hero.backgroundImageSrc = page.heroImage.trim();
@@ -254,10 +278,10 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
       updatedCards.push({
         ...baseCard,
         packageId: baseCard.packageId ?? packageId,
-        title: row?.title?.trim() || baseCard.title,
-        problem: description || baseCard.problem,
-        whatWeDo: description || baseCard.whatWeDo,
-        outcome: description || baseCard.outcome,
+        title: localizedText(locale, row?.title, baseCard.title),
+        problem: localizedText(locale, description, baseCard.problem),
+        whatWeDo: localizedText(locale, description, baseCard.whatWeDo),
+        outcome: localizedText(locale, description, baseCard.outcome),
         priceLabel: formatPriceLabel(displayPrice, locale),
         imageSrc: row?.imageUrl?.trim() || baseCard.imageSrc,
       });
@@ -269,10 +293,18 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         const description = row.description?.trim();
         return {
           id: row.slug,
-          title: row.title?.trim() || row.slug,
-          problem: description || (locale === "he" ? "פתרון מותאם לעסק" : "Custom business solution"),
-          whatWeDo: description || (locale === "he" ? "פרטי הפתרון זמינים לפי בקשה." : "Solution details available on request."),
-          outcome: description || (locale === "he" ? "מתאים לצורך עסקי ממוקד." : "Built for a focused business need."),
+          title: localizedText(locale, row.title, locale === "he" ? `פתרון מותאם ${index + 1}` : row.slug),
+          problem: localizedText(locale, description, locale === "he" ? "פתרון מותאם לעסק" : "Custom business solution"),
+          whatWeDo: localizedText(
+            locale,
+            description,
+            locale === "he" ? "פרטי הפתרון זמינים לפי בקשה." : "Solution details available on request.",
+          ),
+          outcome: localizedText(
+            locale,
+            description,
+            locale === "he" ? "מתאים לצורך עסקי ממוקד." : "Built for a focused business need.",
+          ),
           timeline: locale === "he" ? "מותאם אישית" : "Custom scope",
           priceLabel: formatPriceLabel(applyDiscount(Number(row.price), pricingSettings.discountPercent), locale),
           actionLabel: locale === "he" ? "קבלו פרטים" : "Get details",

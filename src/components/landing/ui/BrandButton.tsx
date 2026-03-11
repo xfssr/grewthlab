@@ -20,10 +20,10 @@ type BrandButtonProps = {
 
 const variantClassMap: Record<BrandButtonVariant, string> = {
   solid:
-    "border border-accent-primary bg-gradient-to-r from-accent-primary to-accent-secondary text-text-inverse shadow-glow hover:brightness-105",
-  outline: "border border-stroke-strong bg-transparent text-text-primary hover:bg-surface-muted",
-  soft: "border border-stroke-subtle bg-accent-soft text-accent-primary hover:border-accent-primary",
-  ghost: "border border-transparent bg-transparent text-text-primary hover:bg-surface-muted",
+    "border border-accent-primary/85 bg-gradient-to-r from-accent-primary to-accent-secondary text-text-inverse shadow-glow hover:brightness-[1.06]",
+  outline: "border border-white/16 bg-black/18 text-text-primary hover:border-accent-primary/55 hover:bg-surface-muted/75",
+  soft: "border border-stroke-subtle bg-accent-soft/90 text-accent-primary hover:border-accent-primary",
+  ghost: "border border-transparent bg-transparent text-text-primary hover:bg-surface-muted/55",
 };
 
 const sizeClassMap = {
@@ -45,7 +45,7 @@ export function BrandButton({
 }: BrandButtonProps) {
   const reduceMotion = useReducedMotionPreference();
   const reveal = revealWhileInView(reduceMotion, 0.3);
-  const classes = `inline-flex items-center justify-center rounded-full transition duration-300 ${variantClassMap[variant]} ${
+  const classes = `inline-flex items-center justify-center rounded-full tracking-[0.01em] transition duration-300 hover:-translate-y-[1px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/65 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0d12] ${variantClassMap[variant]} ${
     sizeClassMap[size]
   } ${className ?? ""}`;
 
