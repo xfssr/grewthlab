@@ -1,20 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
-import { getCalculatorRules, getSiteContent } from "@/core/site.content";
 import { buildWhatsAppMessage } from "@/core/pricing/whatsapp-template";
-import { calculateQuote, QuoteEngineError } from "@/core/pricing/quote-engine";
-import { ADDON_IDS, DELIVERY_MODES, LOCALES, NICHE_IDS, PACKAGE_IDS } from "@/core/site.types";
-import { applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
+import { getTierDefinition } from "@/core/pricing/tier-model";
+import { INTAKE_SOURCES, LANGUAGE_BUNDLES, LOCALES, PACKAGE_IDS, TIER_IDS, VOICE_MODES } from "@/core/site.types";
 
 export const runtime = "nodejs";
 
-const quoteRequestSchema = z.object({
+const tierQuoteRequestSchema = z.object({
   locale: z.enum(LOCALES).default("he"),
-  niche: z.enum(NICHE_IDS),
+  tierId: z.enum(TIER_IDS),
+  intakeSource: z.enum(INTAKE_SOURCES),
+  languageBundle: z.enum(LANGUAGE_BUNDLES),
+  voiceMode: z.enum(VOICE_MODES),
+  notes: z.string().trim().max(500).optional(),
+});
+
+const legacyPackageRequestSchema = z.object({
+  locale: z.enum(LOCALES).default("he"),
   packageId: z.enum(PACKAGE_IDS),
-  deliveryMode: z.enum(DELIVERY_MODES).default("standard"),
-  addons: z.array(z.enum(ADDON_IDS)).default([]),
+  intakeSource: z.enum(INTAKE_SOURCES).default("instagram_menu"),
+  languageBundle: z.enum(LANGUAGE_BUNDLES).default("he_ru_en"),
+  voiceMode: z.enum(VOICE_MODES).default("empathetic"),
   notes: z.string().trim().max(500).optional(),
 });
 
@@ -27,63 +34,55 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON payload." }, { status: 400 });
   }
 
-  const parsed = quoteRequestSchema.safeParse(payload);
-  if (!parsed.success) {
-    return NextResponse.json(
-      {
-        error: "Validation failed.",
-        issues: parsed.error.issues.map((issue) => ({
-          path: issue.path.join("."),
-          message: issue.message,
-        })),
-      },
-      { status: 400 },
-    );
-  }
-
-  const input = parsed.data;
-  const content = getSiteContent(input.locale);
-  const pricingSettings = await getPricingSettings();
-  const rules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
-
-  try {
-    const quote = calculateQuote(input, rules);
-
-    const packageTitle =
-      content.pricing.packageOptions.find((item) => item.id === input.packageId)?.label || input.packageId;
-    const nicheLabel = content.pricing.niches.find((item) => item.id === input.niche)?.label || input.niche;
-    const deliveryLabel =
-      content.pricing.deliveryModes.find((item) => item.id === input.deliveryMode)?.label || input.deliveryMode;
-    const addonLabels = input.addons
-      .map((addonId) => content.pricing.addonOptions.find((item) => item.id === addonId)?.label)
-      .filter((value): value is string => Boolean(value));
-
+  const tierParsed = tierQuoteRequestSchema.safeParse(payload);
+  if (tierParsed.success) {
+    const input = tierParsed.data;
+    const tier = getTierDefinition(input.tierId);
     const whatsappText = buildWhatsAppMessage({
       locale: input.locale,
-      packageTitle,
-      nicheLabel,
-      deliveryLabel,
-      addonLabels,
-      quote,
+      tier,
+      intakeSource: input.intakeSource,
+      languageBundle: input.languageBundle,
+      voiceMode: input.voiceMode,
       notes: input.notes,
     });
 
     return NextResponse.json({
-      ...quote,
+      tier,
+      priceRange: tier.priceRange,
       whatsappText,
     });
-  } catch (error) {
-    if (error instanceof QuoteEngineError) {
-      return NextResponse.json(
-        {
-          error: "Quote engine validation failed.",
-          code: error.code,
-          message: error.message,
-        },
-        { status: 400 },
-      );
-    }
-
-    return NextResponse.json({ error: "Internal quote error." }, { status: 500 });
   }
+
+  const legacyParsed = legacyPackageRequestSchema.safeParse(payload);
+  if (legacyParsed.success) {
+    const input = legacyParsed.data;
+    const tier = getTierDefinition("business");
+    const whatsappText = buildWhatsAppMessage({
+      locale: input.locale,
+      tier,
+      intakeSource: input.intakeSource,
+      languageBundle: input.languageBundle,
+      voiceMode: input.voiceMode,
+      notes: input.notes,
+      legacyPayloadMapped: true,
+    });
+
+    return NextResponse.json({
+      tier,
+      priceRange: tier.priceRange,
+      whatsappText,
+    });
+  }
+
+  return NextResponse.json(
+    {
+      error: "Validation failed.",
+      issues: tierParsed.error.issues.map((issue) => ({
+        path: issue.path.join("."),
+        message: issue.message,
+      })),
+    },
+    { status: 400 },
+  );
 }

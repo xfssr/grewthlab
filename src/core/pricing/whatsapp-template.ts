@@ -1,60 +1,88 @@
-import type { Locale, QuoteResult } from "@/core/site.types";
+import type { IntakeSourceId, LanguageBundleId, Locale, TierDefinition, VoiceModeId } from "@/core/site.types";
 
 type WhatsAppTemplateInput = {
   locale: Locale;
-  packageTitle: string;
-  nicheLabel: string;
-  deliveryLabel: string;
-  addonLabels: string[];
-  quote: QuoteResult;
+  tier: TierDefinition;
+  intakeSource: IntakeSourceId;
+  languageBundle: LanguageBundleId;
+  voiceMode: VoiceModeId;
   notes?: string;
+  legacyPayloadMapped?: boolean;
 };
 
-function formatShekel(amount: number): string {
-  const sign = amount < 0 ? "-" : "";
-  const absolute = Math.abs(amount);
-  return `${sign}₪${absolute.toLocaleString("en-US")}`;
+function formatPrice(amount: number): string {
+  return `\u20AA${amount.toLocaleString("en-US")}`;
+}
+
+function intakeSourceLabel(locale: Locale, value: IntakeSourceId): string {
+  const heLabels: Record<IntakeSourceId, string> = {
+    instagram: "Instagram",
+    menu: "תפריט / PDF",
+    instagram_menu: "Instagram + תפריט",
+    other: "אחר",
+  };
+  const enLabels: Record<IntakeSourceId, string> = {
+    instagram: "Instagram profile",
+    menu: "Menu / PDF",
+    instagram_menu: "Instagram + menu",
+    other: "Other",
+  };
+  return locale === "he" ? heLabels[value] : enLabels[value];
+}
+
+function languageBundleLabel(locale: Locale, value: LanguageBundleId): string {
+  const heLabels: Record<LanguageBundleId, string> = {
+    he_ru_en: "עברית + רוסית + אנגלית",
+    he_en: "עברית + אנגלית",
+    he_ru_en_ar: "עברית + רוסית + אנגלית + ערבית",
+  };
+  const enLabels: Record<LanguageBundleId, string> = {
+    he_ru_en: "Hebrew + Russian + English",
+    he_en: "Hebrew + English",
+    he_ru_en_ar: "Hebrew + Russian + English + Arabic",
+  };
+  return locale === "he" ? heLabels[value] : enLabels[value];
+}
+
+function voiceModeLabel(locale: Locale, value: VoiceModeId): string {
+  if (locale === "he") {
+    return value === "neutral" ? "טון ניטרלי" : "טון אנושי / מכיל";
+  }
+  return value === "neutral" ? "Neutral business tone" : "Empathetic human tone";
 }
 
 export function buildWhatsAppMessage(input: WhatsAppTemplateInput): string {
-  const addonText = input.addonLabels.length ? input.addonLabels.join(", ") : input.locale === "he" ? "ללא" : "None";
-
-  const breakdownText = input.quote.breakdown
-    .map((item) => `- ${item.label}: ${formatShekel(item.amount)}`)
-    .join("\n");
+  const range = `${formatPrice(input.tier.priceRange.min)}-${formatPrice(input.tier.priceRange.max)}`;
+  const intake = intakeSourceLabel(input.locale, input.intakeSource);
+  const languageBundle = languageBundleLabel(input.locale, input.languageBundle);
+  const voiceMode = voiceModeLabel(input.locale, input.voiceMode);
 
   if (input.locale === "he") {
-    const notesLine = input.notes ? `\nהערות: ${input.notes}` : "";
-
     return [
-      "שלום, אני רוצה הצעת מחיר.",
-      `חבילה: ${input.packageTitle}`,
-      `תחום: ${input.nicheLabel}`,
-      `מסלול אספקה: ${input.deliveryLabel}`,
-      `תוספות: ${addonText}`,
-      `סה״כ משוער: ${formatShekel(input.quote.total)}`,
-      "",
-      "פירוט:",
-      breakdownText,
-      notesLine,
+      "שלום, אני רוצה להתחיל מסלול שירות.",
+      `Tier: ${input.tier.publicName}`,
+      `טווח מחיר: ${range} לחודש`,
+      "תיאום ציפיות: הפלט הראשון מגיע תוך 48 שעות.",
+      `מקור חומרים: ${intake}`,
+      `חבילת שפות: ${languageBundle}`,
+      `טון כתיבה: ${voiceMode}`,
+      input.legacyPayloadMapped ? "הערה: הבקשה התקבלה בפורמט ישן ומופתה זמנית ל-Business." : "",
+      input.notes ? `הערות: ${input.notes}` : "",
     ]
       .filter(Boolean)
       .join("\n");
   }
 
-  const notesLine = input.notes ? `\nNotes: ${input.notes}` : "";
-
   return [
-    "Hi, I want a quote for this package.",
-    `Package: ${input.packageTitle}`,
-    `Niche: ${input.nicheLabel}`,
-    `Delivery mode: ${input.deliveryLabel}`,
-    `Add-ons: ${addonText}`,
-    `Estimated total: ${formatShekel(input.quote.total)}`,
-    "",
-    "Breakdown:",
-    breakdownText,
-    notesLine,
+    "Hi, I want to start with your service tier.",
+    `Tier: ${input.tier.publicName}`,
+    `Price range: ${range} / month`,
+    "Expectation: first output is delivered within 48 hours.",
+    `Kickoff input: ${intake}`,
+    `Language bundle: ${languageBundle}`,
+    `Voice mode: ${voiceMode}`,
+    input.legacyPayloadMapped ? "Note: request arrived in legacy package format and was temporarily mapped to Business." : "",
+    input.notes ? `Notes: ${input.notes}` : "",
   ]
     .filter(Boolean)
     .join("\n");

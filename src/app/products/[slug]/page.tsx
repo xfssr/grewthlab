@@ -4,7 +4,13 @@ import { notFound } from "next/navigation";
 
 import { StructuredData } from "@/components/seo/StructuredData";
 import { SeoIntentBanner } from "@/components/seo/SeoIntentBanner";
-import { getSeoBannerVariant, getSeoProductCard, getSeoProductPrice, seoProductBySlug } from "@/lib/seo-data";
+import {
+  getSeoBannerVariant,
+  getSeoProductCard,
+  getSeoProductPriceRange,
+  getSeoTierForPackage,
+  seoProductBySlug,
+} from "@/lib/seo-data";
 import { absoluteUrl, siteName } from "@/lib/site";
 
 type ProductPageProps = {
@@ -60,15 +66,13 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const [card, basePrice] = await Promise.all([
-    getSeoProductCard(product.packageId),
-    getSeoProductPrice(product.packageId),
-  ]);
-
+  const card = await getSeoProductCard(product.packageId);
   if (!card) {
     notFound();
   }
 
+  const priceRange = getSeoProductPriceRange(product.packageId);
+  const tier = getSeoTierForPackage(product.packageId);
   const url = absoluteUrl(`/products/${slug}`);
   const faqSchema = {
     "@context": "https://schema.org",
@@ -94,16 +98,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
     category: "Digital marketing service package",
     image: absoluteUrl("/og-image.jpg"),
     url,
-    offers: basePrice
-      ? {
-          "@type": "Offer",
-          url,
-          priceCurrency: "ILS",
-          price: basePrice,
-          availability: "https://schema.org/InStock",
-          itemCondition: "https://schema.org/NewCondition",
-        }
-      : undefined,
+    offers: {
+      "@type": "AggregateOffer",
+      url,
+      priceCurrency: "ILS",
+      lowPrice: priceRange.min,
+      highPrice: priceRange.max,
+      offerCount: 1,
+    },
   };
   const breadcrumbSchema = {
     "@context": "https://schema.org",
@@ -157,16 +159,19 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <article className="rounded-[1.25rem] border border-stroke-subtle bg-surface-base p-5 md:col-span-1">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-soft">Package</p>
-            <h2 className="mt-3 text-2xl font-semibold">{product.title}</h2>
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-text-soft">Mapped tier</p>
+            <h2 className="mt-3 text-2xl font-semibold">{tier.publicName}</h2>
             <p className="mt-3 text-sm leading-relaxed text-text-muted">{product.searchIntent}</p>
-            {basePrice ? <p className="mt-4 text-lg font-semibold text-accent-primary">Starting from ₪{basePrice.toLocaleString("en-US")}</p> : null}
+            <p className="mt-4 text-lg font-semibold text-accent-primary">
+              {`\u20AA${priceRange.min.toLocaleString("en-US")}-\u20AA${priceRange.max.toLocaleString("en-US")} / month`}
+            </p>
+            <p className="mt-1 text-xs text-text-soft">First output in 48 hours.</p>
             <div className="mt-5 flex flex-wrap gap-3">
               <Link href="/#pricing" className="rounded-full bg-accent-primary px-5 py-2.5 text-sm font-semibold text-text-inverse transition hover:opacity-90">
-                לקבלת מחיר
+                Open pricing
               </Link>
               <Link href="/" className="rounded-full border border-stroke-subtle px-5 py-2.5 text-sm font-semibold text-text-primary transition hover:border-stroke-strong">
-                חזרה ללנדינג
+                Back to home
               </Link>
             </div>
           </article>
@@ -186,7 +191,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         </div>
 
         <section className="mt-10">
-          <h2 className="text-2xl font-semibold">שאלות נפוצות על {product.title}</h2>
+          <h2 className="text-2xl font-semibold">FAQs about {product.title}</h2>
           <div className="mt-4 grid gap-4 md:grid-cols-2">
             {product.faqs.map((item) => (
               <article key={item.question} className="rounded-[1.25rem] border border-stroke-subtle bg-surface-base p-5">

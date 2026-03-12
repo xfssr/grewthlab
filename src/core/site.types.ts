@@ -4,6 +4,28 @@ export type Locale = (typeof LOCALES)[number];
 export const SECTION_IDS = ["top", "solutions", "gallery", "pricing", "cases", "faq", "quote"] as const;
 export type SectionId = (typeof SECTION_IDS)[number];
 
+export const TIER_IDS = ["starter", "business", "growth"] as const;
+export type TierId = (typeof TIER_IDS)[number];
+
+export const INTAKE_SOURCES = ["instagram", "menu", "instagram_menu", "other"] as const;
+export type IntakeSourceId = (typeof INTAKE_SOURCES)[number];
+
+export const LANGUAGE_BUNDLES = ["he_ru_en", "he_en", "he_ru_en_ar"] as const;
+export type LanguageBundleId = (typeof LANGUAGE_BUNDLES)[number];
+
+export const VOICE_MODES = ["empathetic", "neutral"] as const;
+export type VoiceModeId = (typeof VOICE_MODES)[number];
+
+export const ACQUISITION_CHANNELS = [
+  "outbound_instagram_whatsapp",
+  "partnerships",
+  "marketplaces_fiverr_upwork",
+  "experts_wix_squarespace",
+  "paid_ads",
+  "other",
+] as const;
+export type AcquisitionChannel = (typeof ACQUISITION_CHANNELS)[number];
+
 export const NICHE_IDS = ["restaurants", "beauty", "real-estate", "hotels"] as const;
 export type NicheId = (typeof NICHE_IDS)[number];
 
@@ -29,7 +51,21 @@ export type AddonId = (typeof ADDON_IDS)[number];
 
 export type Direction = "ltr" | "rtl";
 export type CurrencyCode = "ILS";
+export type BillingPeriod = "month";
 export type Tone = "gold" | "charcoal" | "bronze" | "stone";
+
+export type TierPriceRange = {
+  min: number;
+  max: number;
+  currency: CurrencyCode;
+  period: BillingPeriod;
+};
+
+export type TierDefinition = {
+  id: TierId;
+  publicName: string;
+  priceRange: TierPriceRange;
+};
 
 export type CalculatorRules = {
   currency: CurrencyCode;
@@ -212,6 +248,15 @@ export type SiteContentViewModel = {
   pricing: {
     title: string;
     description: string;
+    tiers: Array<{
+      id: TierId;
+      publicName: string;
+      description: string;
+      priceRangeLabel: string;
+      features: string[];
+      ctaLabel: string;
+      recommended?: boolean;
+    }>;
     vatNote: string;
     labels: {
       niche: string;
@@ -274,6 +319,7 @@ export type LeadRecord = {
   id: string;
   createdAt: string;
   locale: Locale;
+  acquisitionChannel: AcquisitionChannel;
   contact: {
     name: string;
     phone: string;
@@ -281,9 +327,9 @@ export type LeadRecord = {
     message?: string;
   };
   quote: {
-    packageId: PackageId;
-    total: number;
-    breakdown: PriceBreakdownItem[];
+    tierId: TierId;
+    priceRange: TierPriceRange;
+    legacyPackageId?: PackageId;
   };
-  source: "landing_calculator" | "landing_quote_form";
+  source: "landing_tier_pricing" | "landing_quote_form" | "legacy_package_calculator";
 };

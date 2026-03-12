@@ -10,10 +10,17 @@ import { ProcessFlow } from "@/components/landing/ProcessFlow";
 import { SiteFooter } from "@/components/landing/SiteFooter";
 import { SiteNav } from "@/components/landing/SiteNav";
 import { SystemBridgeSection } from "@/components/landing/SystemBridgeSection";
-import { getCalculatorRules } from "@/core/site.content";
-import { calculateQuote } from "@/core/pricing/quote-engine";
+import { getTierDefinition, mapLegacyPackageToTier } from "@/core/pricing/tier-model";
 import { buildWhatsAppMessage, toWhatsAppUrl } from "@/core/pricing/whatsapp-template";
-import type { AddonId, DeliveryMode, NicheId, PackageId, SectionId } from "@/core/site.types";
+import type {
+  AcquisitionChannel,
+  IntakeSourceId,
+  LanguageBundleId,
+  PackageId,
+  SectionId,
+  TierId,
+  VoiceModeId,
+} from "@/core/site.types";
 
 function SectionLoading({ minHeight }: { minHeight: string }) {
   return (
@@ -49,26 +56,37 @@ function scrollToSection(id: string) {
 
 export function LandingPage() {
   const { content, dir, locale } = useLocaleContent();
-  const rules = useMemo(() => getCalculatorRules(), []);
-
   const [activeSection, setActiveSection] = useState<SectionId>("top");
-  const [selectedNiche, setSelectedNiche] = useState<NicheId>(content.pricing.niches[0]?.id ?? "restaurants");
-  const [selectedPackageId, setSelectedPackageId] = useState<PackageId>(
-    content.pricing.packageOptions[0]?.id ?? "qr-menu-mini-site",
-  );
-  const [selectedDeliveryMode, setSelectedDeliveryMode] = useState<DeliveryMode>("standard");
-  const [selectedAddons, setSelectedAddons] = useState<AddonId[]>([]);
+  const [selectedTierId, setSelectedTierId] = useState<TierId>(content.pricing.tiers[0]?.id ?? "starter");
+  const [selectedPackageId, setSelectedPackageId] = useState<PackageId>("quick-start-system");
+
+  const [selectedIntakeSource, setSelectedIntakeSource] = useState<IntakeSourceId>("instagram_menu");
+  const [selectedLanguageBundle, setSelectedLanguageBundle] = useState<LanguageBundleId>("he_ru_en");
+  const [selectedVoiceMode, setSelectedVoiceMode] = useState<VoiceModeId>("empathetic");
   const [notes, setNotes] = useState("");
   const [quoteLoading, setQuoteLoading] = useState(false);
 
+  const tierIds = useMemo(() => content.pricing.tiers.map((tier) => tier.id), [content.pricing.tiers]);
+  const firstTierId = tierIds[0] ?? "starter";
+  const firstPackageId = useMemo(
+    () => content.solutions.cards.find((card) => card.packageId)?.packageId ?? "quick-start-system",
+    [content.solutions.cards],
+  );
+
   useEffect(() => {
-    if (!content.pricing.packageOptions.find((item) => item.id === selectedPackageId)) {
-      setSelectedPackageId(content.pricing.packageOptions[0]?.id ?? "qr-menu-mini-site");
+    if (!tierIds.includes(selectedTierId)) {
+      setSelectedTierId(firstTierId);
     }
-    if (!content.pricing.niches.find((item) => item.id === selectedNiche)) {
-      setSelectedNiche(content.pricing.niches[0]?.id ?? "restaurants");
+  }, [firstTierId, selectedTierId, tierIds]);
+
+  useEffect(() => {
+    const availablePackageIds = content.solutions.cards.flatMap((card) =>
+      card.packageId ? [card.packageId as PackageId] : [],
+    );
+    if (!availablePackageIds.includes(selectedPackageId)) {
+      setSelectedPackageId(firstPackageId);
     }
-  }, [content.pricing.niches, content.pricing.packageOptions, selectedNiche, selectedPackageId]);
+  }, [content.solutions.cards, firstPackageId, selectedPackageId]);
 
   useEffect(() => {
     const observedIds = ["top", "gallery", "solutions", "pricing", "faq", "quote"];
@@ -101,29 +119,12 @@ export function LandingPage() {
     return () => observer.disconnect();
   }, []);
 
-  const quote = useMemo(
-    () =>
-      calculateQuote(
-        {
-          locale,
-          niche: selectedNiche,
-          packageId: selectedPackageId,
-          deliveryMode: selectedDeliveryMode,
-          addons: selectedAddons,
-        },
-        rules,
-      ),
-    [locale, selectedNiche, selectedPackageId, selectedDeliveryMode, selectedAddons, rules],
-  );
   const sharedVideoSrc = content.hero.backgroundVideoSrc || "";
 
   const handleSelectPackage = (packageId: PackageId) => {
     setSelectedPackageId(packageId);
+    setSelectedTierId(mapLegacyPackageToTier(packageId));
     scrollToSection("pricing");
-  };
-
-  const handleToggleAddon = (addonId: AddonId) => {
-    setSelectedAddons((prev) => (prev.includes(addonId) ? prev.filter((id) => id !== addonId) : [...prev, addonId]));
   };
 
   const handleOpenWhatsApp = async () => {
@@ -136,10 +137,10 @@ export function LandingPage() {
         },
         body: JSON.stringify({
           locale,
-          niche: selectedNiche,
-          packageId: selectedPackageId,
-          deliveryMode: selectedDeliveryMode,
-          addons: selectedAddons,
+          tierId: selectedTierId,
+          intakeSource: selectedIntakeSource,
+          languageBundle: selectedLanguageBundle,
+          voiceMode: selectedVoiceMode,
           notes,
         }),
       });
@@ -151,23 +152,13 @@ export function LandingPage() {
       }
 
       if (!whatsappText) {
-        const packageTitle =
-          content.pricing.packageOptions.find((item) => item.id === selectedPackageId)?.label || selectedPackageId;
-        const nicheLabel = content.pricing.niches.find((item) => item.id === selectedNiche)?.label || selectedNiche;
-        const deliveryLabel =
-          content.pricing.deliveryModes.find((item) => item.id === selectedDeliveryMode)?.label ||
-          selectedDeliveryMode;
-        const addonLabels = selectedAddons
-          .map((addonId) => content.pricing.addonOptions.find((item) => item.id === addonId)?.label)
-          .filter((value): value is string => Boolean(value));
-
+        const tier = getTierDefinition(selectedTierId);
         whatsappText = buildWhatsAppMessage({
           locale,
-          packageTitle,
-          nicheLabel,
-          deliveryLabel,
-          addonLabels,
-          quote,
+          tier,
+          intakeSource: selectedIntakeSource,
+          languageBundle: selectedLanguageBundle,
+          voiceMode: selectedVoiceMode,
           notes,
         });
       }
@@ -194,10 +185,11 @@ export function LandingPage() {
           message: payload.message || undefined,
         },
         quote: {
-          packageId: selectedPackageId,
-          total: quote.total,
-          breakdown: quote.breakdown,
+          tierId: selectedTierId,
+          priceRange: getTierDefinition(selectedTierId).priceRange,
+          legacyPackageId: selectedPackageId,
         },
+        acquisitionChannel: "other" satisfies AcquisitionChannel,
         source: "landing_quote_form",
       }),
     });
@@ -305,24 +297,18 @@ export function LandingPage() {
             title={content.pricing.title}
             description={content.pricing.description}
             vatNote={content.pricing.vatNote}
-            labels={content.pricing.labels}
-            openWhatsAppCta={content.pricing.openWhatsAppCta}
-            packageOptions={content.pricing.packageOptions}
-            niches={content.pricing.niches}
-            deliveryModes={content.pricing.deliveryModes}
-            addonOptions={content.pricing.addonOptions}
+            tiers={content.pricing.tiers}
             notesPlaceholder={content.pricing.notesPlaceholder}
-            selectedPackageId={selectedPackageId}
-            selectedNiche={selectedNiche}
-            selectedDeliveryMode={selectedDeliveryMode}
-            selectedAddons={selectedAddons}
+            selectedTierId={selectedTierId}
+            selectedIntakeSource={selectedIntakeSource}
+            selectedLanguageBundle={selectedLanguageBundle}
+            selectedVoiceMode={selectedVoiceMode}
             notes={notes}
-            quote={quote}
             quoteLoading={quoteLoading}
-            onPackageChange={setSelectedPackageId}
-            onNicheChange={setSelectedNiche}
-            onDeliveryModeChange={setSelectedDeliveryMode}
-            onToggleAddon={handleToggleAddon}
+            onTierChange={setSelectedTierId}
+            onIntakeSourceChange={setSelectedIntakeSource}
+            onLanguageBundleChange={setSelectedLanguageBundle}
+            onVoiceModeChange={setSelectedVoiceMode}
             onNotesChange={setNotes}
             onOpenWhatsApp={handleOpenWhatsApp}
           />

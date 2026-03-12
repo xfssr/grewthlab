@@ -35,7 +35,7 @@ type EditableContentForm = {
   contentArchive: Omit<SiteContentViewModel["contentArchive"], "modules">;
   pricing: Omit<
     SiteContentViewModel["pricing"],
-    "niches" | "packageOptions" | "deliveryModes" | "addonOptions"
+    "tiers" | "niches" | "packageOptions" | "deliveryModes" | "addonOptions"
   >;
   cases: Pick<SiteContentViewModel["cases"], "title">;
   faq: SiteContentViewModel["faq"];
@@ -779,7 +779,7 @@ export default function AdminContentPage() {
         </div>
       </AdminForm>
 
-      <AdminForm title="Pricing" description="Calculator labels, section copy, and pricing stat chips.">
+      <AdminForm title="Pricing" description="Tier section copy and generic pricing notes shown on landing.">
         <div id="pricing" className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <TextField
@@ -804,89 +804,6 @@ export default function AdminContentPage() {
                 rows={3}
               />
             </div>
-            <TextField
-              label="Field label: niche"
-              value={form.pricing.labels.niche}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, niche: value } } } : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: package"
-              value={form.pricing.labels.packageType}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev
-                    ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, packageType: value } } }
-                    : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: delivery"
-              value={form.pricing.labels.deliveryMode}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev
-                    ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, deliveryMode: value } } }
-                    : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: estimate"
-              value={form.pricing.labels.estimate}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, estimate: value } } } : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: add-ons"
-              value={form.pricing.labels.addons}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, addons: value } } } : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: notes"
-              value={form.pricing.labels.notes}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, notes: value } } } : prev,
-                )
-              }
-            />
-            <TextField
-              label="Field label: breakdown"
-              value={form.pricing.labels.breakdown}
-              onChange={(value) =>
-                setForm((prev) =>
-                  prev
-                    ? { ...prev, pricing: { ...prev.pricing, labels: { ...prev.pricing.labels, breakdown: value } } }
-                    : prev,
-                )
-              }
-            />
-            <TextField
-              label="WhatsApp CTA"
-              value={form.pricing.openWhatsAppCta}
-              onChange={(value) =>
-                setForm((prev) => (prev ? { ...prev, pricing: { ...prev.pricing, openWhatsAppCta: value } } : prev))
-              }
-            />
-            <TextField
-              label="Lead form CTA"
-              value={form.pricing.saveLeadCta}
-              onChange={(value) =>
-                setForm((prev) => (prev ? { ...prev, pricing: { ...prev.pricing, saveLeadCta: value } } : prev))
-              }
-            />
             <div className="md:col-span-2">
               <TextAreaField
                 label="Notes placeholder"

@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 
 import { getAdminSession } from "@/app/api/_auth";
-import { getCalculatorRules, getSiteContent } from "@/core/site.content";
+import { getSiteContent } from "@/core/site.content";
+import { getTierDefinition, mapLegacyPackageToTier } from "@/core/pricing/tier-model";
 import { PACKAGE_IDS } from "@/core/site.types";
 import { prisma } from "@/lib/db";
 
@@ -49,7 +50,6 @@ async function createUniqueCustomSlug(title: string): Promise<string> {
 
 export async function GET() {
   const content = getSiteContent("he");
-  const rules = getCalculatorRules();
 
   try {
     const items = await prisma.solution.findMany({
@@ -70,7 +70,8 @@ export async function GET() {
       items: PACKAGE_IDS.map((slug) => {
         const existing = itemBySlug.get(slug);
         const defaultCard = content.solutions.cards.find((item) => item.id === slug);
-        const defaultRule = rules.packages.find((item) => item.id === slug);
+        const tierId = mapLegacyPackageToTier(slug);
+        const tier = getTierDefinition(tierId);
 
         if (existing) {
           return {
@@ -84,7 +85,7 @@ export async function GET() {
           slug,
           title: defaultCard?.title || slug,
           description: defaultCard?.problem || "",
-          price: defaultRule?.basePrice ?? 0,
+          price: tier.priceRange.min,
           imageUrl: "",
           createdAt: "",
         };
@@ -95,14 +96,15 @@ export async function GET() {
     return NextResponse.json({
       items: PACKAGE_IDS.map((slug) => {
         const defaultCard = content.solutions.cards.find((item) => item.id === slug);
-        const defaultRule = rules.packages.find((item) => item.id === slug);
+        const tierId = mapLegacyPackageToTier(slug);
+        const tier = getTierDefinition(tierId);
 
         return {
           id: "",
           slug,
           title: defaultCard?.title || slug,
           description: defaultCard?.problem || "",
-          price: defaultRule?.basePrice ?? 0,
+          price: tier.priceRange.min,
           imageUrl: "",
           createdAt: "",
         };

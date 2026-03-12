@@ -1,8 +1,8 @@
-import { getCalculatorRules, getSiteContent } from "@/core/site.content";
+import { getSiteContent } from "@/core/site.content";
+import { getTierDefinition, legacyPackageToTier, mapLegacyPackageToTier } from "@/core/pricing/tier-model";
 import type { PackageId } from "@/core/site.types";
 import { applyDbOverrides } from "@/lib/site-content-overrides";
 import { absoluteUrl } from "@/lib/site";
-import { applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
 
 export type SeoProductPage = {
   slug: string;
@@ -367,6 +367,7 @@ export const seoProblems: SeoProblemPage[] = [
 export const seoProductBySlug = new Map(seoProducts.map((item) => [item.slug, item]));
 export const seoProblemBySlug = new Map(seoProblems.map((item) => [item.slug, item]));
 export const productSlugByPackageId = new Map(seoProducts.map((item) => [item.packageId, item.slug]));
+export const legacySeoTierMapping = legacyPackageToTier;
 
 function stableHashSeed(value: string): number {
   let hash = 0;
@@ -388,11 +389,13 @@ export async function getSeoProductCard(packageId: PackageId) {
   return content.solutions.cards.find((item) => item.packageId === packageId) ?? null;
 }
 
-export async function getSeoProductPrice(packageId: PackageId): Promise<number | null> {
-  const pricingSettings = await getPricingSettings();
-  const rules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
-  const match = rules.packages.find((item) => item.id === packageId);
-  return match?.basePrice ?? null;
+export function getSeoTierForPackage(packageId: PackageId) {
+  const tierId = mapLegacyPackageToTier(packageId);
+  return getTierDefinition(tierId);
+}
+
+export function getSeoProductPriceRange(packageId: PackageId) {
+  return getSeoTierForPackage(packageId).priceRange;
 }
 
 export function getSeoProductUrl(slug: string): string {

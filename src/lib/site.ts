@@ -1,11 +1,11 @@
 ﻿export const siteName = "SS Space";
-export const siteTitle = "SS Space | Growth systems for local businesses";
+export const siteTitle = "SS Space | 48-hour site + content systems for Israel SMBs";
 export const siteDescription =
-  "Growth systems for local businesses: content, landing pages, WhatsApp, and ads that bring qualified inquiries.";
+  "Instagram/menu -> first output in 48 hours: page, content, and inquiry flow. Built-in Hebrew/Russian/English operations with WhatsApp-first handling.";
 
 export const homePageTitle = "איך למצוא לקוחות לעסק | How to Get More Clients";
 export const homePageDescription =
-  "איך למצוא לקוחות, למה העסק לא מוכר, ולמה תוכן, דף נחיתה, WhatsApp ופרסום עובדים יחד. Learn how content, landing pages, WhatsApp, and ads turn attention into real sales for local businesses.";
+  "מאינסטגרם או תפריט לפלט ראשון תוך 48 שעות: עמוד, תוכן, Google Business ו-WhatsApp בטון אנושי. From Instagram/menu to first output in 48 hours with multilingual and channel-ready assets.";
 
 export const homePageKeywords = [
   "איך למצוא לקוחות לעסק",

@@ -75,3 +75,8 @@ export async function listLeads(limit: number): Promise<LeadRecord[]> {
   const store = await readStore();
   return store.items.slice(0, limit);
 }
+
+export async function listAllLeads(): Promise<LeadRecord[]> {
+  const store = await readStore();
+  return store.items;
+}

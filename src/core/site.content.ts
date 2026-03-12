@@ -2,6 +2,7 @@
 import mediaDemoRaw from "@/data/media.demo.json";
 import enMessagesRaw from "@/messages/en.json";
 import heMessagesRaw from "@/messages/he.json";
+import { formatTierPriceRangeLabel, getTierDefinition } from "@/core/pricing/tier-model";
 
 import type {
   AddonId,
@@ -18,9 +19,10 @@ import type {
   SiteContentViewModel,
   SolutionDiagnosisViewModel,
   SolutionCardViewModel,
+  TierId,
   Tone,
 } from "@/core/site.types";
-import { ADDON_IDS, DELIVERY_MODES, NICHE_IDS, PACKAGE_IDS } from "@/core/site.types";
+import { ADDON_IDS, DELIVERY_MODES, NICHE_IDS, PACKAGE_IDS, TIER_IDS } from "@/core/site.types";
 
 type MessageSchema = {
   brand?: { name?: string };
@@ -263,8 +265,8 @@ const archiveItemsRaw = [
 ] as const;
 
 const heroLeadLineByLocale: Record<Locale, string> = {
-  he: "אנחנו בונים לעסק מערכת ברורה שמביאה פניות איכותיות לוואטסאפ.",
-  en: "We create a clear growth system that drives qualified WhatsApp inquiries.",
+  he: "שולחים אינסטגרם או תפריט, ומקבלים פלט ראשון תוך 48 שעות: עמוד, תוכן ומסלול פניות אנושי.",
+  en: "Send your Instagram or menu, and receive first output within 48 hours: page, content, and a human-tone inquiry path.",
 };
 
 const industryCaptionOverrides: Record<Locale, string[]> = {
@@ -357,9 +359,9 @@ const localizedSectionCopy: Record<
       faq: "שאלות",
     },
     hero: {
-      eyebrow: "אנחנו לא רק מצלמים",
-      title: "מצלמים, בונים מערכת ומביאים לקוחות",
-      accent: "תוכן, דף נחיתה וזרימת פניות לוואטסאפ - כמערכת אחת שמביאה לקוחות.",
+      eyebrow: "פלט ראשון ב-48 שעות",
+      title: "אינסטגרם / תפריט -> אתר + חבילת תוכן",
+      accent: "מערך רב-לשוני לישראל + טון אנושי, בלי טקסט שבלוני",
       primaryCta: "לפתרונות",
       secondaryCta: "למחיר מהיר",
     },
@@ -368,26 +370,22 @@ const localizedSectionCopy: Record<
       title: "איך זה עובד",
       steps: [
         {
-          title: "יוצרים תוכן מדויק לעסק",
-          subtitle: "מזקקים מסר, מצלמים את מה שבאמת מוכר, ובונים נכסים שמתאימים לקהל המקומי.",
+          title: "שולחים מינימום חומרים",
+          subtitle: "קישור אינסטגרם, תפריט, או שניהם. בלי בריף ארוך.",
         },
         {
-          title: "בונים עמוד ברור שממיר",
-          subtitle: "מחברים הצעה, הוכחה וקריאה לפעולה אחת ברורה שמובילה לשיחה.",
+          title: "בונים מערכת פנייה ברורה",
+          subtitle: "עמוד ממיר, שפת מותג אנושית, וזרימת WhatsApp לשיחה ראשונה.",
         },
         {
-          title: "מחברים פרסום ומסלול פנייה",
-          subtitle: "הקמפיין והתוכן מובילים לאותו מסלול WhatsApp מדיד, בלי פערים באמצע.",
-        },
-        {
-          title: "מקבלים פניות אמיתיות",
-          subtitle: "יותר אמון, יותר הודעות, ויותר הזמנות מעסקים שמחפשים תוצאה ולא רעש.",
+          title: "עולים עם פלט ראשון תוך 48 שעות",
+          subtitle: "מתחילים לעבוד עם תוצרים ראשונים ולא מחכים לסיום כל הפרויקט.",
         },
       ],
     },
     solutions: {
-      title: "ארכיטקטורת פתרונות לעסקים מקומיים",
-      description: "אנחנו מאתרים את החוליה השבורה במסע הלקוח ובונים מערכת שמחזירה צמיחה.",
+      title: "ארכיטקטורת הצעה לעסקים בישראל",
+      description: "מהירות ביצוע, רב-לשוניות וערוצים תפעוליים - כחבילה אחת שאפשר להשיק מיידית.",
       chainTitle: "שרשרת הלקוחות בעסק",
       chainStages: [
         "מכירים אתכם",
@@ -399,10 +397,10 @@ const localizedSectionCopy: Record<
       ],
       diagnosticsTitle: "הבעיות האמיתיות שבעל עסק פוגש",
       diagnosticsDescription: "בחרו את הבעיה שאתם מזהים, ונתאים את הפתרון הנכון.",
-      strategicTitle: "לא מוכרים שירות בודד. פותרים חסם צמיחה.",
+      strategicTitle: "זה לא טמפלט SaaS. זאת מערכת עבודה מלאה.",
       strategicBody:
-        "במקום להגיד 'אנחנו מצלמים' או 'אנחנו בונים אתר', אנחנו מחברים תוכן, דף ופרסום למערכת אחת שמביאה פניות.",
-      strategicHighlight: "אנחנו פותרים בעיות צמיחה עסקית, לא רק מפיקים נכסים דיגיטליים.",
+        "במקום ספקים נפרדים, מקבלים השקה אחת: אתר, נכסי Google Business, וטקסטים לשיחות WhatsApp.",
+      strategicHighlight: "העיקרון: טון אנושי עם כללי קול ברורים, לא קופי שיווקי גנרי.",
       panelTitle: "בחירת פתרון",
       panelCta: "התאמת פתרון לפער",
       cardCta: "בחרו פתרון",
@@ -433,24 +431,24 @@ const localizedSectionCopy: Record<
       emptyLabel: "אין פריטים לסינון הזה כרגע.",
     },
     bridge: {
-      eyebrow: "איך זה נהיה מערכת",
-      title: "מנראות יפה לנוכחות שמביאה פניות",
+      eyebrow: "מחומרים להשקה",
+      title: "מאינסטגרם/תפריט לפלט ראשון תוך 48 שעות",
       beforeLabel: "לפני",
-      beforeText: "העסק נראה מצוין במציאות, אבל אונליין המסר מפוזר והלקוח לא מתקדם לפנייה.",
+      beforeText: "יש חומרים, אבל הערוצים לא מחוברים, אין כיסוי שפות מלא, והטון מרגיש רובוטי.",
       buildLabel: "מה אנחנו בונים",
       buildItems: [
-        "תוכן שמדבר לקהל הנכון",
-        "עמוד נחיתה ממוקד הצעה ותוצאה",
-        "קריאייטיב והצעה לפרסום",
-        "זרימת WhatsApp קצרה וברורה",
+        "השקת אתר + חבילת תוכן ב-48 שעות ממינימום קלט",
+        "שכבת שפות מובנית: עברית/רוסית/אנגלית (+ערבית לפי צורך)",
+        "תכני Google Business לפוסטים/הטבות (תואם תהליך API)",
+        "סקריפטים ל-WhatsApp עם טון מכיל ואנושי",
       ],
       resultLabel: "התוצאה",
-      resultText: "יותר אמון כבר במפגש הראשון, יותר פניות רלוונטיות, ויותר הזמנות/סגירות.",
-      cta: "למחשבון מחיר מהיר",
+      resultText: "השקה אחידה בכל נקודות המגע: יותר אמון, תגובות מהירות יותר, ופניות מדויקות יותר.",
+      cta: "לבחירת tier",
     },
     pricing: {
-      title: "מחשבון מחיר מהיר",
-      description: "בחרו תחום, חבילה ותוספות וקבלו מחיר משוער בשניות.",
+      title: "שלוש רמות שירות ברורות",
+      description: "Starter, Business, Growth. הפלט הראשון תוך 48 שעות, בלי מחשבון חבילות.",
     },
     casesTitle: "בעיה, פתרון, תוצאה",
     faq: {
@@ -458,7 +456,7 @@ const localizedSectionCopy: Record<
       items: [
         {
           question: "תוך כמה זמן אפשר לעלות לאוויר?",
-          answer: "בדרך כלל בתוך 7 עד 14 ימים, לפי היקף העבודה.",
+          answer: "הפלט הראשון מגיע תוך 48 שעות. היקף מלא נקבע לאחר אפיון קצר.",
         },
         {
           question: "אתם עושים גם תוכן וגם דף נחיתה?",
@@ -502,9 +500,9 @@ const localizedSectionCopy: Record<
       faq: "FAQ",
     },
     hero: {
-      eyebrow: "We do more than just shooting",
-      title: "We build content systems that bring real clients",
-      accent: "Content + landing page + ads for local businesses",
+      eyebrow: "First output in 48 hours",
+      title: "Instagram / menu -> live site + content pack",
+      accent: "Multilingual Israel stack + human tone, not template copy",
       primaryCta: "View solutions",
       secondaryCta: "Quick pricing",
     },
@@ -513,34 +511,30 @@ const localizedSectionCopy: Record<
       title: "How it works",
       steps: [
         {
-          title: "We shoot content",
-          subtitle: "We capture your business, products, and services in social-first formats.",
+          title: "Drop your minimum input",
+          subtitle: "Send an Instagram profile, a menu, or both. No long brief needed.",
         },
         {
-          title: "We build a landing page",
-          subtitle: "We set up a clear page with offer, proof, and a WhatsApp button.",
+          title: "We build a clear inquiry system",
+          subtitle: "Conversion page, human voice rules, and a WhatsApp-first contact path.",
         },
         {
-          title: "We connect ads",
-          subtitle: "We launch focused campaigns connected to your page and content.",
-        },
-        {
-          title: "Clients message you",
-          subtitle: "Qualified leads come directly to WhatsApp ready to talk.",
+          title: "First output ships in 48 hours",
+          subtitle: "You start operating from initial deliverables instead of waiting for full project completion.",
         },
       ],
     },
     solutions: {
-      title: "Service architecture for local businesses",
-      description: "We diagnose the broken client-chain link and build the fix around it.",
+      title: "Offer architecture for Israel local businesses",
+      description: "We package speed, multilingual execution, and channel-ready assets into one operating offer.",
       chainTitle: "Your client chain",
       chainStages: ["Discover", "Get interested", "Watch", "Trust", "Message", "Buy"],
       diagnosticsTitle: "Real issues local owners describe",
       diagnosticsDescription: "Choose the problem you recognize and match the right solution.",
-      strategicTitle: "We do not sell isolated services. We solve growth bottlenecks.",
+      strategicTitle: "This is not a template SaaS handoff. It is an operating growth stack.",
       strategicBody:
-        "Instead of saying 'we make videos' or 'we build sites', we combine content, conversion page, and promotion into one business system.",
-      strategicHighlight: "This is growth consulting execution, not freelance production.",
+        "Instead of separate vendors, you get one accountable release: site, Google Business assets, and WhatsApp scripts.",
+      strategicHighlight: "Core principle: human tone with context constraints, not generic marketing copy.",
       panelTitle: "Solution selector",
       panelCta: "Match solution to bottleneck",
       cardCta: "Choose solution",
@@ -571,24 +565,24 @@ const localizedSectionCopy: Record<
       emptyLabel: "No items in this filter yet.",
     },
     bridge: {
-      eyebrow: "From Assets to System",
-      title: "We turn good-looking brands into inquiry engines",
+      eyebrow: "From Input to Launch",
+      title: "From Instagram/menu to first output in 48 hours",
       beforeLabel: "Before",
-      beforeText: "The business looks strong in real life, but online touchpoints are fragmented and under-converting.",
+      beforeText: "Assets exist, but channels are disconnected, language coverage is partial, and tone sounds robotic.",
       buildLabel: "What we build",
       buildItems: [
-        "Content that matches buyer intent",
-        "Conversion-focused landing page",
-        "Offer + ad creative alignment",
-        "Simple WhatsApp inquiry flow",
+        "48-hour site + content sprint from minimal input",
+        "Built-in Hebrew/Russian/English layer (Arabic optional)",
+        "Google Business Profile post + offer copy (API-ready workflow)",
+        "WhatsApp response scripts with empathetic, human tone",
       ],
       resultLabel: "Result",
-      resultText: "Higher trust, more qualified inquiries, and more bookings/orders from one connected system.",
+      resultText: "One coherent launch across channels: clearer trust, faster responses, and higher-quality inquiries.",
       cta: "Open quick pricing",
     },
     pricing: {
-      title: "Quick pricing calculator",
-      description: "Choose niche, package, and add-ons to get an instant estimate.",
+      title: "Three clear service tiers",
+      description: "Starter, Business, Growth. First output in 48 hours, no package calculator.",
     },
     casesTitle: "Problem, Solution, Result",
     faq: {
@@ -596,7 +590,7 @@ const localizedSectionCopy: Record<
       items: [
         {
           question: "How fast can we go live?",
-          answer: "Usually within 7 to 14 days, depending on scope.",
+          answer: "First output is delivered within 48 hours. Full scope timeline is set after a short brief.",
         },
         {
           question: "Do you handle both content and landing page?",
@@ -752,28 +746,28 @@ const solutionOverrides: Record<
 > = {
   he: {
     "qr-menu-mini-site": {
-      title: "מערכת צמיחה למסעדות",
-      problem: "המסעדה נראית טוב במציאות, אבל באונליין לא נוצרת תנועה מספקת של אורחים.",
+      title: "מערכת תפריט-לאתר ב-48 שעות",
+      problem: "יש תפריט ותוכן, אבל הם לא מתורגמים למסלול ברור שמייצר פניות מהירות.",
       whatWeDo:
-        "• צילום אוכל מקצועי\n• צילום אווירה ושירות\n• 10-15 רילסים\n• תפריט QR נוח\n• עמוד מסעדה + אינטגרציית וואטסאפ",
-      outcome: "התוצאה: תוכן חזק שמביא יותר תנועה, יותר פניות ויותר הזמנות.",
-      timeline: "10-18 ימים",
+        "• קליטה מתפריט/אינסטגרם\n• מיני-אתר ממיר תוך 48 שעות\n• בלוקים מסודרים להצעה ושירות\n• כפתור WhatsApp עם מסלול תגובה\n• סט טקסטים מוכן לפרסום",
+      outcome: "התוצאה: מעבר מתפריט למסלול הזמנה/פנייה חי בתוך יומיים.",
+      timeline: "48 שעות",
     },
     "content-whatsapp-funnel": {
-      title: "מערכת המרה לוואטסאפ",
-      problem: "אנשים צופים בעמודים וברשתות, אבל לא עוברים לשיחה או השארת פרטים.",
+      title: "מערכת WhatsApp בטון אנושי",
+      problem: "יש פניות, אבל השיחה נשמעת גנרית ונופלת לפני שהלקוח מתקדם.",
       whatWeDo:
-        "• עמוד נחיתה ברור\n• כפתור וואטסאפ בולט\n• קריאה לפעולה לקבלת מחיר\n• הודעות פתיחה מהירות\n• תבניות תגובה לצוות",
-      outcome: "התוצאה: מעבר ישיר מצפייה לפנייה עם יותר לידים רלוונטיים.",
-      timeline: "10-18 ימים",
+        "• מפת שיחה לפי כוונת לקוח\n• הודעות פתיחה והמשך\n• כללי קול אמפתיים (בלי טון פרסומי ריק)\n• טקסטים להצעה והתנגדויות\n• פלייבוק לצוות ב-WhatsApp",
+      outcome: "התוצאה: איכות תגובה גבוהה יותר, טיפול מהיר יותר, ויותר שיחות שנסגרות.",
+      timeline: "3-5 ימים",
     },
     "business-launch-setup": {
-      title: "מערכת השקה לעסק",
-      problem: "עסק חדש עולה לאוויר בלי מערכת שיווק אחידה, ולכן מאבד מומנטום כבר בהתחלה.",
+      title: "סטאק השקה לערוצי ישראל",
+      problem: "עסקים עולים עם אתר בלבד, בלי חיבור תפעולי ל-Google Business ול-WhatsApp.",
       whatWeDo:
-        "• צילום פתיחה לעסק\n• סט תוכן לרשתות\n• אתר/עמוד שירות\n• הקמת פרופיל עסק בגוגל\n• פרסום בסיס ממוקד",
-      outcome: "התוצאה: השקה דיגיטלית מסודרת עם טראפיק ופניות מהיום הראשון.",
-      timeline: "10-21 ימים",
+        "• אתר או עמוד שירות\n• טקסטים לפוסטים/הטבות ב-Google Business\n• הנחיית עבודה תואמת API ל-GBP\n• סקריפטים לתגובות WhatsApp\n• שכבת CTA וטון אחידה",
+      outcome: "התוצאה: כל הערוצים הפעילים עולים יחד עם מסר אחיד ומענה מהיר יותר.",
+      timeline: "4-7 ימים",
     },
     "beauty-booking-flow": {
       title: "מערכת שיווק לנכס נדל\"ן",
@@ -784,38 +778,38 @@ const solutionOverrides: Record<
       timeline: "7-16 ימים",
     },
     "quick-start-system": {
-      title: "חבילת פתיחה לנוכחות דיגיטלית",
-      problem: "העסק כמעט לא נראה באינטרנט ולכן לקוחות לא בונים אמון ולא פונים.",
+      title: "קוויקסטארט מאינסטגרם/תפריט",
+      problem: "יש חומרים בסיסיים, אבל אין דרך מהירה להפוך אותם להשקה שמביאה פניות.",
       whatWeDo:
-        "• יום צילום עסק\n• 10 סרטוני רילס קצרים\n• עיצוב אינסטגרם\n• עיצוב פרופיל העסק בגוגל\n• דף נחיתה בסיסי + וואטסאפ",
-      outcome: "התוצאה: העסק נראה חי ומקצועי, ולקוחות מתחילים לכתוב.",
-      timeline: "5-12 ימים",
+        "• קליטת חומרים קיימים מאינסטגרם/תפריט\n• מסלול השקה מהיר ב-48 שעות\n• שכבת קופי רב-לשונית (עברית/רוסית/אנגלית + ערבית אופציונלית)\n• סט התחלתי ל-Google Business ו-WhatsApp\n• כללי טון אנושי עקביים",
+      outcome: "התוצאה: השקה במינימום קלט, עם שפה טבעית שמביאה פניות איכותיות מהר.",
+      timeline: "48 שעות",
     },
   },
   en: {
     "qr-menu-mini-site": {
-      title: "Restaurant Growth System",
-      problem: "The restaurant looks great offline, but online visibility is not driving enough guests.",
+      title: "48-Hour Menu-to-Site System",
+      problem: "Menu assets exist, but they are not translated into a fast, conversion-ready customer path.",
       whatWeDo:
-        "• Professional food shooting\n• Atmosphere coverage\n• 10-15 social reels\n• QR menu setup\n• Restaurant page + WhatsApp integration",
-      outcome: "Result: stronger social pull, more guest traffic, and more direct inquiries.",
-      timeline: "10-18 days",
+        "• Menu/Instagram intake\n• Conversion mini-site in 48 hours\n• Structured service/offer blocks\n• WhatsApp CTA and response entry\n• Publish-ready content snippets",
+      outcome: "Result: a live ordering/inquiry path from menu content in two days, not two weeks.",
+      timeline: "48 hours",
     },
     "content-whatsapp-funnel": {
-      title: "WhatsApp Conversion System",
-      problem: "People watch your content, but they do not take the next step and message.",
+      title: "Human-Tone WhatsApp Funnel",
+      problem: "Leads arrive, but replies sound generic and conversations drop before intent is qualified.",
       whatWeDo:
-        "• Clear landing page\n• Prominent WhatsApp button\n• \"Get pricing\" CTA flow\n• Fast auto-reply setup\n• Message templates for the team",
-      outcome: "Result: view-to-message conversion improves and lead flow becomes stable.",
-      timeline: "10-18 days",
+        "• Message map by customer intent\n• First-reply and follow-up scripts\n• Empathetic tone guardrails (no ad-bullshit)\n• Offer and objection snippets\n• Team-ready WhatsApp playbook",
+      outcome: "Result: higher reply quality, faster handoff, and more conversations that actually close.",
+      timeline: "3-5 days",
     },
     "business-launch-setup": {
-      title: "Business Launch System",
-      problem: "A new business opens with disconnected assets and no unified acquisition system.",
+      title: "Israel Channel Launch Stack",
+      problem: "Businesses launch with a website only, while Google Business and WhatsApp channels stay unstructured.",
       whatWeDo:
-        "• Launch photoshoot\n• Social content set\n• Website or service page\n• Google Business profile\n• Starter ad setup",
-      outcome: "Result: the business launches with structured visibility, traffic, and first inquiries.",
-      timeline: "10-21 days",
+        "• Site or service page\n• Google Business Profile post/offer copy\n• API-ready GBP posting workflow notes\n• WhatsApp response scripts\n• Unified CTA and tone system",
+      outcome: "Result: all active local channels launch together, with one message and faster lead handling.",
+      timeline: "4-7 days",
     },
     "beauty-booking-flow": {
       title: "Real Estate Listing System",
@@ -826,12 +820,12 @@ const solutionOverrides: Record<
       timeline: "7-16 days",
     },
     "quick-start-system": {
-      title: "Digital Presence Starter",
-      problem: "The business is barely visible online, so trust is low and outreach is weak.",
+      title: "Instagram/Menu Quickstart",
+      problem: "The owner has social/menu materials, but no practical way to package them into a sales-ready launch.",
       whatWeDo:
-        "• Business photoshoot\n• 10 short reels\n• Instagram setup\n• Google Business setup\n• Basic landing page + WhatsApp",
-      outcome: "Result: the business starts to look alive and people begin to message.",
-      timeline: "5-12 days",
+        "• Intake from existing Instagram/menu assets\n• 48-hour sprint setup\n• Multilingual copy layer (HE/RU/EN, optional AR)\n• Google Business + WhatsApp starter scripts\n• Human-tone message rules",
+      outcome: "Result: minimal-input launch that sounds natural and starts collecting qualified inquiries quickly.",
+      timeline: "48 hours",
     },
   },
 };
@@ -1156,32 +1150,21 @@ export function buildContentArchiveModules(locale: Locale, galleryItems: Localiz
   });
 }
 
-function addonLabelFromMessages(locale: Locale, messages: MessageSchema, addonId: AddonId): string {
-  const pricingAddons = messages.pricingPage?.addons ?? [];
+function addonLabelFromMessages(locale: Locale, addonId: AddonId): string {
   const fallbackMap: Record<Locale, Record<AddonId, string>> = {
     en: {
-      extra_production_day: "Extra production day",
-      extra_service_page: "Additional service page",
-      monthly_ad_creatives: "Monthly ad creative set",
-      whatsapp_crm_setup: "WhatsApp CRM setup",
+      extra_production_day: "48-hour sprint execution",
+      extra_service_page: "Google Business posts + offers pack",
+      monthly_ad_creatives: "WhatsApp reply scripts pack",
+      whatsapp_crm_setup: "Multilingual copy layer (HE/RU/EN)",
     },
     he: {
-      extra_production_day: "יום הפקה נוסף",
-      extra_service_page: "עמוד שירות נוסף",
-      monthly_ad_creatives: "סט קריאייטיב חודשי",
-      whatsapp_crm_setup: "הקמת CRM לוואטסאפ",
+      extra_production_day: "ספרינט ביצוע ל-48 שעות",
+      extra_service_page: "סט פוסטים/הטבות ל-Google Business",
+      monthly_ad_creatives: "סט סקריפטים לתגובות WhatsApp",
+      whatsapp_crm_setup: "שכבת קופי רב-לשונית (עברית/רוסית/אנגלית)",
     },
   };
-
-  if (addonId === "extra_production_day" && pricingAddons[0]?.title) {
-    return localizedText(locale, pricingAddons[0].title, fallbackMap[locale][addonId]);
-  }
-  if (addonId === "extra_service_page" && pricingAddons[1]?.title) {
-    return localizedText(locale, pricingAddons[1].title, fallbackMap[locale][addonId]);
-  }
-  if (addonId === "monthly_ad_creatives" && pricingAddons[2]?.title) {
-    return localizedText(locale, pricingAddons[2].title, fallbackMap[locale][addonId]);
-  }
 
   return fallbackMap[locale][addonId];
 }
@@ -1189,12 +1172,12 @@ function addonLabelFromMessages(locale: Locale, messages: MessageSchema, addonId
 function deliveryLabel(locale: Locale, mode: DeliveryMode): string {
   const labels: Record<Locale, Record<DeliveryMode, string>> = {
     en: {
-      standard: "Standard",
-      express: "Express",
+      standard: "Standard (5-10 days)",
+      express: "48-hour sprint",
     },
     he: {
-      standard: "רגיל",
-      express: "מהיר",
+      standard: "רגיל (5-10 ימים)",
+      express: "מהיר 48 שעות",
     },
   };
 
@@ -1217,7 +1200,7 @@ function localizedPricingLabels(locale: Locale) {
       addons: "תוספות",
       notes: "הערות",
       breakdown: "פירוט חישוב",
-      notesPlaceholder: "כתבו מטרה עסקית, תקציב חודשי ואזור פעילות.",
+      notesPlaceholder: "הדביקו קישור אינסטגרם/תפריט + מטרה עסקית + אזור פעילות.",
       openWhatsAppCta: "פתיחה בוואטסאפ",
       saveLeadCta: "שליחת פנייה",
       vatNote: "מע״מ לא כלול.",
@@ -1232,12 +1215,86 @@ function localizedPricingLabels(locale: Locale) {
     addons: "Add-ons",
     notes: "Notes",
     breakdown: "Price breakdown",
-    notesPlaceholder: "Write your business goal, monthly budget, and target area.",
+    notesPlaceholder: "Paste Instagram/menu link + business goal + target area.",
     openWhatsAppCta: "Open WhatsApp",
     saveLeadCta: "Send inquiry",
     vatNote: "VAT not included.",
   };
 }
+
+const tierCardCopyByLocale: Record<
+  Locale,
+  Record<
+    TierId,
+    {
+      description: string;
+      features: string[];
+      ctaLabel: string;
+      recommended?: boolean;
+    }
+  >
+> = {
+  he: {
+    starter: {
+      description: "כניסה מהירה לעסק שצריך להתחיל מסלול פניות ברור.",
+      features: [
+        "הקמה מהירה ממינימום חומרים",
+        "שפה מותאמת לשוק המקומי",
+        "הפלט הראשון תוך 48 שעות",
+      ],
+      ctaLabel: "פתיחה בוואטסאפ",
+    },
+    business: {
+      description: "ליבה תפעולית לעסק שרוצה זרימה עקבית של פניות איכותיות.",
+      features: [
+        "מערכת אתר + WhatsApp בטון אנושי",
+        "עבודה רב-לשונית HE/EN (+RU לפי צורך)",
+        "התאמת תכנים לערוצי ישראל",
+      ],
+      ctaLabel: "פתיחה בוואטסאפ",
+      recommended: true,
+    },
+    growth: {
+      description: "מערך רחב יותר לעסקים שצריכים קצב ייצור והפצה גבוה.",
+      features: [
+        "מסלול תפעול מלא עם שכבות תוכן",
+        "הרחבת נפח יצירה והטמעת תהליכים",
+        "ניהול יציב של פאנל פניות פעיל",
+      ],
+      ctaLabel: "פתיחה בוואטסאפ",
+    },
+  },
+  en: {
+    starter: {
+      description: "Fast entry point for businesses that need a clear inquiry path.",
+      features: [
+        "Quick setup from minimal assets",
+        "Local-market ready messaging",
+        "First output delivered in 48 hours",
+      ],
+      ctaLabel: "Open WhatsApp",
+    },
+    business: {
+      description: "Core operating layer for teams that need consistent qualified inquiries.",
+      features: [
+        "Site + WhatsApp system with human tone",
+        "Multilingual execution in HE/EN (+RU when needed)",
+        "Channel-ready assets for Israel market flows",
+      ],
+      ctaLabel: "Open WhatsApp",
+      recommended: true,
+    },
+    growth: {
+      description: "Expanded service layer for teams that need higher production volume.",
+      features: [
+        "Full-stack operating setup",
+        "Higher content throughput with process discipline",
+        "Reliable handling of ongoing lead volume",
+      ],
+      ctaLabel: "Open WhatsApp",
+    },
+  },
+};
 
 export function getCalculatorRules(): CalculatorRules {
   return calculatorRules;
@@ -1306,26 +1363,33 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
 
   const processSteps = localizedCopy.process.steps;
 
-  const pricingTiers = messages.pricingPage?.tiers ?? [];
-  const pricingAddons = messages.pricingPage?.addons ?? [];
-  const stats = [
-    {
-      label: localizedText(locale, pricingTiers[0]?.title, isRtl ? "בסיס" : "Basic"),
-      value: toShekelLabel(pricingTiers[0]?.price) || formatShekel(1200),
-    },
-    {
-      label: localizedText(locale, pricingTiers[1]?.title, isRtl ? "צמיחה" : "Growth"),
-      value: toShekelLabel(pricingTiers[1]?.price) || formatShekel(3000),
-    },
-    {
-      label: localizedText(locale, pricingTiers[2]?.title, isRtl ? "מערכת" : "System"),
-      value: toShekelLabel(pricingTiers[2]?.price) || formatShekel(5000),
-    },
-    {
-      label: localizedText(locale, pricingAddons[0]?.title, isRtl ? "תוספת" : "Add-on"),
-      value: toShekelLabel(pricingAddons[0]?.price) || formatShekel(900),
-    },
-  ];
+  const stats = isRtl
+    ? [
+        { label: "חלון לפלט ראשון", value: "48 שעות" },
+        { label: "שפות מובנות", value: "עברית / רוסית / אנגלית" },
+        { label: "ערוצים בחבילה", value: "אתר + GBP + WhatsApp" },
+        { label: "סגנון כתיבה", value: "טון אנושי" },
+      ]
+    : [
+        { label: "First output window", value: "48 hours" },
+        { label: "Built-in languages", value: "Hebrew / Russian / English" },
+        { label: "Channel package", value: "Site + GBP + WhatsApp" },
+        { label: "Voice style", value: "Human tone" },
+      ];
+
+  const tierCards = TIER_IDS.map((id) => {
+    const tier = getTierDefinition(id);
+    const copy = tierCardCopyByLocale[locale][id];
+    return {
+      id,
+      publicName: tier.publicName,
+      description: copy.description,
+      priceRangeLabel: formatTierPriceRangeLabel(id, locale),
+      features: copy.features,
+      ctaLabel: copy.ctaLabel,
+      recommended: copy.recommended,
+    };
+  });
 
   const niches = NICHE_IDS.map((id, index) => ({
     id,
@@ -1336,7 +1400,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     const addon = calculatorRules.addons.find((item) => item.id === id);
     return {
       id,
-      label: addonLabelFromMessages(locale, messages, id),
+      label: addonLabelFromMessages(locale, id),
       priceLabel: formatShekel(addon?.price ?? 0),
     };
   });
@@ -1461,6 +1525,7 @@ export function getSiteContent(locale: Locale): SiteContentViewModel {
     pricing: {
       title: localizedCopy.pricing.title,
       description: localizedCopy.pricing.description,
+      tiers: tierCards,
       vatNote: pricingLabels.vatNote,
       labels: {
         niche: pricingLabels.niche,

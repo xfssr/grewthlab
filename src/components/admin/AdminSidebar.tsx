@@ -8,6 +8,7 @@ const navItems = [
   { href: "/admin/pages", label: "Pages" },
   { href: "/admin/gallery", label: "Gallery" },
   { href: "/admin/solutions", label: "Solutions" },
+  { href: "/admin/cac", label: "CAC" },
 ];
 
 export function AdminSidebar() {

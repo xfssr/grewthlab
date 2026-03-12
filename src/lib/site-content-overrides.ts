@@ -1,8 +1,7 @@
-import { buildContentArchiveModules, getCalculatorRules } from "@/core/site.content";
+import { buildContentArchiveModules } from "@/core/site.content";
 import type { Locale, LocalizedMediaAsset, PackageId, SiteContentViewModel } from "@/core/site.types";
 import { PACKAGE_IDS } from "@/core/site.types";
 import { prisma } from "@/lib/db";
-import { applyDiscount, applyDiscountToRules, getPricingSettings } from "@/lib/pricing-settings";
 
 type SiteContentOverrideData = Partial<SiteContentViewModel>;
 
@@ -95,6 +94,7 @@ export function sanitizeSiteContentOverrideData(value: unknown): SiteContentOver
     delete next.solutions.cards;
   }
   if (isPlainObject(next.pricing)) {
+    delete next.pricing.tiers;
     delete next.pricing.packageOptions;
   }
   if (isPlainObject(next.cases)) {
@@ -201,7 +201,7 @@ export async function clearSiteContentOverrides(locales: Locale[]): Promise<void
 
 export async function applyDbOverrides(content: SiteContentViewModel, locale: Locale): Promise<SiteContentViewModel> {
   try {
-    const [contentOverride, page, galleryRows, solutionRows, pricingSettings] = await Promise.all([
+    const [contentOverride, page, galleryRows, solutionRows] = await Promise.all([
       getSiteContentOverride(locale),
       prisma.page.findUnique({ where: { slug: "home" } }),
       prisma.galleryItem.findMany({
@@ -225,13 +225,9 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
           imageUrl: true,
         },
       }),
-      getPricingSettings(),
     ]);
 
     const next = structuredClone(content) as SiteContentViewModel;
-    const discountedRules = applyDiscountToRules(getCalculatorRules(), pricingSettings.discountPercent);
-    const discountedPackagePrices = new Map(discountedRules.packages.map((item) => [item.id, item.basePrice]));
-    const discountedAddonPrices = new Map(discountedRules.addons.map((item) => [item.id, item.price]));
 
     if (page) {
       if (page.title?.trim()) {
@@ -271,9 +267,7 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
 
       const row = rowBySlug.get(packageId);
       const description = row?.description?.trim();
-      const displayPrice = row
-        ? applyDiscount(Number(row.price), pricingSettings.discountPercent)
-        : (discountedPackagePrices.get(packageId) ?? 0);
+      const displayPrice = row ? Number(row.price) : null;
 
       updatedCards.push({
         ...baseCard,
@@ -282,7 +276,7 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         problem: localizedText(locale, description, baseCard.problem),
         whatWeDo: localizedText(locale, description, baseCard.whatWeDo),
         outcome: localizedText(locale, description, baseCard.outcome),
-        priceLabel: formatPriceLabel(displayPrice, locale),
+        priceLabel: displayPrice !== null ? formatPriceLabel(displayPrice, locale) : baseCard.priceLabel,
         imageSrc: row?.imageUrl?.trim() || baseCard.imageSrc,
       });
     }
@@ -306,7 +300,7 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
             locale === "he" ? "מתאים לצורך עסקי ממוקד." : "Built for a focused business need.",
           ),
           timeline: locale === "he" ? "מותאם אישית" : "Custom scope",
-          priceLabel: formatPriceLabel(applyDiscount(Number(row.price), pricingSettings.discountPercent), locale),
+          priceLabel: formatPriceLabel(Number(row.price), locale),
           actionLabel: locale === "he" ? "קבלו פרטים" : "Get details",
           tone: updatedCards[index % updatedCards.length]?.tone ?? "stone",
           imageSrc: row.imageUrl?.trim() || undefined,
@@ -320,30 +314,6 @@ export async function applyDbOverrides(content: SiteContentViewModel, locale: Lo
         label: item.title,
       }));
     }
-
-    withLocalizedCopy.pricing.addonOptions = withLocalizedCopy.pricing.addonOptions.map((item) => ({
-      ...item,
-      priceLabel: formatPriceLabel(discountedAddonPrices.get(item.id) ?? 0, locale),
-    }));
-
-    const statsPackageOrder: PackageId[] = [
-      "qr-menu-mini-site",
-      "content-whatsapp-funnel",
-      "business-launch-setup",
-    ];
-    withLocalizedCopy.pricing.stats = withLocalizedCopy.pricing.stats.map((item, index) => {
-      if (index < statsPackageOrder.length) {
-        return {
-          ...item,
-          value: formatPriceLabel(discountedPackagePrices.get(statsPackageOrder[index]) ?? 0, locale),
-        };
-      }
-
-      return {
-        ...item,
-        value: formatPriceLabel(discountedAddonPrices.get("extra_production_day") ?? 0, locale),
-      };
-    });
 
     return withLocalizedCopy;
   } catch {

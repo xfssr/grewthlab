@@ -14,10 +14,6 @@ type SolutionItem = {
   createdAt: string;
 };
 
-type PricingSettings = {
-  discountPercent: number;
-};
-
 type CreateDraft = {
   title: string;
   description: string;
@@ -36,11 +32,9 @@ export default function AdminSolutionsPage() {
   const [items, setItems] = useState<SolutionItem[]>([]);
   const [customItems, setCustomItems] = useState<SolutionItem[]>([]);
   const [draft, setDraft] = useState<CreateDraft>(initialDraft);
-  const [discountPercent, setDiscountPercent] = useState("0");
   const [loading, setLoading] = useState(true);
   const [savingSlug, setSavingSlug] = useState("");
   const [uploadingTarget, setUploadingTarget] = useState("");
-  const [savingDiscount, setSavingDiscount] = useState(false);
   const [creating, setCreating] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -48,21 +42,16 @@ export default function AdminSolutionsPage() {
     setLoading(true);
 
     try {
-      const [solutionsResponse, settingsResponse] = await Promise.all([
-        fetch("/api/solutions", { cache: "no-store" }),
-        fetch("/api/pricing-settings", { cache: "no-store" }),
-      ]);
+      const solutionsResponse = await fetch("/api/solutions", { cache: "no-store" });
 
       const solutionsPayload = (await solutionsResponse.json()) as {
         items?: SolutionItem[];
         customItems?: SolutionItem[];
         error?: string;
       };
-      const settingsPayload = (await settingsResponse.json()) as { settings?: PricingSettings };
 
       setItems(solutionsPayload.items || []);
       setCustomItems(solutionsPayload.customItems || []);
-      setDiscountPercent(String(settingsPayload.settings?.discountPercent ?? 0));
 
       if (solutionsPayload.error) {
         setMessage(solutionsPayload.error);
@@ -184,32 +173,6 @@ export default function AdminSolutionsPage() {
     }
   }
 
-  async function saveDiscount() {
-    setSavingDiscount(true);
-    setMessage("");
-
-    try {
-      const response = await fetch("/api/pricing-settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          discountPercent: Number(discountPercent),
-        }),
-      });
-
-      const payload = (await response.json()) as { error?: string; settings?: PricingSettings };
-      if (!response.ok) {
-        setMessage(payload.error || "Discount update failed.");
-        return;
-      }
-
-      setDiscountPercent(String(payload.settings?.discountPercent ?? 0));
-      setMessage("Global discount saved.");
-    } finally {
-      setSavingDiscount(false);
-    }
-  }
-
   function renderSolutionEditor(item: SolutionItem, isCustom: boolean) {
     return (
       <article key={item.slug} className="grid gap-2 rounded-md border border-white/10 p-3 md:grid-cols-2">
@@ -315,34 +278,9 @@ export default function AdminSolutionsPage() {
       <header>
         <h1 className="text-2xl font-semibold">Solutions</h1>
         <p className="mt-1 text-sm text-zinc-400">
-          Replace fixed package cards, add custom solution cards, and apply one discount to all calculated prices.
+          Replace legacy SEO-mapped solutions and add custom cards for tier positioning.
         </p>
       </header>
-
-      <AdminForm title="Global Discount" description="Applies to solution prices, calculator package prices, and add-ons.">
-        <div className="flex flex-col gap-3 md:flex-row md:items-end">
-          <label className="flex-1">
-            <span className="mb-2 block text-sm text-zinc-300">Discount percent</span>
-            <input
-              type="number"
-              min={0}
-              max={100}
-              step="1"
-              value={discountPercent}
-              onChange={(event) => setDiscountPercent(event.target.value)}
-              className="w-full rounded-md border border-white/15 bg-black/30 px-3 py-2 text-sm"
-            />
-          </label>
-          <button
-            type="button"
-            onClick={() => void saveDiscount()}
-            disabled={savingDiscount}
-            className="rounded-md bg-zinc-100 px-4 py-2 text-sm font-medium text-zinc-900 disabled:opacity-60"
-          >
-            {savingDiscount ? "Saving..." : "Save discount"}
-          </button>
-        </div>
-      </AdminForm>
 
       <AdminForm title="Add Solution" description="Creates an extra solution card without replacing the fixed package set.">
         <form onSubmit={(event) => void createItem(event)} className="grid gap-3 md:grid-cols-2">
@@ -400,7 +338,7 @@ export default function AdminSolutionsPage() {
         </form>
       </AdminForm>
 
-      <AdminForm title="Replace Existing Solutions" description="These rows stay tied to the fixed package slugs used by the calculator.">
+      <AdminForm title="Replace Existing Solutions" description="These rows stay tied to legacy package slugs kept for SEO compatibility.">
         <div className="space-y-3">
           {items.map((item) => renderSolutionEditor(item, false))}
           {!loading && items.length === 0 ? <p className="text-sm text-zinc-400">No fixed solutions available.</p> : null}

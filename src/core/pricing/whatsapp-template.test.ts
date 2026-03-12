@@ -1,48 +1,37 @@
 import { buildWhatsAppMessage, toWhatsAppUrl } from "@/core/pricing/whatsapp-template";
-import type { QuoteResult } from "@/core/site.types";
-
-const quote: QuoteResult = {
-  currency: "ILS",
-  subtotal: 4400,
-  total: 4400,
-  breakdown: [
-    { label: "Base package", amount: 2500 },
-    { label: "Niche multiplier", amount: 0 },
-    { label: "Delivery mode", amount: 0 },
-    { label: "Add-ons", amount: 1900 },
-  ],
-  vatIncluded: false,
-};
+import { getTierDefinition } from "@/core/pricing/tier-model";
 
 describe("whatsapp-template", () => {
-  it("builds english message", () => {
+  it("builds english message from tier metadata", () => {
     const text = buildWhatsAppMessage({
       locale: "en",
-      packageTitle: "QR Menu + Mini Site",
-      nicheLabel: "Restaurants",
-      deliveryLabel: "Standard",
-      addonLabels: ["Extra production day"],
-      quote,
-      notes: "Need launch in 2 weeks",
+      tier: getTierDefinition("business"),
+      intakeSource: "instagram_menu",
+      languageBundle: "he_ru_en_ar",
+      voiceMode: "empathetic",
+      notes: "Need fast kickoff",
     });
 
-    expect(text).toContain("Package: QR Menu + Mini Site");
-    expect(text).toContain("Estimated total: ₪4,400");
-    expect(text).toContain("Notes: Need launch in 2 weeks");
+    expect(text).toContain("Tier: Business");
+    expect(text).toContain("Price range: \u20AA449-\u20AA799 / month");
+    expect(text).toContain("Expectation: first output is delivered within 48 hours.");
+    expect(text).toContain("Language bundle: Hebrew + Russian + English + Arabic");
+    expect(text).toContain("Notes: Need fast kickoff");
   });
 
-  it("builds hebrew message", () => {
+  it("builds hebrew message with legacy mapping note", () => {
     const text = buildWhatsAppMessage({
       locale: "he",
-      packageTitle: "תפריט QR + מיני-אתר",
-      nicheLabel: "מסעדות",
-      deliveryLabel: "רגיל",
-      addonLabels: [],
-      quote,
+      tier: getTierDefinition("business"),
+      intakeSource: "menu",
+      languageBundle: "he_en",
+      voiceMode: "neutral",
+      legacyPayloadMapped: true,
     });
 
-    expect(text).toContain("חבילה: תפריט QR + מיני-אתר");
-    expect(text).toContain("סה״כ משוער: ₪4,400");
+    expect(text).toContain("Tier: Business");
+    expect(text).toContain("הפלט הראשון מגיע תוך 48 שעות");
+    expect(text).toContain("הבקשה התקבלה בפורמט ישן");
   });
 
   it("builds wa.me url", () => {
